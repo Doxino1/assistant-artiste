@@ -4,7 +4,7 @@ import { use } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SaveButtons } from "@/components/SaveButtons";
-import { mockEvents } from "@/lib/mock-events";
+import { useEvents } from "@/lib/use-events";
 import { EVENT_TYPE_LABELS } from "@/lib/types";
 import { useSavedEvents } from "@/lib/use-saved-events";
 
@@ -21,8 +21,26 @@ function formatDate(iso: string) {
 
 export default function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const event = mockEvents.find((e) => e.id === id);
+  const { events, loading, error } = useEvents();
   const { saved, setStatus } = useSavedEvents();
+
+  const event = events.find((e) => e.id === id);
+
+  if (loading) {
+    return (
+      <div className="mx-auto w-full max-w-2xl px-4 py-8">
+        <p className="text-sm text-foreground/60">Chargement…</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="mx-auto w-full max-w-2xl px-4 py-8">
+        <p className="text-sm text-red-600">Impossible de charger l&apos;événement ({error}).</p>
+      </div>
+    );
+  }
 
   if (!event) notFound();
 

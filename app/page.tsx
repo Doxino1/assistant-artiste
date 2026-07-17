@@ -2,12 +2,13 @@
 
 import { useMemo, useState } from "react";
 import { EventCard } from "@/components/EventCard";
-import { mockEvents } from "@/lib/mock-events";
+import { useEvents } from "@/lib/use-events";
 import { DISCIPLINES, EVENT_TYPE_LABELS, EventType, Ville } from "@/lib/types";
 
 const VILLES: Ville[] = ["Paris", "Athènes"];
 
 export default function FeedPage() {
+  const { events: allEvents, loading, error } = useEvents();
   const [ville, setVille] = useState<Ville>("Paris");
   const [type, setType] = useState<EventType | "">("");
   const [discipline, setDiscipline] = useState("");
@@ -16,13 +17,13 @@ export default function FeedPage() {
 
   const quartiers = useMemo(
     () =>
-      Array.from(new Set(mockEvents.filter((e) => e.ville === ville).map((e) => e.quartier))).sort(),
-    [ville]
+      Array.from(new Set(allEvents.filter((e) => e.ville === ville).map((e) => e.quartier))).sort(),
+    [allEvents, ville]
   );
 
   const events = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return mockEvents
+    return allEvents
       .filter((e) => e.ville === ville)
       .filter((e) => !type || e.type === type)
       .filter((e) => !discipline || e.discipline === discipline)
@@ -34,7 +35,7 @@ export default function FeedPage() {
           e.description.toLowerCase().includes(q)
       )
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  }, [ville, type, discipline, quartier, query]);
+  }, [allEvents, ville, type, discipline, quartier, query]);
 
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8">
@@ -107,7 +108,13 @@ export default function FeedPage() {
       </div>
 
       <div className="flex flex-col gap-3">
-        {events.length === 0 && (
+        {loading && <p className="text-sm text-foreground/60">Chargement des événements…</p>}
+        {error && (
+          <p className="text-sm text-red-600">
+            Impossible de charger les événements ({error}).
+          </p>
+        )}
+        {!loading && !error && events.length === 0 && (
           <p className="text-sm text-foreground/60">Aucun événement ne correspond à ces filtres.</p>
         )}
         {events.map((event) => (
