@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
+import { SignOutButton } from "@/components/SignOutButton";
+import { createClient } from "@/lib/supabase/server";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -18,11 +20,16 @@ export const metadata: Metadata = {
   description: "Événements, matching et communauté pour artistes à Paris et Athènes",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <html
       lang="fr"
@@ -37,6 +44,18 @@ export default function RootLayout({
             <Link href="/mes-evenements" className="text-foreground/60 hover:text-foreground">
               Mes événements
             </Link>
+            <div className="ml-auto flex items-center gap-4">
+              {user ? (
+                <>
+                  <span className="text-foreground/60">{user.email}</span>
+                  <SignOutButton />
+                </>
+              ) : (
+                <Link href="/login" className="text-foreground/60 hover:text-foreground">
+                  Connexion
+                </Link>
+              )}
+            </div>
           </nav>
         </header>
         {children}
