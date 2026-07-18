@@ -1,6 +1,7 @@
 export type EventType = "vernissage" | "expo" | "workshop" | "open_call" | "annonce";
 export type AnnouncementSubtype = "oeuvre" | "materiel" | "atelier";
 export type SavedStatus = "sauvegarde" | "je_viens";
+export type ProfileType = "artiste_pro" | "amateur" | "galerie" | "institution" | "curateur";
 
 export type Ville = "Paris" | "Athènes";
 
@@ -26,3 +27,17 @@ export const EVENT_TYPE_LABELS: Record<EventType, string> = {
 };
 
 export const DISCIPLINES = ["Peinture", "Sculpture", "Performance", "Multidisciplinaire"] as const;
+
+export const ANNOUNCEMENT_SUBTYPE_LABELS: Record<AnnouncementSubtype, string> = {
+  oeuvre: "Œuvre",
+  materiel: "Matériel",
+  atelier: "Atelier",
+};
+
+export const PROFILE_TYPE_LABELS: Record<ProfileType, string> = {
+  artiste_pro: "Artiste professionnel·le",
+  amateur: "Artiste amateur",
+  galerie: "Galerie",
+  institution: "Institution",
+  curateur: "Curateur·rice",
+};

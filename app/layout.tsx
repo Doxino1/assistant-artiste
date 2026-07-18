@@ -44,6 +44,16 @@ export default async function RootLayout({
             <Link href="/mes-evenements" className="text-foreground/60 hover:text-foreground">
               Mes événements
             </Link>
+            {user && (
+              <>
+                <Link href="/evenements/nouveau" className="text-foreground/60 hover:text-foreground">
+                  Proposer un événement
+                </Link>
+                <Link href="/profil" className="text-foreground/60 hover:text-foreground">
+                  Profil
+                </Link>
+              </>
+            )}
             <div className="ml-auto flex items-center gap-4">
               {user ? (
                 <>

@@ -5,11 +5,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SaveButtons } from "@/components/SaveButtons";
 import { useEvents } from "@/lib/use-events";
-import { EVENT_TYPE_LABELS } from "@/lib/types";
+import { ArtEvent, EVENT_TYPE_LABELS } from "@/lib/types";
+import { formatInVille } from "@/lib/timezone";
 import { useSavedEvents } from "@/lib/use-saved-events";
 
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("fr-FR", {
+function formatDate(event: ArtEvent) {
+  return formatInVille(event.date, event.ville, {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -58,7 +59,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
       </div>
 
       <h1 className="mt-3 text-2xl font-semibold">{event.titre}</h1>
-      <p className="mt-1 text-sm text-foreground/60">{formatDate(event.date)}</p>
+      <p className="mt-1 text-sm text-foreground/60">{formatDate(event)}</p>
       <p className="mt-1 text-sm text-foreground/60">{event.lieu}</p>
 
       <p className="mt-6 text-base leading-relaxed">{event.description}</p>

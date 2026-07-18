@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { SaveButtons } from "./SaveButtons";
 import { ArtEvent, EVENT_TYPE_LABELS } from "@/lib/types";
+import { formatInVille } from "@/lib/timezone";
 import { useSavedEvents } from "@/lib/use-saved-events";
 
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("fr-FR", {
+function formatDate(event: ArtEvent) {
+  return formatInVille(event.date, event.ville, {
     weekday: "short",
     day: "numeric",
     month: "short",
@@ -23,7 +24,7 @@ export function EventCard({ event }: { event: ArtEvent }) {
           <span className="rounded-full bg-foreground/5 px-2 py-0.5">
             {EVENT_TYPE_LABELS[event.type]}
           </span>
-          <span>{formatDate(event.date)}</span>
+          <span>{formatDate(event)}</span>
         </div>
         <h3 className="mt-2 font-medium">{event.titre}</h3>
         <p className="mt-1 text-sm text-foreground/60">
