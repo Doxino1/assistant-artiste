@@ -142,32 +142,40 @@ export default function EvenementsPage() {
             className="mb-4 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
           />
 
-          <div className="mb-6 flex flex-wrap gap-2">
-            <select
-              value={type}
-              onChange={(e) => setType(e.target.value as EventType | "")}
-              className="rounded-md border border-foreground/20 bg-transparent px-2 py-1 text-sm"
+          <div className="mb-2 -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <button
+              onClick={() => setType("")}
+              className={`shrink-0 whitespace-nowrap ${pillClass(type === "")}`}
             >
-              <option value="">Tous types</option>
-              {Object.entries(EVENT_TYPE_LABELS).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
+              Tous types
+            </button>
+            {Object.entries(EVENT_TYPE_LABELS).map(([value, label]) => (
+              <button
+                key={value}
+                onClick={() => setType(value as EventType)}
+                className={`shrink-0 whitespace-nowrap ${pillClass(type === value)}`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
 
-            <select
-              value={discipline}
-              onChange={(e) => setDiscipline(e.target.value)}
-              className="rounded-md border border-foreground/20 bg-transparent px-2 py-1 text-sm"
+          <div className="mb-6 -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <button
+              onClick={() => setDiscipline("")}
+              className={`shrink-0 whitespace-nowrap ${pillClass(discipline === "")}`}
             >
-              <option value="">Toutes disciplines</option>
-              {DISCIPLINES.map((d) => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
-              ))}
-            </select>
+              Toutes disciplines
+            </button>
+            {DISCIPLINES.map((d) => (
+              <button
+                key={d}
+                onClick={() => setDiscipline(d)}
+                className={`shrink-0 whitespace-nowrap ${pillClass(discipline === d)}`}
+              >
+                {d}
+              </button>
+            ))}
           </div>
 
           <div className="flex flex-col gap-3">
