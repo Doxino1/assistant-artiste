@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { EventCard } from "@/components/EventCard";
+import { EventCalendar } from "@/components/EventCalendar";
 import { useEvents } from "@/lib/use-events";
 import { useSavedEvents } from "@/lib/use-saved-events";
 import { createClient } from "@/lib/supabase/client";
@@ -12,7 +13,7 @@ import { DISCIPLINES, EventType, Ville } from "@/lib/types";
 
 const VILLES: Ville[] = ["Paris", "Athènes"];
 
-type Tab = "tous" | "mes";
+type Tab = "tous" | "calendrier" | "mes";
 type SubmissionStatut = "en_attente" | "publie";
 
 interface MySubmission {
@@ -109,6 +110,9 @@ export default function EvenementsPage() {
           <button onClick={() => setTab("tous")} className={pillClass(tab === "tous")}>
             {t.evenements.tabTous}
           </button>
+          <button onClick={() => setTab("calendrier")} className={pillClass(tab === "calendrier")}>
+            {t.calendar.tab}
+          </button>
           <button onClick={() => setTab("mes")} className={pillClass(tab === "mes")}>
             {t.evenements.tabMes}
           </button>
@@ -187,6 +191,19 @@ export default function EvenementsPage() {
               <EventCard key={event.id} event={event} />
             ))}
           </div>
+        </>
+      )}
+
+      {tab === "calendrier" && (
+        <>
+          <div className="mb-6 flex gap-2">
+            {VILLES.map((v) => (
+              <button key={v} onClick={() => setVille(v)} className={pillClass(ville === v)}>
+                {t.villeLabels[v]}
+              </button>
+            ))}
+          </div>
+          <EventCalendar events={events} ville={ville} />
         </>
       )}
 

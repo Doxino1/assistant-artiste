@@ -115,6 +115,11 @@ export interface Dictionary {
     emailContactPlaceholder: string;
     saved: string;
     save: string;
+    portfolioPublic: string;
+    postsPublic: string;
+    managePortfolio: string;
+    managePosts: string;
+    manageLibrary: string;
   };
 
   submission: {
@@ -161,6 +166,70 @@ export interface Dictionary {
     rejectConfirm: string;
     submittedBy: (nom: string) => string;
     loadError: (message: string) => string;
+  };
+
+  portfolio: {
+    title: string;
+    addTitle: string;
+    titre: string;
+    technique: string;
+    annee: string;
+    image: string;
+    add: string;
+    empty: string;
+    delete: string;
+    private: string;
+  };
+
+  posts: {
+    title: string;
+    legende: string;
+    publish: string;
+    empty: string;
+    comments: string;
+    addComment: string;
+    send: string;
+    delete: string;
+    private: string;
+  };
+
+  library: {
+    title: string;
+    subtitle: string;
+    titre: string;
+    contenu: string;
+    image: string;
+    add: string;
+    empty: string;
+    delete: string;
+  };
+
+  artiste: {
+    directory: string;
+    follow: string;
+    unfollow: string;
+    portfolio: string;
+    posts: string;
+    followers: (count: number) => string;
+    following: (count: number) => string;
+    notFound: string;
+  };
+
+  shops: {
+    title: string;
+    addShop: string;
+    nom: string;
+    adresse: string;
+    description: string;
+    lien: string;
+    add: string;
+    empty: string;
+    delete: string;
+  };
+
+  calendar: {
+    tab: string;
+    today: string;
   };
 }
 
@@ -281,6 +350,11 @@ export const fr: Dictionary = {
     emailContactPlaceholder: "Laisse vide pour ne pas être contactable",
     saved: "Profil mis à jour.",
     save: "Enregistrer",
+    portfolioPublic: "Portfolio public",
+    postsPublic: "Posts publics",
+    managePortfolio: "Gérer mon portfolio",
+    managePosts: "Gérer mes posts",
+    manageLibrary: "Bibliothèque privée",
   },
   submission: {
     title: "Proposer un événement",
@@ -323,6 +397,64 @@ export const fr: Dictionary = {
     rejectConfirm: "Rejeter et supprimer cet événement ?",
     submittedBy: (nom) => `Soumis par ${nom}`,
     loadError: (message) => `Impossible de charger les soumissions (${message}).`,
+  },
+  portfolio: {
+    title: "Mon portfolio",
+    addTitle: "Ajouter une œuvre",
+    titre: "Titre",
+    technique: "Technique",
+    annee: "Année",
+    image: "Image",
+    add: "Ajouter",
+    empty: "Aucune œuvre pour l'instant.",
+    delete: "Supprimer",
+    private: "Portfolio privé",
+  },
+  posts: {
+    title: "Mes posts",
+    legende: "Légende",
+    publish: "Publier",
+    empty: "Aucun post pour l'instant.",
+    comments: "Commentaires",
+    addComment: "Écrire un commentaire…",
+    send: "Envoyer",
+    delete: "Supprimer",
+    private: "Posts privés",
+  },
+  library: {
+    title: "Bibliothèque privée",
+    subtitle: "Ton espace perso, jamais partagé.",
+    titre: "Titre",
+    contenu: "Contenu",
+    image: "Image",
+    add: "Ajouter",
+    empty: "Rien pour l'instant.",
+    delete: "Supprimer",
+  },
+  artiste: {
+    directory: "Artistes",
+    follow: "Suivre",
+    unfollow: "Ne plus suivre",
+    portfolio: "Portfolio",
+    posts: "Posts",
+    followers: (count) => `${count} abonné${count > 1 ? "s" : ""}`,
+    following: (count) => `${count} abonnement${count > 1 ? "s" : ""}`,
+    notFound: "Profil introuvable.",
+  },
+  shops: {
+    title: "Boutiques de matériel",
+    addShop: "Ajouter une boutique",
+    nom: "Nom",
+    adresse: "Adresse",
+    description: "Description",
+    lien: "Lien",
+    add: "Ajouter",
+    empty: "Aucune boutique référencée pour l'instant.",
+    delete: "Supprimer",
+  },
+  calendar: {
+    tab: "Calendrier",
+    today: "Aujourd'hui",
   },
 };
 
@@ -443,6 +575,11 @@ export const en: Dictionary = {
     emailContactPlaceholder: "Leave blank to not be contactable",
     saved: "Profile updated.",
     save: "Save",
+    portfolioPublic: "Public portfolio",
+    postsPublic: "Public posts",
+    managePortfolio: "Manage my portfolio",
+    managePosts: "Manage my posts",
+    manageLibrary: "Private library",
   },
   submission: {
     title: "Submit an event",
@@ -485,6 +622,64 @@ export const en: Dictionary = {
     rejectConfirm: "Reject and delete this event?",
     submittedBy: (nom) => `Submitted by ${nom}`,
     loadError: (message) => `Couldn't load submissions (${message}).`,
+  },
+  portfolio: {
+    title: "My portfolio",
+    addTitle: "Add a piece",
+    titre: "Title",
+    technique: "Technique",
+    annee: "Year",
+    image: "Image",
+    add: "Add",
+    empty: "Nothing here yet.",
+    delete: "Delete",
+    private: "Private portfolio",
+  },
+  posts: {
+    title: "My posts",
+    legende: "Caption",
+    publish: "Post",
+    empty: "No post yet.",
+    comments: "Comments",
+    addComment: "Write a comment…",
+    send: "Send",
+    delete: "Delete",
+    private: "Private posts",
+  },
+  library: {
+    title: "Private library",
+    subtitle: "Your personal space, never shared.",
+    titre: "Title",
+    contenu: "Content",
+    image: "Image",
+    add: "Add",
+    empty: "Nothing here yet.",
+    delete: "Delete",
+  },
+  artiste: {
+    directory: "Artists",
+    follow: "Follow",
+    unfollow: "Unfollow",
+    portfolio: "Portfolio",
+    posts: "Posts",
+    followers: (count) => `${count} follower${count > 1 ? "s" : ""}`,
+    following: (count) => `${count} following`,
+    notFound: "Profile not found.",
+  },
+  shops: {
+    title: "Art supply shops",
+    addShop: "Add a shop",
+    nom: "Name",
+    adresse: "Address",
+    description: "Description",
+    lien: "Link",
+    add: "Add",
+    empty: "No shop listed yet.",
+    delete: "Delete",
+  },
+  calendar: {
+    tab: "Calendar",
+    today: "Today",
   },
 };
 
@@ -605,6 +800,11 @@ export const el: Dictionary = {
     emailContactPlaceholder: "Άφησέ το κενό αν δεν θες να σε βρίσκουν",
     saved: "Το προφίλ ενημερώθηκε.",
     save: "Αποθήκευση",
+    portfolioPublic: "Δημόσιο portfolio",
+    postsPublic: "Δημόσια posts",
+    managePortfolio: "Διαχείριση portfolio",
+    managePosts: "Διαχείριση posts",
+    manageLibrary: "Προσωπική βιβλιοθήκη",
   },
   submission: {
     title: "Πρόταση εκδήλωσης",
@@ -647,6 +847,64 @@ export const el: Dictionary = {
     rejectConfirm: "Απόρριψη και διαγραφή αυτής της εκδήλωσης;",
     submittedBy: (nom) => `Υποβλήθηκε από ${nom}`,
     loadError: (message) => `Αδυναμία φόρτωσης προτάσεων (${message}).`,
+  },
+  portfolio: {
+    title: "Το portfolio μου",
+    addTitle: "Προσθήκη έργου",
+    titre: "Τίτλος",
+    technique: "Τεχνική",
+    annee: "Έτος",
+    image: "Εικόνα",
+    add: "Προσθήκη",
+    empty: "Τίποτα ακόμη.",
+    delete: "Διαγραφή",
+    private: "Ιδιωτικό portfolio",
+  },
+  posts: {
+    title: "Τα posts μου",
+    legende: "Λεζάντα",
+    publish: "Δημοσίευση",
+    empty: "Κανένα post ακόμη.",
+    comments: "Σχόλια",
+    addComment: "Γράψε ένα σχόλιο…",
+    send: "Αποστολή",
+    delete: "Διαγραφή",
+    private: "Ιδιωτικά posts",
+  },
+  library: {
+    title: "Προσωπική βιβλιοθήκη",
+    subtitle: "Ο προσωπικός σου χώρος, ποτέ κοινός.",
+    titre: "Τίτλος",
+    contenu: "Περιεχόμενο",
+    image: "Εικόνα",
+    add: "Προσθήκη",
+    empty: "Τίποτα ακόμη.",
+    delete: "Διαγραφή",
+  },
+  artiste: {
+    directory: "Καλλιτέχνες",
+    follow: "Ακολούθησε",
+    unfollow: "Διακοπή",
+    portfolio: "Portfolio",
+    posts: "Posts",
+    followers: (count) => `${count} ακόλουθοι`,
+    following: (count) => `${count} ακολουθεί`,
+    notFound: "Το προφίλ δεν βρέθηκε.",
+  },
+  shops: {
+    title: "Καταστήματα υλικών",
+    addShop: "Προσθήκη καταστήματος",
+    nom: "Όνομα",
+    adresse: "Διεύθυνση",
+    description: "Περιγραφή",
+    lien: "Σύνδεσμος",
+    add: "Προσθήκη",
+    empty: "Κανένα κατάστημα ακόμη.",
+    delete: "Διαγραφή",
+  },
+  calendar: {
+    tab: "Ημερολόγιο",
+    today: "Σήμερα",
   },
 };
 

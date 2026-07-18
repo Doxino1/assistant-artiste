@@ -24,8 +24,14 @@ export function Header({
           <Link href="/matching" className="text-foreground/60 hover:text-foreground">
             {t.nav.matching}
           </Link>
+          <Link href="/artistes" className="text-foreground/60 hover:text-foreground">
+            {t.artiste.directory}
+          </Link>
           <Link href="/communaute" className="text-foreground/60 hover:text-foreground">
             {t.nav.communaute}
+          </Link>
+          <Link href="/boutiques" className="text-foreground/60 hover:text-foreground">
+            {t.shops.title}
           </Link>
           <Link href="/profil" className="text-foreground/60 hover:text-foreground">
             {t.nav.profil}

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useT } from "@/lib/i18n/context";
 import { DISCIPLINES, MATCHING_TAGS, MatchingTag, PROFILE_TYPES, ProfileType, Ville } from "@/lib/types";
@@ -23,6 +24,9 @@ export default function ProfilPage() {
   const [bio, setBio] = useState("");
   const [emailContact, setEmailContact] = useState("");
   const [matchingTags, setMatchingTags] = useState<MatchingTag[]>([]);
+  const [portfolioPublic, setPortfolioPublic] = useState(true);
+  const [postsPublic, setPostsPublic] = useState(true);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -38,10 +42,12 @@ export default function ProfilPage() {
         return;
       }
 
+      setUserId(user.id);
+
       const [{ data, error: fetchError }, { data: tags, error: tagsError }] = await Promise.all([
         supabase
           .from("profiles")
-          .select("nom, ville, disciplines, type_profil, bio, email_contact")
+          .select("nom, ville, disciplines, type_profil, bio, email_contact, portfolio_public, posts_public")
           .eq("id", user.id)
           .single(),
         supabase.from("matching_tags").select("tag").eq("user_id", user.id),
@@ -58,6 +64,8 @@ export default function ProfilPage() {
         setDisciplines(data.disciplines ?? []);
         setBio(data.bio ?? "");
         setEmailContact(data.email_contact ?? "");
+        setPortfolioPublic(data.portfolio_public);
+        setPostsPublic(data.posts_public);
       }
       if (!tagsError && tags) {
         setMatchingTags(tags.map((row) => row.tag as MatchingTag));
@@ -104,6 +112,8 @@ export default function ProfilPage() {
         disciplines,
         bio,
         email_contact: emailContact || null,
+        portfolio_public: portfolioPublic,
+        posts_public: postsPublic,
       })
       .eq("id", user.id);
 
@@ -247,6 +257,24 @@ export default function ProfilPage() {
           />
         </label>
 
+        <label className="flex items-center gap-2 text-sm text-foreground/60">
+          <input
+            type="checkbox"
+            checked={portfolioPublic}
+            onChange={(e) => setPortfolioPublic(e.target.checked)}
+          />
+          {t.profil.portfolioPublic}
+        </label>
+
+        <label className="flex items-center gap-2 text-sm text-foreground/60">
+          <input
+            type="checkbox"
+            checked={postsPublic}
+            onChange={(e) => setPostsPublic(e.target.checked)}
+          />
+          {t.profil.postsPublic}
+        </label>
+
         {error && <p className="text-sm text-red-600">{error}</p>}
         {message && <p className="text-sm text-green-700">{message}</p>}
 
@@ -258,6 +286,23 @@ export default function ProfilPage() {
           {saving ? "…" : t.profil.save}
         </button>
       </form>
+
+      <div className="mt-6 flex flex-col gap-2 text-sm">
+        <Link href="/profil/portfolio" className="text-foreground/70 underline hover:text-foreground">
+          {t.profil.managePortfolio}
+        </Link>
+        <Link href="/profil/posts" className="text-foreground/70 underline hover:text-foreground">
+          {t.profil.managePosts}
+        </Link>
+        <Link href="/profil/bibliotheque" className="text-foreground/70 underline hover:text-foreground">
+          {t.profil.manageLibrary}
+        </Link>
+        {userId && (
+          <Link href={`/artistes/${userId}`} className="text-foreground/70 underline hover:text-foreground">
+            {t.artiste.portfolio} / {t.artiste.posts}
+          </Link>
+        )}
+      </div>
     </div>
   );
 }

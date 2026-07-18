@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n/context";
 
@@ -158,7 +159,9 @@ export default function CommunautePage() {
         {messages.map((m) => (
           <div key={m.id} className="rounded-lg border border-foreground/10 p-3">
             <div className="flex items-baseline justify-between gap-2 text-xs text-foreground/60">
-              <span className="font-medium text-foreground">{m.profiles?.nom || t.communaute.anonyme}</span>
+              <Link href={`/artistes/${m.user_id}`} className="font-medium text-foreground hover:underline">
+                {m.profiles?.nom || t.communaute.anonyme}
+              </Link>
               <span>{formatDate(m.date)}</span>
             </div>
             <p className="mt-1 text-sm">{m.texte}</p>

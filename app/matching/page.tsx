@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useT } from "@/lib/i18n/context";
 import { MatchingTag, ProfileType } from "@/lib/types";
@@ -138,7 +139,9 @@ export default function MatchingPage() {
         {suggestions.map((s) => (
           <div key={s.id} className="rounded-lg border border-foreground/10 p-4">
             <div className="flex items-center justify-between gap-2">
-              <h3 className="font-medium">{s.nom}</h3>
+              <Link href={`/artistes/${s.id}`} className="font-medium hover:underline">
+                {s.nom}
+              </Link>
               <span className="text-xs text-foreground/60">{t.profileTypeLabels[s.typeProfil]}</span>
             </div>
             <p className="mt-1 text-sm text-foreground/60">
