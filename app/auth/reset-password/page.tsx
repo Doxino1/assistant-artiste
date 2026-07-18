@@ -1,0 +1,100 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+
+export default function ResetPasswordPage() {
+  const router = useRouter();
+  const [ready, setReady] = useState(false);
+  const [password, setPassword] = useState("");
+  const [confirmation, setConfirmation] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    createClient()
+      .auth.getUser()
+      .then(({ data: { user } }) => {
+        if (!active) return;
+        if (!user) {
+          router.push("/login");
+          return;
+        }
+        setReady(true);
+      });
+    return () => {
+      active = false;
+    };
+  }, [router]);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (password !== confirmation) {
+      setError("Les deux mots de passe ne correspondent pas.");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    const supabase = createClient();
+    const { error: updateError } = await supabase.auth.updateUser({ password });
+
+    setLoading(false);
+    if (updateError) {
+      setError(updateError.message);
+      return;
+    }
+
+    router.push("/");
+    router.refresh();
+  }
+
+  if (!ready) {
+    return (
+      <div className="mx-auto w-full max-w-sm px-4 py-8">
+        <p className="text-sm text-foreground/60">Chargement…</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mx-auto w-full max-w-sm px-4 py-8">
+      <h1 className="text-xl font-semibold">Nouveau mot de passe</h1>
+
+      <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-3">
+        <input
+          type="password"
+          required
+          minLength={6}
+          placeholder="Nouveau mot de passe"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+        />
+        <input
+          type="password"
+          required
+          minLength={6}
+          placeholder="Confirmer le mot de passe"
+          value={confirmation}
+          onChange={(e) => setConfirmation(e.target.value)}
+          className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+        />
+
+        {error && <p className="text-sm text-red-600">{error}</p>}
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="mt-2 rounded-full bg-foreground px-4 py-2 text-sm text-background transition disabled:opacity-50"
+        >
+          {loading ? "…" : "Enregistrer le mot de passe"}
+        </button>
+      </form>
+    </div>
+  );
+}

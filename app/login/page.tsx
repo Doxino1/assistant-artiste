@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Ville } from "@/lib/types";
 
-type Mode = "connexion" | "inscription";
+type Mode = "connexion" | "inscription" | "mot_de_passe_oublie";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -25,6 +25,19 @@ export default function LoginPage() {
     setMessage(null);
 
     const supabase = createClient();
+
+    if (mode === "mot_de_passe_oublie") {
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth/callback?next=/auth/reset-password`,
+      });
+      setLoading(false);
+      if (resetError) {
+        setError(resetError.message);
+        return;
+      }
+      setMessage("Si un compte existe pour cette adresse, un lien de réinitialisation vient d'être envoyé.");
+      return;
+    }
 
     if (mode === "connexion") {
       const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
@@ -81,6 +94,12 @@ export default function LoginPage() {
         </button>
       </div>
 
+      {mode === "mot_de_passe_oublie" && (
+        <p className="mb-3 text-sm text-foreground/60">
+          Indique ton email, on t&apos;envoie un lien pour choisir un nouveau mot de passe.
+        </p>
+      )}
+
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <input
           type="email"
@@ -90,15 +109,32 @@ export default function LoginPage() {
           onChange={(e) => setEmail(e.target.value)}
           className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
         />
-        <input
-          type="password"
-          required
-          minLength={6}
-          placeholder="Mot de passe"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
-        />
+
+        {mode !== "mot_de_passe_oublie" && (
+          <input
+            type="password"
+            required
+            minLength={6}
+            placeholder="Mot de passe"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+          />
+        )}
+
+        {mode === "connexion" && (
+          <button
+            type="button"
+            onClick={() => {
+              setMode("mot_de_passe_oublie");
+              setError(null);
+              setMessage(null);
+            }}
+            className="self-start text-sm text-foreground/60 hover:text-foreground"
+          >
+            Mot de passe oublié ?
+          </button>
+        )}
 
         {mode === "inscription" && (
           <>
@@ -129,7 +165,13 @@ export default function LoginPage() {
           disabled={loading}
           className="mt-2 rounded-full bg-foreground px-4 py-2 text-sm text-background transition disabled:opacity-50"
         >
-          {loading ? "…" : mode === "connexion" ? "Se connecter" : "S'inscrire"}
+          {loading
+            ? "…"
+            : mode === "connexion"
+              ? "Se connecter"
+              : mode === "inscription"
+                ? "S'inscrire"
+                : "Envoyer le lien"}
         </button>
       </form>
     </div>
