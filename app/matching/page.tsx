@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { MATCHING_TAG_LABELS, MatchingTag, PROFILE_TYPE_LABELS, ProfileType } from "@/lib/types";
+import { useT } from "@/lib/i18n/context";
+import { MatchingTag, ProfileType } from "@/lib/types";
 
 interface Suggestion {
   id: string;
@@ -17,6 +18,7 @@ interface Suggestion {
 }
 
 export default function MatchingPage() {
+  const t = useT();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -45,12 +47,12 @@ export default function MatchingPage() {
       if (!active) return;
 
       if (meError || !me) {
-        setError(meError?.message ?? "Profil introuvable.");
+        setError(meError?.message ?? t.common.profileNotFound);
         setLoading(false);
         return;
       }
 
-      const mine = (myTagRows ?? []).map((t) => t.tag as MatchingTag);
+      const mine = (myTagRows ?? []).map((row) => row.tag as MatchingTag);
       setMyTags(mine);
 
       const [{ data: candidates, error: candidatesError }, { data: allTags }] = await Promise.all([
@@ -82,7 +84,7 @@ export default function MatchingPage() {
         const candidateDisciplines: string[] = c.disciplines ?? [];
         const candidateTags = tagsByUser.get(c.id) ?? [];
         const sharedDisciplines = candidateDisciplines.filter((d) => me.disciplines.includes(d));
-        const sharedTags = candidateTags.filter((t) => mine.includes(t));
+        const sharedTags = candidateTags.filter((tag) => mine.includes(tag));
 
         if (sharedDisciplines.length > 0 && sharedTags.length > 0) {
           results.push({
@@ -106,35 +108,30 @@ export default function MatchingPage() {
     return () => {
       active = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   if (loading) {
     return (
       <div className="mx-auto w-full max-w-2xl px-4 py-8">
-        <p className="text-sm text-foreground/60">Chargement…</p>
+        <p className="text-sm text-foreground/60">{t.common.loading}</p>
       </div>
     );
   }
 
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8">
-      <h1 className="text-xl font-semibold">Suggestions de matching</h1>
-      <p className="mt-1 text-sm text-foreground/60">
-        Même ville, discipline en commun, et un tag &laquo; je cherche &raquo; partagé.
-      </p>
+      <h1 className="text-xl font-semibold">{t.matching.title}</h1>
+      <p className="mt-1 text-sm text-foreground/60">{t.matching.subtitle}</p>
 
       {error && <p className="mt-6 text-sm text-red-600">{error}</p>}
 
       {!error && myTags.length === 0 && (
-        <p className="mt-6 text-sm text-foreground/60">
-          Ajoute au moins un tag « je cherche » sur ton profil pour voir des suggestions.
-        </p>
+        <p className="mt-6 text-sm text-foreground/60">{t.matching.needTag}</p>
       )}
 
       {!error && myTags.length > 0 && suggestions.length === 0 && (
-        <p className="mt-6 text-sm text-foreground/60">
-          Aucune suggestion pour l&apos;instant — reviens plus tard.
-        </p>
+        <p className="mt-6 text-sm text-foreground/60">{t.matching.noResults}</p>
       )}
 
       <div className="mt-6 flex flex-col gap-3">
@@ -142,9 +139,11 @@ export default function MatchingPage() {
           <div key={s.id} className="rounded-lg border border-foreground/10 p-4">
             <div className="flex items-center justify-between gap-2">
               <h3 className="font-medium">{s.nom}</h3>
-              <span className="text-xs text-foreground/60">{PROFILE_TYPE_LABELS[s.typeProfil]}</span>
+              <span className="text-xs text-foreground/60">{t.profileTypeLabels[s.typeProfil]}</span>
             </div>
-            <p className="mt-1 text-sm text-foreground/60">{s.disciplines.join(", ")}</p>
+            <p className="mt-1 text-sm text-foreground/60">
+              {s.disciplines.map((d) => t.disciplineLabels[d] ?? d).join(", ")}
+            </p>
             {s.bio && <p className="mt-2 text-sm">{s.bio}</p>}
             <div className="mt-3 flex flex-wrap gap-1">
               {s.sharedTags.map((tag) => (
@@ -152,7 +151,7 @@ export default function MatchingPage() {
                   key={tag}
                   className="rounded-full bg-foreground/5 px-2 py-0.5 text-xs text-foreground/60"
                 >
-                  {MATCHING_TAG_LABELS[tag]}
+                  {t.matchingTagLabels[tag]}
                 </span>
               ))}
             </div>
@@ -162,10 +161,10 @@ export default function MatchingPage() {
                   href={`mailto:${s.emailContact}`}
                   className="rounded-full border border-foreground/20 px-3 py-1 text-sm hover:border-foreground/40"
                 >
-                  Contacter
+                  {t.matching.contact}
                 </a>
               ) : (
-                <span className="text-xs text-foreground/40">Pas de contact renseigné</span>
+                <span className="text-xs text-foreground/40">{t.matching.noContact}</span>
               )}
             </div>
           </div>

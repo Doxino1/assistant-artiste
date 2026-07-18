@@ -5,32 +5,22 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SaveButtons } from "@/components/SaveButtons";
 import { useEvents } from "@/lib/use-events";
-import { ArtEvent, EVENT_TYPE_LABELS } from "@/lib/types";
 import { formatInVille } from "@/lib/timezone";
 import { useSavedEvents } from "@/lib/use-saved-events";
-
-function formatDate(event: ArtEvent) {
-  return formatInVille(event.date, event.ville, {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
+import { useLocale } from "@/lib/i18n/context";
 
 export default function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const { events, loading, error } = useEvents();
   const { saved, setStatus, canSave } = useSavedEvents();
+  const { locale, t } = useLocale();
 
   const event = events.find((e) => e.id === id);
 
   if (loading) {
     return (
       <div className="mx-auto w-full max-w-2xl px-4 py-8">
-        <p className="text-sm text-foreground/60">Chargement…</p>
+        <p className="text-sm text-foreground/60">{t.common.loading}</p>
       </div>
     );
   }
@@ -38,36 +28,49 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
   if (error) {
     return (
       <div className="mx-auto w-full max-w-2xl px-4 py-8">
-        <p className="text-sm text-red-600">Impossible de charger l&apos;événement ({error}).</p>
+        <p className="text-sm text-red-600">{t.eventDetail.loadError(error)}</p>
       </div>
     );
   }
 
   if (!event) notFound();
 
+  const date = formatInVille(
+    event.date,
+    event.ville,
+    {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    },
+    locale
+  );
+
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8">
       <Link href="/" className="text-sm text-foreground/60 hover:text-foreground">
-        ← Retour aux événements
+        {t.eventDetail.back}
       </Link>
 
       <div className="mt-4 flex items-center justify-between gap-2 text-xs text-foreground/60">
         <span className="rounded-full bg-foreground/5 px-2 py-0.5">
-          {EVENT_TYPE_LABELS[event.type]}
+          {t.eventTypeLabels[event.type]}
         </span>
-        <span>{event.ville}</span>
+        <span>{t.villeLabels[event.ville]}</span>
       </div>
 
       <h1 className="mt-3 text-2xl font-semibold">{event.titre}</h1>
-      <p className="mt-1 text-sm text-foreground/60">{formatDate(event)}</p>
+      <p className="mt-1 text-sm text-foreground/60">{date}</p>
       <p className="mt-1 text-sm text-foreground/60">{event.lieu}</p>
 
       <p className="mt-6 text-base leading-relaxed">{event.description}</p>
 
       {event.type === "annonce" && (
         <p className="mt-4 rounded-md bg-foreground/5 px-3 py-2 text-xs text-foreground/60">
-          Annonce entre particuliers : la transaction se fait directement avec la personne, en
-          dehors de l&apos;application.
+          {t.eventDetail.annonceDisclaimer}
         </p>
       )}
 
@@ -76,7 +79,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
           <SaveButtons status={saved[event.id]} onChange={(status) => setStatus(event.id, status)} />
         ) : (
           <Link href="/login" className="text-sm text-foreground/40 hover:text-foreground/60">
-            Connecte-toi pour sauvegarder
+            {t.saveButtons.loginToSave}
           </Link>
         )}
       </div>

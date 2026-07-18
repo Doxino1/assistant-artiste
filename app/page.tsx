@@ -7,7 +7,8 @@ import { useEvents } from "@/lib/use-events";
 import { useSavedEvents } from "@/lib/use-saved-events";
 import { createClient } from "@/lib/supabase/client";
 import { formatInVille } from "@/lib/timezone";
-import { DISCIPLINES, EVENT_TYPE_LABELS, EventType, Ville } from "@/lib/types";
+import { useT } from "@/lib/i18n/context";
+import { DISCIPLINES, EventType, Ville } from "@/lib/types";
 
 const VILLES: Ville[] = ["Paris", "Athènes"];
 
@@ -22,11 +23,6 @@ interface MySubmission {
   statut: SubmissionStatut;
 }
 
-const STATUT_LABELS: Record<SubmissionStatut, string> = {
-  en_attente: "En attente de validation",
-  publie: "Publié",
-};
-
 function pillClass(active: boolean) {
   return `rounded-full border px-4 py-1.5 text-sm transition ${
     active
@@ -36,6 +32,7 @@ function pillClass(active: boolean) {
 }
 
 export default function EvenementsPage() {
+  const t = useT();
   const { events: allEvents, loading, error } = useEvents();
   const { saved } = useSavedEvents();
 
@@ -48,6 +45,7 @@ export default function EvenementsPage() {
   const [userId, setUserId] = useState<string | null>(null);
   const [checkingUser, setCheckingUser] = useState(true);
   const [submissions, setSubmissions] = useState<MySubmission[] | null>(null);
+  const [now] = useState(() => Date.now());
 
   useEffect(() => {
     let active = true;
@@ -83,6 +81,7 @@ export default function EvenementsPage() {
   const events = useMemo(() => {
     const q = query.trim().toLowerCase();
     return allEvents
+      .filter((e) => new Date(e.date).getTime() >= now)
       .filter((e) => e.ville === ville)
       .filter((e) => !type || e.type === type)
       .filter((e) => !discipline || e.discipline === discipline)
@@ -93,7 +92,7 @@ export default function EvenementsPage() {
           e.description.toLowerCase().includes(q)
       )
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  }, [allEvents, ville, type, discipline, query]);
+  }, [allEvents, ville, type, discipline, query, now]);
 
   const savedEvents = allEvents
     .filter((e) => saved[e.id] === "sauvegarde")
@@ -108,10 +107,10 @@ export default function EvenementsPage() {
       <div className="mb-6 flex items-center justify-between gap-2">
         <div className="flex gap-2">
           <button onClick={() => setTab("tous")} className={pillClass(tab === "tous")}>
-            Tous
+            {t.evenements.tabTous}
           </button>
           <button onClick={() => setTab("mes")} className={pillClass(tab === "mes")}>
-            Mes événements
+            {t.evenements.tabMes}
           </button>
         </div>
         {userId && (
@@ -119,7 +118,7 @@ export default function EvenementsPage() {
             href="/evenements/nouveau"
             className="rounded-full bg-foreground px-4 py-1.5 text-sm text-background transition hover:opacity-90"
           >
-            + Proposer
+            {t.evenements.proposer}
           </Link>
         )}
       </div>
@@ -129,14 +128,14 @@ export default function EvenementsPage() {
           <div className="mb-6 flex gap-2">
             {VILLES.map((v) => (
               <button key={v} onClick={() => setVille(v)} className={pillClass(ville === v)}>
-                {v}
+                {t.villeLabels[v]}
               </button>
             ))}
           </div>
 
           <input
             type="search"
-            placeholder="Rechercher un événement…"
+            placeholder={t.evenements.searchPlaceholder}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="mb-4 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
@@ -147,9 +146,9 @@ export default function EvenementsPage() {
               onClick={() => setType("")}
               className={`shrink-0 whitespace-nowrap ${pillClass(type === "")}`}
             >
-              Tous types
+              {t.evenements.tousTypes}
             </button>
-            {Object.entries(EVENT_TYPE_LABELS).map(([value, label]) => (
+            {Object.entries(t.eventTypeLabels).map(([value, label]) => (
               <button
                 key={value}
                 onClick={() => setType(value as EventType)}
@@ -165,7 +164,7 @@ export default function EvenementsPage() {
               onClick={() => setDiscipline("")}
               className={`shrink-0 whitespace-nowrap ${pillClass(discipline === "")}`}
             >
-              Toutes disciplines
+              {t.evenements.toutesDisciplines}
             </button>
             {DISCIPLINES.map((d) => (
               <button
@@ -173,20 +172,16 @@ export default function EvenementsPage() {
                 onClick={() => setDiscipline(d)}
                 className={`shrink-0 whitespace-nowrap ${pillClass(discipline === d)}`}
               >
-                {d}
+                {t.disciplineLabels[d]}
               </button>
             ))}
           </div>
 
           <div className="flex flex-col gap-3">
-            {loading && <p className="text-sm text-foreground/60">Chargement des événements…</p>}
-            {error && (
-              <p className="text-sm text-red-600">
-                Impossible de charger les événements ({error}).
-              </p>
-            )}
+            {loading && <p className="text-sm text-foreground/60">{t.common.loading}</p>}
+            {error && <p className="text-sm text-red-600">{t.evenements.loadError(error)}</p>}
             {!loading && !error && events.length === 0 && (
-              <p className="text-sm text-foreground/60">Aucun événement ne correspond à ces filtres.</p>
+              <p className="text-sm text-foreground/60">{t.evenements.noResults}</p>
             )}
             {events.map((event) => (
               <EventCard key={event.id} event={event} />
@@ -197,24 +192,24 @@ export default function EvenementsPage() {
 
       {tab === "mes" && (
         <>
-          {checkingUser && <p className="text-sm text-foreground/60">Chargement…</p>}
+          {checkingUser && <p className="text-sm text-foreground/60">{t.common.loading}</p>}
 
           {!checkingUser && !userId && (
             <p className="text-sm text-foreground/60">
               <Link href="/login" className="underline hover:text-foreground">
-                Connecte-toi
+                {t.evenements.loginLink}
               </Link>{" "}
-              pour voir tes événements.
+              {t.evenements.loginToSee}
             </p>
           )}
 
           {!checkingUser && userId && (
             <>
               <section>
-                <h2 className="text-sm font-medium text-foreground/60">Je viens</h2>
+                <h2 className="text-sm font-medium text-foreground/60">{t.evenements.jeViens}</h2>
                 <div className="mt-3 flex flex-col gap-3">
                   {goingEvents.length === 0 && (
-                    <p className="text-sm text-foreground/60">Aucun événement pour l&apos;instant.</p>
+                    <p className="text-sm text-foreground/60">{t.evenements.noneYet}</p>
                   )}
                   {goingEvents.map((event) => (
                     <EventCard key={event.id} event={event} />
@@ -223,10 +218,10 @@ export default function EvenementsPage() {
               </section>
 
               <section className="mt-8">
-                <h2 className="text-sm font-medium text-foreground/60">Sauvegardés</h2>
+                <h2 className="text-sm font-medium text-foreground/60">{t.evenements.sauvegardes}</h2>
                 <div className="mt-3 flex flex-col gap-3">
                   {savedEvents.length === 0 && (
-                    <p className="text-sm text-foreground/60">Aucun événement pour l&apos;instant.</p>
+                    <p className="text-sm text-foreground/60">{t.evenements.noneYet}</p>
                   )}
                   {savedEvents.map((event) => (
                     <EventCard key={event.id} event={event} />
@@ -235,15 +230,13 @@ export default function EvenementsPage() {
               </section>
 
               <section className="mt-8">
-                <h2 className="text-sm font-medium text-foreground/60">Mes soumissions</h2>
+                <h2 className="text-sm font-medium text-foreground/60">{t.evenements.mesSoumissions}</h2>
                 <div className="mt-3 flex flex-col gap-3">
                   {submissions === null && (
-                    <p className="text-sm text-foreground/60">Chargement…</p>
+                    <p className="text-sm text-foreground/60">{t.common.loading}</p>
                   )}
                   {submissions !== null && submissions.length === 0 && (
-                    <p className="text-sm text-foreground/60">
-                      Aucun événement proposé pour l&apos;instant.
-                    </p>
+                    <p className="text-sm text-foreground/60">{t.evenements.noSubmissions}</p>
                   )}
                   {(submissions ?? []).map((s) => (
                     <div key={s.id} className="rounded-lg border border-foreground/10 p-4">
@@ -256,11 +249,13 @@ export default function EvenementsPage() {
                               : "bg-foreground/5 text-foreground/60"
                           }`}
                         >
-                          {STATUT_LABELS[s.statut]}
+                          {s.statut === "publie"
+                            ? t.evenements.statutPublie
+                            : t.evenements.statutEnAttente}
                         </span>
                       </div>
                       <p className="mt-1 text-sm text-foreground/60">
-                        {s.ville} ·{" "}
+                        {t.villeLabels[s.ville]} ·{" "}
                         {formatInVille(s.date, s.ville, {
                           day: "numeric",
                           month: "short",
@@ -268,6 +263,14 @@ export default function EvenementsPage() {
                           minute: "2-digit",
                         })}
                       </p>
+                      <div className="mt-2 flex gap-3 text-xs">
+                        <Link
+                          href={`/evenements/${s.id}/modifier`}
+                          className="text-foreground/60 underline hover:text-foreground"
+                        >
+                          {t.evenements.editLink}
+                        </Link>
+                      </div>
                     </div>
                   ))}
                 </div>

@@ -10,7 +10,8 @@
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import { formatInVille } from "../lib/timezone.ts";
-import { EVENT_TYPE_LABELS } from "../lib/types.ts";
+import { LOCALES, dictionaries } from "../lib/i18n/dictionary.ts";
+import type { Locale } from "../lib/i18n/dictionary.ts";
 import type { ArtEvent, Ville } from "../lib/types.ts";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -36,6 +37,7 @@ interface ProfileRow {
   nom: string;
   ville: string;
   disciplines: string[];
+  langue_preferee: string | null;
 }
 
 interface EventRow {
@@ -45,9 +47,12 @@ interface EventRow {
   type: ArtEvent["type"];
   discipline: string | null;
   ville: string;
-  quartier: string | null;
   date: string;
   lieu: string | null;
+}
+
+function resolveLocale(langue: string | null): Locale {
+  return langue && (LOCALES as string[]).includes(langue) ? (langue as Locale) : "fr";
 }
 
 function escapeHtml(value: string): string {
@@ -59,37 +64,35 @@ function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
-function eventHtml(event: EventRow): string {
-  const date = formatInVille(event.date, event.ville as Ville, {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+function eventHtml(event: EventRow, locale: Locale): string {
+  const t = dictionaries[locale];
+  const date = formatInVille(
+    event.date,
+    event.ville as Ville,
+    { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" },
+    locale
+  );
   const link = SITE_URL ? `${SITE_URL}/events/${event.id}` : null;
   const titreSafe = escapeHtml(event.titre);
   const titre = link ? `<a href="${escapeHtml(link)}">${titreSafe}</a>` : titreSafe;
-  const lieuLigne = [event.quartier, event.lieu]
-    .filter((v): v is string => Boolean(v))
-    .map(escapeHtml)
-    .join(" · ");
+  const lieu = event.lieu ? escapeHtml(event.lieu) : "";
 
   return `
     <li style="margin-bottom: 16px;">
-      <div style="font-size: 12px; color: #666;">${EVENT_TYPE_LABELS[event.type]} · ${date}</div>
+      <div style="font-size: 12px; color: #666;">${t.eventTypeLabels[event.type]} · ${date}</div>
       <div style="font-weight: 600;">${titre}</div>
-      <div style="font-size: 13px; color: #666;">${lieuLigne}</div>
+      <div style="font-size: 13px; color: #666;">${lieu}</div>
     </li>`;
 }
 
-function digestHtml(nom: string, ville: string, events: EventRow[]): string {
+function digestHtml(nom: string, ville: string, events: EventRow[], locale: Locale): string {
+  const t = dictionaries[locale];
   return `
     <div style="font-family: sans-serif; max-width: 480px;">
-      <p>Bonjour ${escapeHtml(nom || "")},</p>
-      <p>Voici les événements à ${escapeHtml(ville)} pour les 7 prochains jours :</p>
+      <p>${escapeHtml(t.weeklyEmail.greeting(nom || ""))}</p>
+      <p>${escapeHtml(t.weeklyEmail.intro(ville))}</p>
       <ul style="list-style: none; padding: 0;">
-        ${events.map(eventHtml).join("")}
+        ${events.map((e) => eventHtml(e, locale)).join("")}
       </ul>
     </div>`;
 }
@@ -100,10 +103,10 @@ async function main() {
 
   const [{ data: profiles, error: profilesError }, { data: events, error: eventsError }] =
     await Promise.all([
-      supabase.from("profiles").select("id, nom, ville, disciplines"),
+      supabase.from("profiles").select("id, nom, ville, disciplines, langue_preferee"),
       supabase
         .from("events")
-        .select("id, titre, description, type, discipline, ville, quartier, date, lieu")
+        .select("id, titre, description, type, discipline, ville, date, lieu")
         .eq("statut", "publie")
         .gte("date", now.toISOString())
         .lt("date", in7Days.toISOString())
@@ -147,11 +150,14 @@ async function main() {
       continue;
     }
 
-    const subject = `${relevant.length} événement${relevant.length > 1 ? "s" : ""} à ${profile.ville} cette semaine`;
-    const html = digestHtml(profile.nom, profile.ville, relevant);
+    const locale = resolveLocale(profile.langue_preferee);
+    const t = dictionaries[locale];
+    const villeLabel = t.villeLabels[profile.ville as Ville] ?? profile.ville;
+    const subject = t.weeklyEmail.subject(relevant.length, villeLabel);
+    const html = digestHtml(profile.nom, villeLabel, relevant, locale);
 
     if (dryRun) {
-      console.log(`[dry-run] ${email} — ${subject}`);
+      console.log(`[dry-run] ${email} (${locale}) — ${subject}`);
       sent += 1;
       continue;
     }

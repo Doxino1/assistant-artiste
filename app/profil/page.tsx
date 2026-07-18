@@ -3,20 +3,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import {
-  DISCIPLINES,
-  MATCHING_TAG_LABELS,
-  MatchingTag,
-  PROFILE_TYPE_LABELS,
-  ProfileType,
-  Ville,
-} from "@/lib/types";
+import { useT } from "@/lib/i18n/context";
+import { DISCIPLINES, MATCHING_TAGS, MatchingTag, PROFILE_TYPES, ProfileType, Ville } from "@/lib/types";
 
 const VILLES: Ville[] = ["Paris", "Athènes"];
-const PROFILE_TYPES = Object.keys(PROFILE_TYPE_LABELS) as ProfileType[];
-const MATCHING_TAGS = Object.keys(MATCHING_TAG_LABELS) as MatchingTag[];
 
 export default function ProfilPage() {
+  const t = useT();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -67,7 +60,7 @@ export default function ProfilPage() {
         setEmailContact(data.email_contact ?? "");
       }
       if (!tagsError && tags) {
-        setMatchingTags(tags.map((t) => t.tag as MatchingTag));
+        setMatchingTags(tags.map((row) => row.tag as MatchingTag));
       }
       setLoading(false);
     }
@@ -136,24 +129,24 @@ export default function ProfilPage() {
       setError(deleteTagsError.message);
       return;
     }
-    setMessage("Profil mis à jour.");
+    setMessage(t.profil.saved);
   }
 
   if (loading) {
     return (
       <div className="mx-auto w-full max-w-sm px-4 py-8">
-        <p className="text-sm text-foreground/60">Chargement…</p>
+        <p className="text-sm text-foreground/60">{t.common.loading}</p>
       </div>
     );
   }
 
   return (
     <div className="mx-auto w-full max-w-sm px-4 py-8">
-      <h1 className="text-xl font-semibold">Mon profil</h1>
+      <h1 className="text-xl font-semibold">{t.profil.title}</h1>
 
       <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-3">
         <label className="text-sm text-foreground/60">
-          Nom
+          {t.profil.nom}
           <input
             type="text"
             required
@@ -164,7 +157,7 @@ export default function ProfilPage() {
         </label>
 
         <label className="text-sm text-foreground/60">
-          Ville
+          {t.profil.ville}
           <select
             value={ville}
             onChange={(e) => setVille(e.target.value as Ville)}
@@ -172,29 +165,29 @@ export default function ProfilPage() {
           >
             {VILLES.map((v) => (
               <option key={v} value={v}>
-                {v}
+                {t.villeLabels[v]}
               </option>
             ))}
           </select>
         </label>
 
         <label className="text-sm text-foreground/60">
-          Type de profil
+          {t.profil.typeProfil}
           <select
             value={typeProfil}
             onChange={(e) => setTypeProfil(e.target.value as ProfileType)}
             className="mt-1 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
           >
-            {PROFILE_TYPES.map((t) => (
-              <option key={t} value={t}>
-                {PROFILE_TYPE_LABELS[t]}
+            {PROFILE_TYPES.map((pt) => (
+              <option key={pt} value={pt}>
+                {t.profileTypeLabels[pt]}
               </option>
             ))}
           </select>
         </label>
 
         <div className="text-sm text-foreground/60">
-          Disciplines
+          {t.profil.disciplines}
           <div className="mt-1 flex flex-wrap gap-2">
             {DISCIPLINES.map((d) => (
               <button
@@ -207,14 +200,14 @@ export default function ProfilPage() {
                     : "border-foreground/20 hover:border-foreground/40"
                 }`}
               >
-                {d}
+                {t.disciplineLabels[d]}
               </button>
             ))}
           </div>
         </div>
 
         <label className="text-sm text-foreground/60">
-          Bio
+          {t.profil.bio}
           <textarea
             value={bio}
             onChange={(e) => setBio(e.target.value)}
@@ -224,7 +217,7 @@ export default function ProfilPage() {
         </label>
 
         <div className="text-sm text-foreground/60">
-          Je cherche
+          {t.profil.jeCherche}
           <div className="mt-1 flex flex-wrap gap-2">
             {MATCHING_TAGS.map((tag) => (
               <button
@@ -237,19 +230,19 @@ export default function ProfilPage() {
                     : "border-foreground/20 hover:border-foreground/40"
                 }`}
               >
-                {MATCHING_TAG_LABELS[tag]}
+                {t.matchingTagLabels[tag]}
               </button>
             ))}
           </div>
         </div>
 
         <label className="text-sm text-foreground/60">
-          Email de contact <span className="text-foreground/40">(optionnel, visible des autres artistes)</span>
+          {t.profil.emailContact} <span className="text-foreground/40">{t.profil.emailContactHint}</span>
           <input
             type="email"
             value={emailContact}
             onChange={(e) => setEmailContact(e.target.value)}
-            placeholder="Laisse vide pour ne pas être contactable"
+            placeholder={t.profil.emailContactPlaceholder}
             className="mt-1 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
           />
         </label>
@@ -262,7 +255,7 @@ export default function ProfilPage() {
           disabled={saving}
           className="mt-2 rounded-full bg-foreground px-4 py-2 text-sm text-background transition disabled:opacity-50"
         >
-          {saving ? "…" : "Enregistrer"}
+          {saving ? "…" : t.profil.save}
         </button>
       </form>
     </div>

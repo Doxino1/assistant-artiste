@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Link from "next/link";
-import { SignOutButton } from "@/components/SignOutButton";
+import { Header } from "@/components/Header";
+import { LocaleProvider } from "@/lib/i18n/context";
 import { createClient } from "@/lib/supabase/server";
 import "./globals.css";
 
@@ -36,39 +36,12 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <header className="border-b border-foreground/10">
-          <nav className="mx-auto flex w-full max-w-2xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 text-sm">
-            <Link href="/" className="font-medium">
-              Événements
-            </Link>
-            {user && (
-              <>
-                <Link href="/matching" className="text-foreground/60 hover:text-foreground">
-                  Matching
-                </Link>
-                <Link href="/communaute" className="text-foreground/60 hover:text-foreground">
-                  Communauté
-                </Link>
-                <Link href="/profil" className="text-foreground/60 hover:text-foreground">
-                  Profil
-                </Link>
-              </>
-            )}
-            <div className="ml-auto flex items-center gap-4">
-              {user ? (
-                <>
-                  <span className="text-foreground/60">{user.email}</span>
-                  <SignOutButton />
-                </>
-              ) : (
-                <Link href="/login" className="text-foreground/60 hover:text-foreground">
-                  Connexion
-                </Link>
-              )}
-            </div>
-          </nav>
-        </header>
-        {children}
+        <LocaleProvider>
+          <header className="border-b border-foreground/10">
+            <Header userEmail={user?.email ?? null} />
+          </header>
+          {children}
+        </LocaleProvider>
       </body>
     </html>
   );

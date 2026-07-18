@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useT } from "@/lib/i18n/context";
 
 export default function ResetPasswordPage() {
+  const t = useT();
   const router = useRouter();
   const [ready, setReady] = useState(false);
   const [password, setPassword] = useState("");
@@ -33,7 +35,7 @@ export default function ResetPasswordPage() {
     e.preventDefault();
 
     if (password !== confirmation) {
-      setError("Les deux mots de passe ne correspondent pas.");
+      setError(t.resetPassword.mismatch);
       return;
     }
 
@@ -56,21 +58,21 @@ export default function ResetPasswordPage() {
   if (!ready) {
     return (
       <div className="mx-auto w-full max-w-sm px-4 py-8">
-        <p className="text-sm text-foreground/60">Chargement…</p>
+        <p className="text-sm text-foreground/60">{t.common.loading}</p>
       </div>
     );
   }
 
   return (
     <div className="mx-auto w-full max-w-sm px-4 py-8">
-      <h1 className="text-xl font-semibold">Nouveau mot de passe</h1>
+      <h1 className="text-xl font-semibold">{t.resetPassword.title}</h1>
 
       <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-3">
         <input
           type="password"
           required
           minLength={6}
-          placeholder="Nouveau mot de passe"
+          placeholder={t.resetPassword.nouveauMotDePasse}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
@@ -79,7 +81,7 @@ export default function ResetPasswordPage() {
           type="password"
           required
           minLength={6}
-          placeholder="Confirmer le mot de passe"
+          placeholder={t.resetPassword.confirmerMotDePasse}
           value={confirmation}
           onChange={(e) => setConfirmation(e.target.value)}
           className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
@@ -92,7 +94,7 @@ export default function ResetPasswordPage() {
           disabled={loading}
           className="mt-2 rounded-full bg-foreground px-4 py-2 text-sm text-background transition disabled:opacity-50"
         >
-          {loading ? "…" : "Enregistrer le mot de passe"}
+          {loading ? "…" : t.resetPassword.submit}
         </button>
       </form>
     </div>

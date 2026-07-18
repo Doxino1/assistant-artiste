@@ -4,10 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Ville } from "@/lib/types";
+import { useT } from "@/lib/i18n/context";
 
 type Mode = "connexion" | "inscription" | "mot_de_passe_oublie";
 
 export default function LoginPage() {
+  const t = useT();
   const router = useRouter();
   const [mode, setMode] = useState<Mode>("connexion");
   const [email, setEmail] = useState("");
@@ -17,6 +19,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [resending, setResending] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -35,7 +38,7 @@ export default function LoginPage() {
         setError(resetError.message);
         return;
       }
-      setMessage("Si un compte existe pour cette adresse, un lien de réinitialisation vient d'être envoyé.");
+      setMessage(t.auth.resetEmailSent);
       return;
     }
 
@@ -64,7 +67,31 @@ export default function LoginPage() {
       setError(signUpError.message);
       return;
     }
-    setMessage("Compte créé ! Vérifie ta boîte mail pour confirmer ton adresse avant de te connecter.");
+    setMessage(t.auth.accountCreated);
+  }
+
+  async function handleResendConfirmation() {
+    if (!email) {
+      setError(t.auth.email);
+      return;
+    }
+    setResending(true);
+    setError(null);
+    setMessage(null);
+
+    const supabase = createClient();
+    const { error: resendError } = await supabase.auth.resend({
+      type: "signup",
+      email,
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+    });
+
+    setResending(false);
+    if (resendError) {
+      setError(resendError.message);
+      return;
+    }
+    setMessage(t.auth.resendConfirmationSent);
   }
 
   return (
@@ -79,7 +106,7 @@ export default function LoginPage() {
               : "border-foreground/20 hover:border-foreground/40"
           }`}
         >
-          Se connecter
+          {t.auth.seConnecter}
         </button>
         <button
           type="button"
@@ -90,21 +117,19 @@ export default function LoginPage() {
               : "border-foreground/20 hover:border-foreground/40"
           }`}
         >
-          S&apos;inscrire
+          {t.auth.sInscrire}
         </button>
       </div>
 
       {mode === "mot_de_passe_oublie" && (
-        <p className="mb-3 text-sm text-foreground/60">
-          Indique ton email, on t&apos;envoie un lien pour choisir un nouveau mot de passe.
-        </p>
+        <p className="mb-3 text-sm text-foreground/60">{t.auth.resetInstructions}</p>
       )}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <input
           type="email"
           required
-          placeholder="Email"
+          placeholder={t.auth.email}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
@@ -115,7 +140,7 @@ export default function LoginPage() {
             type="password"
             required
             minLength={6}
-            placeholder="Mot de passe"
+            placeholder={t.auth.motDePasse}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
@@ -123,17 +148,27 @@ export default function LoginPage() {
         )}
 
         {mode === "connexion" && (
-          <button
-            type="button"
-            onClick={() => {
-              setMode("mot_de_passe_oublie");
-              setError(null);
-              setMessage(null);
-            }}
-            className="self-start text-sm text-foreground/60 hover:text-foreground"
-          >
-            Mot de passe oublié ?
-          </button>
+          <div className="flex flex-col items-start gap-1">
+            <button
+              type="button"
+              onClick={() => {
+                setMode("mot_de_passe_oublie");
+                setError(null);
+                setMessage(null);
+              }}
+              className="text-sm text-foreground/60 hover:text-foreground"
+            >
+              {t.auth.motDePasseOublie}
+            </button>
+            <button
+              type="button"
+              onClick={handleResendConfirmation}
+              disabled={resending}
+              className="text-sm text-foreground/60 hover:text-foreground disabled:opacity-50"
+            >
+              {resending ? "…" : t.auth.resendConfirmation}
+            </button>
+          </div>
         )}
 
         {mode === "inscription" && (
@@ -141,7 +176,7 @@ export default function LoginPage() {
             <input
               type="text"
               required
-              placeholder="Nom"
+              placeholder={t.auth.nom}
               value={nom}
               onChange={(e) => setNom(e.target.value)}
               className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
@@ -151,8 +186,8 @@ export default function LoginPage() {
               onChange={(e) => setVille(e.target.value as Ville)}
               className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
             >
-              <option value="Paris">Paris</option>
-              <option value="Athènes">Athènes</option>
+              <option value="Paris">{t.villeLabels.Paris}</option>
+              <option value="Athènes">{t.villeLabels["Athènes"]}</option>
             </select>
           </>
         )}
@@ -168,10 +203,10 @@ export default function LoginPage() {
           {loading
             ? "…"
             : mode === "connexion"
-              ? "Se connecter"
+              ? t.auth.seConnecter
               : mode === "inscription"
-                ? "S'inscrire"
-                : "Envoyer le lien"}
+                ? t.auth.sInscrire
+                : t.auth.envoyerLeLien}
         </button>
       </form>
     </div>

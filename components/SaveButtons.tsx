@@ -1,6 +1,7 @@
 "use client";
 
 import { SavedStatus } from "@/lib/types";
+import { useT } from "@/lib/i18n/context";
 
 interface SaveButtonsProps {
   status?: SavedStatus;
@@ -8,6 +9,8 @@ interface SaveButtonsProps {
 }
 
 export function SaveButtons({ status, onChange }: SaveButtonsProps) {
+  const t = useT();
+
   return (
     <div className="flex gap-2">
       <button
@@ -19,7 +22,7 @@ export function SaveButtons({ status, onChange }: SaveButtonsProps) {
             : "border-foreground/20 hover:border-foreground/40"
         }`}
       >
-        {status === "sauvegarde" ? "Sauvegardé ✓" : "Sauvegarder"}
+        {status === "sauvegarde" ? t.saveButtons.sauvegarde : t.saveButtons.sauvegarder}
       </button>
       <button
         type="button"
@@ -30,7 +33,7 @@ export function SaveButtons({ status, onChange }: SaveButtonsProps) {
             : "border-foreground/20 hover:border-foreground/40"
         }`}
       >
-        {status === "je_viens" ? "Je viens ✓" : "Je viens"}
+        {status === "je_viens" ? t.saveButtons.jeViensActif : t.saveButtons.jeViens}
       </button>
     </div>
   );
