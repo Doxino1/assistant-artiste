@@ -39,16 +39,10 @@ export default async function RootLayout({
         <header className="border-b border-foreground/10">
           <nav className="mx-auto flex w-full max-w-2xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 text-sm">
             <Link href="/" className="font-medium">
-              Flux
-            </Link>
-            <Link href="/mes-evenements" className="text-foreground/60 hover:text-foreground">
-              Mes événements
+              Événements
             </Link>
             {user && (
               <>
-                <Link href="/evenements/nouveau" className="text-foreground/60 hover:text-foreground">
-                  Proposer un événement
-                </Link>
                 <Link href="/matching" className="text-foreground/60 hover:text-foreground">
                   Matching
                 </Link>

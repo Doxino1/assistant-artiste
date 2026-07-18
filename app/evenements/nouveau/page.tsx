@@ -23,7 +23,6 @@ export default function NouvelEvenementPage() {
   const [sousType, setSousType] = useState<AnnouncementSubtype>("oeuvre");
   const [discipline, setDiscipline] = useState<string>(DISCIPLINES[0]);
   const [ville, setVille] = useState<Ville>("Paris");
-  const [quartier, setQuartier] = useState("");
   const [date, setDate] = useState("");
   const [heure, setHeure] = useState("19:00");
   const [lieu, setLieu] = useState("");
@@ -76,7 +75,6 @@ export default function NouvelEvenementPage() {
       sous_type: type === "annonce" ? sousType : null,
       discipline,
       ville,
-      quartier,
       date: dateIso,
       lieu,
       soumis_par: user.id,
@@ -91,7 +89,6 @@ export default function NouvelEvenementPage() {
     setMessage("Événement soumis, en attente de validation avant publication.");
     setTitre("");
     setDescription("");
-    setQuartier("");
     setLieu("");
     setDate("");
   }
@@ -184,15 +181,6 @@ export default function NouvelEvenementPage() {
             </option>
           ))}
         </select>
-
-        <input
-          type="text"
-          required
-          placeholder="Quartier"
-          value={quartier}
-          onChange={(e) => setQuartier(e.target.value)}
-          className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
-        />
 
         <input
           type="text"

@@ -8,7 +8,6 @@ interface EventRow {
   sous_type: ArtEvent["sousType"] | null;
   discipline: string | null;
   ville: string;
-  quartier: string | null;
   date: string;
   lieu: string | null;
 }
@@ -22,7 +21,6 @@ export function mapEventRow(row: EventRow): ArtEvent {
     sousType: row.sous_type ?? undefined,
     discipline: row.discipline ?? "",
     ville: row.ville as ArtEvent["ville"],
-    quartier: row.quartier ?? "",
     date: row.date,
     lieu: row.lieu ?? "",
   };

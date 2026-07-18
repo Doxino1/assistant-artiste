@@ -14,7 +14,6 @@ export interface ArtEvent {
   sousType?: AnnouncementSubtype;
   discipline: string;
   ville: Ville;
-  quartier: string;
   date: string; // ISO 8601
   lieu: string;
 }

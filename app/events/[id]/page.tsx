@@ -48,14 +48,14 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8">
       <Link href="/" className="text-sm text-foreground/60 hover:text-foreground">
-        ← Retour au flux
+        ← Retour aux événements
       </Link>
 
       <div className="mt-4 flex items-center justify-between gap-2 text-xs text-foreground/60">
         <span className="rounded-full bg-foreground/5 px-2 py-0.5">
           {EVENT_TYPE_LABELS[event.type]}
         </span>
-        <span>{event.ville} · {event.quartier}</span>
+        <span>{event.ville}</span>
       </div>
 
       <h1 className="mt-3 text-2xl font-semibold">{event.titre}</h1>

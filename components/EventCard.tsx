@@ -28,7 +28,7 @@ export function EventCard({ event }: { event: ArtEvent }) {
         </div>
         <h3 className="mt-2 font-medium">{event.titre}</h3>
         <p className="mt-1 text-sm text-foreground/60">
-          {event.ville} · {event.quartier} · {event.discipline}
+          {event.ville} · {event.discipline}
         </p>
       </Link>
       <div className="mt-3">
