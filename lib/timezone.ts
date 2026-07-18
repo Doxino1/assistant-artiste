@@ -1,4 +1,4 @@
-import { Ville } from "./types";
+import type { Ville } from "./types.ts";
 
 export const VILLE_TIMEZONES: Record<Ville, string> = {
   Paris: "Europe/Paris",
