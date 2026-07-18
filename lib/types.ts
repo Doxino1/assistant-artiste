@@ -2,6 +2,7 @@ export type EventType = "vernissage" | "expo" | "workshop" | "open_call" | "anno
 export type AnnouncementSubtype = "oeuvre" | "materiel" | "atelier";
 export type SavedStatus = "sauvegarde" | "je_viens";
 export type ProfileType = "artiste_pro" | "amateur" | "galerie" | "institution" | "curateur";
+export type MatchingTag = "atelier_partage" | "collaborations" | "mentorat";
 
 export type Ville = "Paris" | "Athènes";
 
@@ -40,4 +41,10 @@ export const PROFILE_TYPE_LABELS: Record<ProfileType, string> = {
   galerie: "Galerie",
   institution: "Institution",
   curateur: "Curateur·rice",
+};
+
+export const MATCHING_TAG_LABELS: Record<MatchingTag, string> = {
+  atelier_partage: "Atelier partagé",
+  collaborations: "Collaborations",
+  mentorat: "Mentorat",
 };

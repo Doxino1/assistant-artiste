@@ -37,7 +37,7 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <header className="border-b border-foreground/10">
-          <nav className="mx-auto flex w-full max-w-2xl items-center gap-4 px-4 py-3 text-sm">
+          <nav className="mx-auto flex w-full max-w-2xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 text-sm">
             <Link href="/" className="font-medium">
               Flux
             </Link>
@@ -48,6 +48,12 @@ export default async function RootLayout({
               <>
                 <Link href="/evenements/nouveau" className="text-foreground/60 hover:text-foreground">
                   Proposer un événement
+                </Link>
+                <Link href="/matching" className="text-foreground/60 hover:text-foreground">
+                  Matching
+                </Link>
+                <Link href="/communaute" className="text-foreground/60 hover:text-foreground">
+                  Communauté
                 </Link>
                 <Link href="/profil" className="text-foreground/60 hover:text-foreground">
                   Profil

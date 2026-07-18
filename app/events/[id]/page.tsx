@@ -64,6 +64,13 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
 
       <p className="mt-6 text-base leading-relaxed">{event.description}</p>
 
+      {event.type === "annonce" && (
+        <p className="mt-4 rounded-md bg-foreground/5 px-3 py-2 text-xs text-foreground/60">
+          Annonce entre particuliers : la transaction se fait directement avec la personne, en
+          dehors de l&apos;application.
+        </p>
+      )}
+
       <div className="mt-8">
         <SaveButtons status={saved[event.id]} onChange={(status) => setStatus(event.id, status)} />
       </div>

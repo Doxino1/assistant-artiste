@@ -142,17 +142,23 @@ export default function NouvelEvenementPage() {
         </select>
 
         {type === "annonce" && (
-          <select
-            value={sousType}
-            onChange={(e) => setSousType(e.target.value as AnnouncementSubtype)}
-            className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
-          >
-            {Object.entries(ANNOUNCEMENT_SUBTYPE_LABELS).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
+          <>
+            <select
+              value={sousType}
+              onChange={(e) => setSousType(e.target.value as AnnouncementSubtype)}
+              className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
+            >
+              {Object.entries(ANNOUNCEMENT_SUBTYPE_LABELS).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+            <p className="rounded-md bg-foreground/5 px-3 py-2 text-xs text-foreground/60">
+              La transaction (paiement, échange) se fait directement entre vous, en dehors de
+              l&apos;application — on ne s&apos;en occupe pas.
+            </p>
+          </>
         )}
 
         <select
