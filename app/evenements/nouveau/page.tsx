@@ -80,7 +80,6 @@ export default function NouvelEvenementPage() {
       date: dateIso,
       lieu,
       soumis_par: user.id,
-      source: "manuel",
     });
 
     setLoading(false);
