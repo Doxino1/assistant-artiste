@@ -50,6 +50,15 @@ interface EventRow {
   lieu: string | null;
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function eventHtml(event: EventRow): string {
   const date = formatInVille(event.date, event.ville as Ville, {
     weekday: "long",
@@ -59,21 +68,26 @@ function eventHtml(event: EventRow): string {
     minute: "2-digit",
   });
   const link = SITE_URL ? `${SITE_URL}/events/${event.id}` : null;
-  const titre = link ? `<a href="${link}">${event.titre}</a>` : event.titre;
+  const titreSafe = escapeHtml(event.titre);
+  const titre = link ? `<a href="${escapeHtml(link)}">${titreSafe}</a>` : titreSafe;
+  const lieuLigne = [event.quartier, event.lieu]
+    .filter((v): v is string => Boolean(v))
+    .map(escapeHtml)
+    .join(" · ");
 
   return `
     <li style="margin-bottom: 16px;">
       <div style="font-size: 12px; color: #666;">${EVENT_TYPE_LABELS[event.type]} · ${date}</div>
       <div style="font-weight: 600;">${titre}</div>
-      <div style="font-size: 13px; color: #666;">${[event.quartier, event.lieu].filter(Boolean).join(" · ")}</div>
+      <div style="font-size: 13px; color: #666;">${lieuLigne}</div>
     </li>`;
 }
 
 function digestHtml(nom: string, ville: string, events: EventRow[]): string {
   return `
     <div style="font-family: sans-serif; max-width: 480px;">
-      <p>Bonjour ${nom || ""},</p>
-      <p>Voici les événements à ${ville} pour les 7 prochains jours :</p>
+      <p>Bonjour ${escapeHtml(nom || "")},</p>
+      <p>Voici les événements à ${escapeHtml(ville)} pour les 7 prochains jours :</p>
       <ul style="list-style: none; padding: 0;">
         ${events.map(eventHtml).join("")}
       </ul>
