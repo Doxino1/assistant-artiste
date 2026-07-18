@@ -23,7 +23,7 @@ function formatDate(event: ArtEvent) {
 export default function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const { events, loading, error } = useEvents();
-  const { saved, setStatus } = useSavedEvents();
+  const { saved, setStatus, canSave } = useSavedEvents();
 
   const event = events.find((e) => e.id === id);
 
@@ -72,7 +72,13 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
       )}
 
       <div className="mt-8">
-        <SaveButtons status={saved[event.id]} onChange={(status) => setStatus(event.id, status)} />
+        {canSave ? (
+          <SaveButtons status={saved[event.id]} onChange={(status) => setStatus(event.id, status)} />
+        ) : (
+          <Link href="/login" className="text-sm text-foreground/40 hover:text-foreground/60">
+            Connecte-toi pour sauvegarder
+          </Link>
+        )}
       </div>
     </div>
   );

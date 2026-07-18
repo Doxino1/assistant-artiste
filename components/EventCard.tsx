@@ -15,7 +15,7 @@ function formatDate(event: ArtEvent) {
 }
 
 export function EventCard({ event }: { event: ArtEvent }) {
-  const { saved, setStatus } = useSavedEvents();
+  const { saved, setStatus, canSave } = useSavedEvents();
 
   return (
     <div className="rounded-lg border border-foreground/10 p-4 transition hover:border-foreground/30">
@@ -32,7 +32,13 @@ export function EventCard({ event }: { event: ArtEvent }) {
         </p>
       </Link>
       <div className="mt-3">
-        <SaveButtons status={saved[event.id]} onChange={(status) => setStatus(event.id, status)} />
+        {canSave ? (
+          <SaveButtons status={saved[event.id]} onChange={(status) => setStatus(event.id, status)} />
+        ) : (
+          <Link href="/login" className="text-xs text-foreground/40 hover:text-foreground/60">
+            Connecte-toi pour sauvegarder
+          </Link>
+        )}
       </div>
     </div>
   );

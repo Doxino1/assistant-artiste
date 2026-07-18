@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { resetSavedEventsCache } from "@/lib/use-saved-events";
 
 export function SignOutButton() {
   const router = useRouter();
@@ -9,6 +10,7 @@ export function SignOutButton() {
   async function handleSignOut() {
     const supabase = createClient();
     await supabase.auth.signOut();
+    resetSavedEventsCache();
     router.push("/");
     router.refresh();
   }
