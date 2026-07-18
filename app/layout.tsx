@@ -30,6 +30,16 @@ export default async function RootLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
+  let isModerator = false;
+  if (user) {
+    const { data } = await supabase
+      .from("profiles")
+      .select("is_moderator")
+      .eq("id", user.id)
+      .single();
+    isModerator = data?.is_moderator === true;
+  }
+
   return (
     <html
       lang="fr"
@@ -38,7 +48,7 @@ export default async function RootLayout({
       <body className="min-h-full flex flex-col">
         <LocaleProvider>
           <header className="border-b border-foreground/10">
-            <Header userEmail={user?.email ?? null} />
+            <Header userEmail={user?.email ?? null} isModerator={isModerator} />
           </header>
           {children}
         </LocaleProvider>

@@ -5,7 +5,13 @@ import { SignOutButton } from "./SignOutButton";
 import { useLocale } from "@/lib/i18n/context";
 import { LOCALE_LABELS, LOCALES } from "@/lib/i18n/dictionary";
 
-export function Header({ userEmail }: { userEmail: string | null }) {
+export function Header({
+  userEmail,
+  isModerator,
+}: {
+  userEmail: string | null;
+  isModerator: boolean;
+}) {
   const { locale, setLocale, t } = useLocale();
 
   return (
@@ -24,6 +30,11 @@ export function Header({ userEmail }: { userEmail: string | null }) {
           <Link href="/profil" className="text-foreground/60 hover:text-foreground">
             {t.nav.profil}
           </Link>
+          {isModerator && (
+            <Link href="/moderation" className="text-foreground/60 hover:text-foreground">
+              {t.nav.moderation}
+            </Link>
+          )}
         </>
       )}
 

@@ -29,6 +29,7 @@ export interface Dictionary {
     matching: string;
     communaute: string;
     profil: string;
+    moderation: string;
     connexion: string;
     deconnexion: string;
   };
@@ -151,6 +152,16 @@ export interface Dictionary {
     greeting: (nom: string) => string;
     intro: (ville: string) => string;
   };
+
+  moderation: {
+    title: string;
+    empty: string;
+    publish: string;
+    reject: string;
+    rejectConfirm: string;
+    submittedBy: (nom: string) => string;
+    loadError: (message: string) => string;
+  };
 }
 
 export const fr: Dictionary = {
@@ -190,6 +201,7 @@ export const fr: Dictionary = {
     matching: "Matching",
     communaute: "Communauté",
     profil: "Profil",
+    moderation: "Modération",
     connexion: "Connexion",
     deconnexion: "Déconnexion",
   },
@@ -303,6 +315,15 @@ export const fr: Dictionary = {
     greeting: (nom) => `Bonjour ${nom},`,
     intro: (ville) => `Voici les événements à ${ville} pour les 7 prochains jours :`,
   },
+  moderation: {
+    title: "Modération",
+    empty: "Aucun événement en attente.",
+    publish: "Publier",
+    reject: "Rejeter",
+    rejectConfirm: "Rejeter et supprimer cet événement ?",
+    submittedBy: (nom) => `Soumis par ${nom}`,
+    loadError: (message) => `Impossible de charger les soumissions (${message}).`,
+  },
 };
 
 export const en: Dictionary = {
@@ -342,6 +363,7 @@ export const en: Dictionary = {
     matching: "Matching",
     communaute: "Community",
     profil: "Profile",
+    moderation: "Moderation",
     connexion: "Sign in",
     deconnexion: "Sign out",
   },
@@ -455,6 +477,15 @@ export const en: Dictionary = {
     greeting: (nom) => `Hi ${nom},`,
     intro: (ville) => `Here are the events in ${ville} for the next 7 days:`,
   },
+  moderation: {
+    title: "Moderation",
+    empty: "No pending event.",
+    publish: "Publish",
+    reject: "Reject",
+    rejectConfirm: "Reject and delete this event?",
+    submittedBy: (nom) => `Submitted by ${nom}`,
+    loadError: (message) => `Couldn't load submissions (${message}).`,
+  },
 };
 
 export const el: Dictionary = {
@@ -494,6 +525,7 @@ export const el: Dictionary = {
     matching: "Αντιστοίχιση",
     communaute: "Κοινότητα",
     profil: "Προφίλ",
+    moderation: "Έλεγχος",
     connexion: "Σύνδεση",
     deconnexion: "Αποσύνδεση",
   },
@@ -606,6 +638,15 @@ export const el: Dictionary = {
     subject: (count, ville) => `${count} εκδήλωση${count > 1 ? "εις" : ""} στην ${ville} αυτή την εβδομάδα`,
     greeting: (nom) => `Γεια σου ${nom},`,
     intro: (ville) => `Ορίστε οι εκδηλώσεις στην ${ville} για τις επόμενες 7 μέρες:`,
+  },
+  moderation: {
+    title: "Έλεγχος",
+    empty: "Καμία εκδήλωση σε αναμονή.",
+    publish: "Δημοσίευση",
+    reject: "Απόρριψη",
+    rejectConfirm: "Απόρριψη και διαγραφή αυτής της εκδήλωσης;",
+    submittedBy: (nom) => `Υποβλήθηκε από ${nom}`,
+    loadError: (message) => `Αδυναμία φόρτωσης προτάσεων (${message}).`,
   },
 };
 
