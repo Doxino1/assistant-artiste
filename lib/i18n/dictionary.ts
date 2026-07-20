@@ -266,6 +266,25 @@ export interface Dictionary {
     deleteButton: string;
     deleteError: string;
   };
+
+  onboarding: {
+    stepLabel: (step: number, total: number) => string;
+    back: string;
+    next: string;
+    skip: string;
+    finish: string;
+    saveError: string;
+    step1Title: string;
+    step1Hint: string;
+    step2Title: string;
+    step2Hint: string;
+    step3Title: string;
+    step4Title: string;
+    step4Hint: string;
+    step5Title: string;
+    step5Intro: string;
+    step5ExampleEvents: string[];
+  };
 }
 
 export const fr: Dictionary = {
@@ -523,6 +542,28 @@ export const fr: Dictionary = {
     deleteConfirmWord: "SUPPRIMER",
     deleteButton: "Supprimer définitivement",
     deleteError: "La suppression a échoué, réessaie ou contacte-nous.",
+  },
+  onboarding: {
+    stepLabel: (step, total) => `Étape ${step} sur ${total}`,
+    back: "Retour",
+    next: "Continuer",
+    skip: "Passer",
+    finish: "C'est parti",
+    saveError: "Une erreur est survenue, réessaie.",
+    step1Title: "Quelle est ta ville principale ?",
+    step1Hint: "On te montrera d'abord les événements de cette ville.",
+    step2Title: "Quelles disciplines pratiques-tu ?",
+    step2Hint: "Choisis-en au moins une.",
+    step3Title: "Quel type de profil es-tu ?",
+    step4Title: "Qu'est-ce que tu recherches ?",
+    step4Hint: "Optionnel — utilisé pour te proposer des rencontres pertinentes.",
+    step5Title: "Bienvenue !",
+    step5Intro: "Chaque semaine, tu recevras un email avec les événements à venir dans ta ville. Par exemple :",
+    step5ExampleEvents: [
+      "Vernissage · lundi 27 juillet, 20:00 — Lignes de fuite",
+      "Workshop · mercredi 29 juillet, 14:00 — Taille directe sur pierre",
+      "Exposition · samedi 1 août, 11:00 — Résidences croisées",
+    ],
   },
 };
 
@@ -782,6 +823,28 @@ export const en: Dictionary = {
     deleteButton: "Delete permanently",
     deleteError: "Deletion failed, try again or contact us.",
   },
+  onboarding: {
+    stepLabel: (step, total) => `Step ${step} of ${total}`,
+    back: "Back",
+    next: "Continue",
+    skip: "Skip",
+    finish: "Let's go",
+    saveError: "Something went wrong, try again.",
+    step1Title: "What's your main city?",
+    step1Hint: "We'll show you this city's events first.",
+    step2Title: "Which disciplines do you practice?",
+    step2Hint: "Pick at least one.",
+    step3Title: "What kind of profile are you?",
+    step4Title: "What are you looking for?",
+    step4Hint: "Optional — used to suggest relevant connections.",
+    step5Title: "Welcome!",
+    step5Intro: "Every week, you'll get an email with upcoming events in your city. For example:",
+    step5ExampleEvents: [
+      "Opening · Monday July 27, 8:00 PM — Lignes de fuite",
+      "Workshop · Wednesday July 29, 2:00 PM — Taille directe sur pierre",
+      "Exhibition · Saturday August 1, 11:00 AM — Résidences croisées",
+    ],
+  },
 };
 
 export const el: Dictionary = {
@@ -1039,6 +1102,28 @@ export const el: Dictionary = {
     deleteConfirmWord: "ΔΙΑΓΡΑΦΗ",
     deleteButton: "Οριστική διαγραφή",
     deleteError: "Η διαγραφή απέτυχε, δοκίμασε ξανά ή επικοινώνησε μαζί μας.",
+  },
+  onboarding: {
+    stepLabel: (step, total) => `Βήμα ${step} από ${total}`,
+    back: "Πίσω",
+    next: "Συνέχεια",
+    skip: "Παράλειψη",
+    finish: "Ας ξεκινήσουμε",
+    saveError: "Κάτι πήγε στραβά, δοκίμασε ξανά.",
+    step1Title: "Ποια είναι η κύρια πόλη σου;",
+    step1Hint: "Θα σου δείξουμε πρώτα τις εκδηλώσεις αυτής της πόλης.",
+    step2Title: "Ποιες πειθαρχίες ασκείς;",
+    step2Hint: "Διάλεξε τουλάχιστον μία.",
+    step3Title: "Τι τύπος προφίλ είσαι;",
+    step4Title: "Τι ψάχνεις;",
+    step4Hint: "Προαιρετικό — χρησιμοποιείται για να σου προτείνουμε σχετικές γνωριμίες.",
+    step5Title: "Καλώς όρισες!",
+    step5Intro: "Κάθε εβδομάδα θα λαμβάνεις ένα email με τις επερχόμενες εκδηλώσεις στην πόλη σου. Για παράδειγμα:",
+    step5ExampleEvents: [
+      "Εγκαίνια · Δευτέρα 27 Ιουλίου, 20:00 — Lignes de fuite",
+      "Εργαστήριο · Τετάρτη 29 Ιουλίου, 14:00 — Taille directe sur pierre",
+      "Έκθεση · Σάββατο 1 Αυγούστου, 11:00 — Résidences croisées",
+    ],
   },
 };
 

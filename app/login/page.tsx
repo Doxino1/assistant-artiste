@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Ville } from "@/lib/types";
 import { useT } from "@/lib/i18n/context";
 
 type Mode = "connexion" | "inscription" | "mot_de_passe_oublie";
@@ -15,7 +14,6 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nom, setNom] = useState("");
-  const [ville, setVille] = useState<Ville>("Paris");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -58,7 +56,7 @@ export default function LoginPage() {
       email,
       password,
       options: {
-        data: { nom, ville },
+        data: { nom },
         emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
@@ -172,24 +170,14 @@ export default function LoginPage() {
         )}
 
         {mode === "inscription" && (
-          <>
-            <input
-              type="text"
-              required
-              placeholder={t.auth.nom}
-              value={nom}
-              onChange={(e) => setNom(e.target.value)}
-              className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
-            />
-            <select
-              value={ville}
-              onChange={(e) => setVille(e.target.value as Ville)}
-              className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
-            >
-              <option value="Paris">{t.villeLabels.Paris}</option>
-              <option value="Athènes">{t.villeLabels["Athènes"]}</option>
-            </select>
-          </>
+          <input
+            type="text"
+            required
+            placeholder={t.auth.nom}
+            value={nom}
+            onChange={(e) => setNom(e.target.value)}
+            className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+          />
         )}
 
         {error && <p className="text-sm text-red-600">{error}</p>}

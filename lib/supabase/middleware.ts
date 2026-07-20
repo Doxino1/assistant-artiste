@@ -1,6 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+// Chemins accessibles même si le parcours d'inscription n'est pas terminé.
+const ONBOARDING_EXEMPT_PREFIXES = ["/onboarding", "/login", "/auth", "/api"];
+
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
 
@@ -25,7 +28,26 @@ export async function updateSession(request: NextRequest) {
 
   // Rafraîchit la session si besoin — nécessaire pour que les Server Components
   // lisent un état d'authentification à jour.
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const pathname = request.nextUrl.pathname;
+  const exempt = ONBOARDING_EXEMPT_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+
+  if (user && !exempt) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("onboarding_complete")
+      .eq("id", user.id)
+      .single();
+
+    if (profile?.onboarding_complete === false) {
+      const redirectResponse = NextResponse.redirect(new URL("/onboarding", request.url));
+      response.cookies.getAll().forEach((cookie) => redirectResponse.cookies.set(cookie));
+      return redirectResponse;
+    }
+  }
 
   return response;
 }
