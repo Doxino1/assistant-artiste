@@ -454,6 +454,23 @@ export default function ProfilPage() {
           {t.safety.blockedUsersTitle}
         </Link>
       </div>
+
+      <div className="mt-8 border-t border-foreground/10 pt-4">
+        <h2 className="text-sm font-medium text-foreground/60">{t.account.exportData}</h2>
+        <p className="mt-1 text-xs text-foreground/50">{t.account.exportHint}</p>
+        <a
+          href="/api/account/export"
+          className="mt-2 inline-block rounded-full border border-foreground/20 px-4 py-2 text-sm hover:border-foreground/40"
+        >
+          {t.account.exportButton}
+        </a>
+      </div>
+
+      <div className="mt-4">
+        <Link href="/profil/supprimer" className="text-sm text-red-600 underline hover:text-red-700">
+          {t.account.deleteAccount}
+        </Link>
+      </div>
     </div>
   );
 }

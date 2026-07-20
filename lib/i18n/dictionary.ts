@@ -254,6 +254,18 @@ export interface Dictionary {
     blockedUsersTitle: string;
     noBlockedUsers: string;
   };
+
+  account: {
+    exportData: string;
+    exportHint: string;
+    exportButton: string;
+    deleteAccount: string;
+    deleteWarning: string;
+    deleteConfirmLabel: (word: string) => string;
+    deleteConfirmWord: string;
+    deleteButton: string;
+    deleteError: string;
+  };
 }
 
 export const fr: Dictionary = {
@@ -500,6 +512,17 @@ export const fr: Dictionary = {
     cancel: "Annuler",
     blockedUsersTitle: "Utilisateurs bloqués",
     noBlockedUsers: "Aucun utilisateur bloqué.",
+  },
+  account: {
+    exportData: "Télécharger mes données",
+    exportHint: "Profil, posts publiés, événements soumis et sauvegardés, au format JSON.",
+    exportButton: "Télécharger",
+    deleteAccount: "Supprimer mon compte",
+    deleteWarning: "Cette action est définitive et efface toutes tes données (profil, posts, portfolio, bibliothèque privée, messages). Impossible à annuler.",
+    deleteConfirmLabel: (word) => `Tape ${word} pour confirmer`,
+    deleteConfirmWord: "SUPPRIMER",
+    deleteButton: "Supprimer définitivement",
+    deleteError: "La suppression a échoué, réessaie ou contacte-nous.",
   },
 };
 
@@ -748,6 +771,17 @@ export const en: Dictionary = {
     blockedUsersTitle: "Blocked users",
     noBlockedUsers: "No blocked users.",
   },
+  account: {
+    exportData: "Download my data",
+    exportHint: "Profile, published posts, submitted and saved events, as JSON.",
+    exportButton: "Download",
+    deleteAccount: "Delete my account",
+    deleteWarning: "This is permanent and erases all your data (profile, posts, portfolio, private library, messages). Cannot be undone.",
+    deleteConfirmLabel: (word) => `Type ${word} to confirm`,
+    deleteConfirmWord: "DELETE",
+    deleteButton: "Delete permanently",
+    deleteError: "Deletion failed, try again or contact us.",
+  },
 };
 
 export const el: Dictionary = {
@@ -994,6 +1028,17 @@ export const el: Dictionary = {
     cancel: "Ακύρωση",
     blockedUsersTitle: "Αποκλεισμένοι χρήστες",
     noBlockedUsers: "Κανένας αποκλεισμένος χρήστης.",
+  },
+  account: {
+    exportData: "Λήψη των δεδομένων μου",
+    exportHint: "Προφίλ, δημοσιευμένα posts, εκδηλώσεις που πρότεινες και αποθήκευσες, σε μορφή JSON.",
+    exportButton: "Λήψη",
+    deleteAccount: "Διαγραφή λογαριασμού",
+    deleteWarning: "Αυτή η ενέργεια είναι οριστική και διαγράφει όλα τα δεδομένα σου (προφίλ, posts, portfolio, ιδιωτική βιβλιοθήκη, μηνύματα). Δεν μπορεί να αναιρεθεί.",
+    deleteConfirmLabel: (word) => `Πληκτρολόγησε ${word} για επιβεβαίωση`,
+    deleteConfirmWord: "ΔΙΑΓΡΑΦΗ",
+    deleteButton: "Οριστική διαγραφή",
+    deleteError: "Η διαγραφή απέτυχε, δοκίμασε ξανά ή επικοινώνησε μαζί μας.",
   },
 };
 
