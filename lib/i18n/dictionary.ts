@@ -40,6 +40,8 @@ export interface Dictionary {
     cancel: string;
     delete: string;
     profileNotFound: string;
+    public: string;
+    prive: string;
   };
 
   evenements: {
@@ -115,11 +117,12 @@ export interface Dictionary {
     emailContactPlaceholder: string;
     saved: string;
     save: string;
-    portfolioPublic: string;
-    postsPublic: string;
-    managePortfolio: string;
-    managePosts: string;
-    manageLibrary: string;
+    postsLabel: string;
+    followersLabel: string;
+    followingLabel: string;
+    postsSubtitle: string;
+    portfolioSubtitle: string;
+    settingsTitle: string;
   };
 
   submission: {
@@ -171,6 +174,7 @@ export interface Dictionary {
   portfolio: {
     title: string;
     addTitle: string;
+    addPiece: string;
     titre: string;
     technique: string;
     annee: string;
@@ -280,6 +284,8 @@ export const fr: Dictionary = {
     cancel: "Annuler",
     delete: "Supprimer",
     profileNotFound: "Profil introuvable.",
+    public: "Public",
+    prive: "Privé",
   },
   evenements: {
     tabTous: "Tous",
@@ -350,11 +356,12 @@ export const fr: Dictionary = {
     emailContactPlaceholder: "Laisse vide pour ne pas être contactable",
     saved: "Profil mis à jour.",
     save: "Enregistrer",
-    portfolioPublic: "Portfolio public",
-    postsPublic: "Posts publics",
-    managePortfolio: "Gérer mon portfolio",
-    managePosts: "Gérer mes posts",
-    manageLibrary: "Bibliothèque privée",
+    postsLabel: "Posts",
+    followersLabel: "Abonnés",
+    followingLabel: "Abonnements",
+    postsSubtitle: "Ce que tu partages au fil de l'eau",
+    portfolioSubtitle: "Ta sélection de travail, vitrine pro",
+    settingsTitle: "Paramètres du profil",
   },
   submission: {
     title: "Proposer un événement",
@@ -401,6 +408,7 @@ export const fr: Dictionary = {
   portfolio: {
     title: "Mon portfolio",
     addTitle: "Ajouter une œuvre",
+    addPiece: "Ajouter une pièce",
     titre: "Titre",
     technique: "Technique",
     annee: "Année",
@@ -505,6 +513,8 @@ export const en: Dictionary = {
     cancel: "Cancel",
     delete: "Delete",
     profileNotFound: "Profile not found.",
+    public: "Public",
+    prive: "Private",
   },
   evenements: {
     tabTous: "All",
@@ -575,11 +585,12 @@ export const en: Dictionary = {
     emailContactPlaceholder: "Leave blank to not be contactable",
     saved: "Profile updated.",
     save: "Save",
-    portfolioPublic: "Public portfolio",
-    postsPublic: "Public posts",
-    managePortfolio: "Manage my portfolio",
-    managePosts: "Manage my posts",
-    manageLibrary: "Private library",
+    postsLabel: "Posts",
+    followersLabel: "Followers",
+    followingLabel: "Following",
+    postsSubtitle: "What you share as you go",
+    portfolioSubtitle: "Your curated work, a professional showcase",
+    settingsTitle: "Profile settings",
   },
   submission: {
     title: "Submit an event",
@@ -626,6 +637,7 @@ export const en: Dictionary = {
   portfolio: {
     title: "My portfolio",
     addTitle: "Add a piece",
+    addPiece: "Add a piece",
     titre: "Title",
     technique: "Technique",
     annee: "Year",
@@ -730,6 +742,8 @@ export const el: Dictionary = {
     cancel: "Ακύρωση",
     delete: "Διαγραφή",
     profileNotFound: "Το προφίλ δεν βρέθηκε.",
+    public: "Δημόσιο",
+    prive: "Ιδιωτικό",
   },
   evenements: {
     tabTous: "Όλες",
@@ -800,11 +814,12 @@ export const el: Dictionary = {
     emailContactPlaceholder: "Άφησέ το κενό αν δεν θες να σε βρίσκουν",
     saved: "Το προφίλ ενημερώθηκε.",
     save: "Αποθήκευση",
-    portfolioPublic: "Δημόσιο portfolio",
-    postsPublic: "Δημόσια posts",
-    managePortfolio: "Διαχείριση portfolio",
-    managePosts: "Διαχείριση posts",
-    manageLibrary: "Προσωπική βιβλιοθήκη",
+    postsLabel: "Posts",
+    followersLabel: "Ακόλουθοι",
+    followingLabel: "Ακολουθεί",
+    postsSubtitle: "Ό,τι μοιράζεσαι στην πορεία",
+    portfolioSubtitle: "Η επιλεγμένη δουλειά σου, επαγγελματική βιτρίνα",
+    settingsTitle: "Ρυθμίσεις προφίλ",
   },
   submission: {
     title: "Πρόταση εκδήλωσης",
@@ -851,6 +866,7 @@ export const el: Dictionary = {
   portfolio: {
     title: "Το portfolio μου",
     addTitle: "Προσθήκη έργου",
+    addPiece: "Προσθήκη έργου",
     titre: "Τίτλος",
     technique: "Τεχνική",
     annee: "Έτος",

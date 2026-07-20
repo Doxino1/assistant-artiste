@@ -20,36 +20,48 @@ interface LocaleContextValue {
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
-function storedLocale(): Locale | null {
-  if (typeof window === "undefined") return null;
-  const stored = window.localStorage.getItem(STORAGE_KEY);
-  return stored && (LOCALES as string[]).includes(stored) ? (stored as Locale) : null;
-}
-
+// L'état initial doit être identique entre le rendu serveur et le premier
+// rendu client ("fr", comme <html lang="fr">) sinon React déclenche une
+// erreur d'hydratation — le localStorage/la préférence en base ne peuvent
+// être lus qu'après le montage, dans l'effet ci-dessous.
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(() => storedLocale() ?? "fr");
+  const [locale, setLocaleState] = useState<Locale>("fr");
 
   useEffect(() => {
-    if (storedLocale()) return;
-
     let active = true;
-    const supabase = createClient();
-    supabase.auth.getUser().then(async ({ data: { user } }) => {
-      if (!active || !user) {
+
+    async function init() {
+      const stored = window.localStorage.getItem(STORAGE_KEY);
+      if (stored && (LOCALES as string[]).includes(stored)) {
+        if (active) setLocaleState(stored as Locale);
+        return;
+      }
+
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!active) return;
+      if (!user) {
         setLocaleState(detectBrowserLocale());
         return;
       }
+
       const { data } = await supabase
         .from("profiles")
         .select("langue_preferee")
         .eq("id", user.id)
         .single();
+
       if (!active) return;
       const preferred = data?.langue_preferee;
       setLocaleState(
         preferred && (LOCALES as string[]).includes(preferred) ? (preferred as Locale) : detectBrowserLocale()
       );
-    });
+    }
+
+    init();
     return () => {
       active = false;
     };
