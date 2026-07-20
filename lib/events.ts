@@ -10,6 +10,8 @@ interface EventRow {
   ville: string;
   date: string;
   lieu: string | null;
+  lat: number | null;
+  lng: number | null;
 }
 
 export function mapEventRow(row: EventRow): ArtEvent {
@@ -23,5 +25,7 @@ export function mapEventRow(row: EventRow): ArtEvent {
     ville: row.ville as ArtEvent["ville"],
     date: row.date,
     lieu: row.lieu ?? "",
+    lat: row.lat ?? undefined,
+    lng: row.lng ?? undefined,
   };
 }

@@ -17,6 +17,7 @@ interface PublicProfile {
   type_profil: ProfileType;
   portfolio_public: boolean;
   posts_public: boolean;
+  verified: boolean;
 }
 
 interface PortfolioItem {
@@ -59,7 +60,7 @@ export default function ArtisteProfilPage({ params }: { params: Promise<{ id: st
         await Promise.all([
           supabase
             .from("profiles")
-            .select("id, nom, bio, ville, disciplines, type_profil, portfolio_public, posts_public")
+            .select("id, nom, bio, ville, disciplines, type_profil, portfolio_public, posts_public, verified")
             .eq("id", id)
             .single(),
           supabase
@@ -136,7 +137,14 @@ export default function ArtisteProfilPage({ params }: { params: Promise<{ id: st
     <div className="mx-auto w-full max-w-2xl px-4 py-8">
       <div className="flex items-center justify-between gap-2">
         <div>
-          <h1 className="text-xl font-semibold">{profile.nom}</h1>
+          <h1 className="flex items-center gap-1.5 text-xl font-semibold">
+            {profile.nom}
+            {profile.verified && (profile.type_profil === "galerie" || profile.type_profil === "institution") && (
+              <span title={t.artiste.verified} className="text-base text-blue-600">
+                ✓
+              </span>
+            )}
+          </h1>
           <p className="text-sm text-foreground/60">
             {t.profileTypeLabels[profile.type_profil]} · {t.villeLabels[profile.ville as "Paris" | "Athènes"]}
           </p>

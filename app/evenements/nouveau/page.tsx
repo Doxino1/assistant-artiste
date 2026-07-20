@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { EventForm, EventFormValues } from "@/components/EventForm";
+import { EventForm, EventFormValues, RecurrenceValue } from "@/components/EventForm";
 import { createClient } from "@/lib/supabase/client";
 import { VILLE_TIMEZONES, zonedTimeToUtcIso } from "@/lib/timezone";
+import { geocode } from "@/lib/geocode";
 import { useT } from "@/lib/i18n/context";
 import { DISCIPLINES } from "@/lib/types";
 
@@ -24,6 +25,7 @@ export default function NouvelEvenementPage() {
   const t = useT();
   const router = useRouter();
   const [checkingAuth, setCheckingAuth] = useState(true);
+  const [recurrence, setRecurrence] = useState<RecurrenceValue>({ repeatWeekly: false, count: 4 });
 
   useEffect(() => {
     let active = true;
@@ -57,17 +59,33 @@ export default function NouvelEvenementPage() {
     // du navigateur qui soumet), convertie en instant UTC pour le stockage.
     const dateIso = zonedTimeToUtcIso(values.date, values.heure, VILLE_TIMEZONES[values.ville]);
 
-    const { error: insertError } = await supabase.from("events").insert({
-      titre: values.titre,
-      description: values.description,
-      type: values.type,
-      sous_type: values.type === "annonce" ? values.sousType : null,
-      discipline: values.discipline,
-      ville: values.ville,
-      date: dateIso,
-      lieu: values.lieu,
-      soumis_par: user.id,
+    // Géocodage best-effort (Nominatim/OSM, gratuit, sans clé) — un échec ne
+    // bloque pas la soumission, l'événement reste publiable sans pin carte.
+    const coords = await geocode(`${values.lieu}, ${values.ville}`);
+
+    const occurrences = recurrence.repeatWeekly ? recurrence.count : 1;
+    const recurrenceGroupId = occurrences > 1 ? crypto.randomUUID() : null;
+    const startDate = new Date(dateIso);
+
+    const rows = Array.from({ length: occurrences }, (_, i) => {
+      const occurrenceDate = new Date(startDate.getTime() + i * 7 * 24 * 60 * 60 * 1000);
+      return {
+        titre: values.titre,
+        description: values.description,
+        type: values.type,
+        sous_type: values.type === "annonce" ? values.sousType : null,
+        discipline: values.discipline,
+        ville: values.ville,
+        date: occurrenceDate.toISOString(),
+        lieu: values.lieu,
+        soumis_par: user.id,
+        lat: coords?.lat ?? null,
+        lng: coords?.lng ?? null,
+        recurrence_group_id: recurrenceGroupId,
+      };
     });
+
+    const { error: insertError } = await supabase.from("events").insert(rows);
 
     return insertError ? insertError.message : null;
   }
@@ -91,6 +109,8 @@ export default function NouvelEvenementPage() {
         successMessage={t.submission.submitted}
         resetOnSuccess
         onSubmit={handleSubmit}
+        recurrence={recurrence}
+        onRecurrenceChange={setRecurrence}
       />
     </div>
   );

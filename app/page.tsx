@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { EventCard } from "@/components/EventCard";
 import { EventCalendar } from "@/components/EventCalendar";
 import { useEvents } from "@/lib/use-events";
@@ -13,7 +14,11 @@ import { DISCIPLINES, EventType, Ville } from "@/lib/types";
 
 const VILLES: Ville[] = ["Paris", "Athènes"];
 
-type Tab = "tous" | "calendrier" | "mes";
+const EventMap = dynamic(() => import("@/components/EventMap").then((m) => m.EventMap), {
+  ssr: false,
+});
+
+type Tab = "tous" | "calendrier" | "carte" | "mes";
 type SubmissionStatut = "en_attente" | "publie";
 
 interface MySubmission {
@@ -113,6 +118,9 @@ export default function EvenementsPage() {
           <button onClick={() => setTab("calendrier")} className={pillClass(tab === "calendrier")}>
             {t.calendar.tab}
           </button>
+          <button onClick={() => setTab("carte")} className={pillClass(tab === "carte")}>
+            {t.evenements.tabCarte}
+          </button>
           <button onClick={() => setTab("mes")} className={pillClass(tab === "mes")}>
             {t.evenements.tabMes}
           </button>
@@ -204,6 +212,19 @@ export default function EvenementsPage() {
             ))}
           </div>
           <EventCalendar events={events} ville={ville} />
+        </>
+      )}
+
+      {tab === "carte" && (
+        <>
+          <div className="mb-6 flex gap-2">
+            {VILLES.map((v) => (
+              <button key={v} onClick={() => setVille(v)} className={pillClass(ville === v)}>
+                {t.villeLabels[v]}
+              </button>
+            ))}
+          </div>
+          <EventMap key={ville} events={events} ville={ville} />
         </>
       )}
 

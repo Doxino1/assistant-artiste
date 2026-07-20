@@ -47,6 +47,7 @@ export interface Dictionary {
   evenements: {
     tabTous: string;
     tabMes: string;
+    tabCarte: string;
     proposer: string;
     searchPlaceholder: string;
     tousTypes: string;
@@ -79,6 +80,9 @@ export interface Dictionary {
     back: string;
     loadError: (message: string) => string;
     annonceDisclaimer: string;
+    addToGoogleCalendar: string;
+    addToAppleCalendar: string;
+    goingFollows: (names: string, count: number) => string;
   };
 
   auth: {
@@ -135,6 +139,13 @@ export interface Dictionary {
     annonceDisclaimer: string;
     submitted: string;
     submit: string;
+    repeatWeekly: string;
+    repeatCountLabel: string;
+    repeatHint: string;
+  };
+
+  map: {
+    noCoordinates: (count: number) => string;
   };
 
   matching: {
@@ -217,6 +228,7 @@ export interface Dictionary {
     followers: (count: number) => string;
     following: (count: number) => string;
     notFound: string;
+    verified: string;
   };
 
   shops: {
@@ -340,6 +352,7 @@ export const fr: Dictionary = {
   evenements: {
     tabTous: "Tous",
     tabMes: "Mes événements",
+    tabCarte: "Carte",
     proposer: "+ Proposer",
     searchPlaceholder: "Rechercher un événement…",
     tousTypes: "Tous types",
@@ -371,6 +384,9 @@ export const fr: Dictionary = {
     loadError: (message) => `Impossible de charger l'événement (${message}).`,
     annonceDisclaimer:
       "Annonce entre particuliers : la transaction se fait directement avec la personne, en dehors de l'application.",
+    addToGoogleCalendar: "Google Agenda",
+    addToAppleCalendar: "Apple / Outlook (.ics)",
+    goingFollows: (names, count) => `${names} — ${count > 1 ? "abonnements que tu suis" : "abonnement que tu suis"} y ${count > 1 ? "vont" : "va"}.`,
   },
   auth: {
     seConnecter: "Se connecter",
@@ -424,6 +440,15 @@ export const fr: Dictionary = {
       "La transaction (paiement, échange) se fait directement entre vous, en dehors de l'application — on ne s'en occupe pas.",
     submitted: "Événement soumis, en attente de validation avant publication.",
     submit: "Soumettre",
+    repeatWeekly: "Répéter chaque semaine",
+    repeatCountLabel: "Nombre d'occurrences (dont celle-ci)",
+    repeatHint: "Chaque occurrence est soumise à validation séparément.",
+  },
+  map: {
+    noCoordinates: (count) =>
+      count > 1
+        ? `${count} événements sans localisation précise — retrouve-les dans la liste.`
+        : `${count} événement sans localisation précise — retrouve-le dans la liste.`,
   },
   matching: {
     title: "Suggestions de matching",
@@ -498,6 +523,7 @@ export const fr: Dictionary = {
     followers: (count) => `${count} abonné${count > 1 ? "s" : ""}`,
     following: (count) => `${count} abonnement${count > 1 ? "s" : ""}`,
     notFound: "Profil introuvable.",
+    verified: "Compte vérifié",
   },
   shops: {
     title: "Boutiques de matériel",
@@ -620,6 +646,7 @@ export const en: Dictionary = {
   evenements: {
     tabTous: "All",
     tabMes: "My events",
+    tabCarte: "Map",
     proposer: "+ Submit",
     searchPlaceholder: "Search an event…",
     tousTypes: "All types",
@@ -651,6 +678,9 @@ export const en: Dictionary = {
     loadError: (message) => `Couldn't load this event (${message}).`,
     annonceDisclaimer:
       "Listing between individuals: the transaction happens directly with the person, outside the app.",
+    addToGoogleCalendar: "Google Calendar",
+    addToAppleCalendar: "Apple / Outlook (.ics)",
+    goingFollows: (names, count) => `${names} — ${count > 1 ? "people you follow are" : "person you follow is"} going.`,
   },
   auth: {
     seConnecter: "Sign in",
@@ -704,6 +734,15 @@ export const en: Dictionary = {
       "The transaction (payment, exchange) happens directly between you, outside the app — we don't handle it.",
     submitted: "Event submitted, pending review before publication.",
     submit: "Submit",
+    repeatWeekly: "Repeat weekly",
+    repeatCountLabel: "Number of occurrences (including this one)",
+    repeatHint: "Each occurrence is reviewed separately.",
+  },
+  map: {
+    noCoordinates: (count) =>
+      count > 1
+        ? `${count} events without a precise location — find them in the list.`
+        : `${count} event without a precise location — find it in the list.`,
   },
   matching: {
     title: "Matching suggestions",
@@ -778,6 +817,7 @@ export const en: Dictionary = {
     followers: (count) => `${count} follower${count > 1 ? "s" : ""}`,
     following: (count) => `${count} following`,
     notFound: "Profile not found.",
+    verified: "Verified account",
   },
   shops: {
     title: "Art supply shops",
@@ -900,6 +940,7 @@ export const el: Dictionary = {
   evenements: {
     tabTous: "Όλες",
     tabMes: "Οι εκδηλώσεις μου",
+    tabCarte: "Χάρτης",
     proposer: "+ Πρόταση",
     searchPlaceholder: "Αναζήτηση εκδήλωσης…",
     tousTypes: "Όλοι οι τύποι",
@@ -931,6 +972,10 @@ export const el: Dictionary = {
     loadError: (message) => `Αδυναμία φόρτωσης εκδήλωσης (${message}).`,
     annonceDisclaimer:
       "Αγγελία μεταξύ ιδιωτών: η συναλλαγή γίνεται απευθείας με το άτομο, εκτός εφαρμογής.",
+    addToGoogleCalendar: "Google Calendar",
+    addToAppleCalendar: "Apple / Outlook (.ics)",
+    goingFollows: (names, count) =>
+      `${names} — ${count > 1 ? "άτομα που ακολουθείς θα πάνε" : "άτομο που ακολουθείς θα πάει"}.`,
   },
   auth: {
     seConnecter: "Σύνδεση",
@@ -984,6 +1029,15 @@ export const el: Dictionary = {
       "Η συναλλαγή (πληρωμή, ανταλλαγή) γίνεται απευθείας μεταξύ σας, εκτός εφαρμογής — δεν εμπλεκόμαστε.",
     submitted: "Η εκδήλωση υποβλήθηκε, σε αναμονή έγκρισης πριν τη δημοσίευση.",
     submit: "Υποβολή",
+    repeatWeekly: "Επανάληψη κάθε εβδομάδα",
+    repeatCountLabel: "Αριθμός επαναλήψεων (μαζί με αυτή)",
+    repeatHint: "Κάθε επανάληψη ελέγχεται ξεχωριστά.",
+  },
+  map: {
+    noCoordinates: (count) =>
+      count > 1
+        ? `${count} εκδηλώσεις χωρίς ακριβή τοποθεσία — βρες τις στη λίστα.`
+        : `${count} εκδήλωση χωρίς ακριβή τοποθεσία — βρες τη στη λίστα.`,
   },
   matching: {
     title: "Προτάσεις αντιστοίχισης",
@@ -1058,6 +1112,7 @@ export const el: Dictionary = {
     followers: (count) => `${count} ακόλουθοι`,
     following: (count) => `${count} ακολουθεί`,
     notFound: "Το προφίλ δεν βρέθηκε.",
+    verified: "Επαληθευμένος λογαριασμός",
   },
   shops: {
     title: "Καταστήματα υλικών",

@@ -12,6 +12,7 @@ interface ArtisteRow {
   ville: Ville;
   type_profil: ProfileType;
   disciplines: string[];
+  verified: boolean;
 }
 
 const VILLES: Ville[] = ["Paris", "Athènes"];
@@ -33,7 +34,7 @@ export default function ArtistesPage() {
     let active = true;
     createClient()
       .from("profiles")
-      .select("id, nom, ville, type_profil, disciplines")
+      .select("id, nom, ville, type_profil, disciplines, verified")
       .eq("ville", ville)
       .order("nom")
       .then(({ data }) => {
@@ -68,7 +69,14 @@ export default function ArtistesPage() {
             className="rounded-lg border border-foreground/10 p-4 transition hover:border-foreground/30"
           >
             <div className="flex items-center justify-between gap-2">
-              <h3 className="font-medium">{a.nom}</h3>
+              <h3 className="flex items-center gap-1 font-medium">
+                {a.nom}
+                {a.verified && (a.type_profil === "galerie" || a.type_profil === "institution") && (
+                  <span title={t.artiste.verified} className="text-blue-600">
+                    ✓
+                  </span>
+                )}
+              </h3>
               <span className="text-xs text-foreground/60">{t.profileTypeLabels[a.type_profil]}</span>
             </div>
             <p className="mt-1 text-sm text-foreground/60">

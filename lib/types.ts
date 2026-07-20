@@ -16,6 +16,8 @@ export interface ArtEvent {
   ville: Ville;
   date: string; // ISO 8601
   lieu: string;
+  lat?: number;
+  lng?: number;
 }
 
 // Valeurs canoniques stockées en base — l'affichage localisé vit dans

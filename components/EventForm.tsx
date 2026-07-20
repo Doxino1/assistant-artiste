@@ -19,6 +19,11 @@ export interface EventFormValues {
   lieu: string;
 }
 
+export interface RecurrenceValue {
+  repeatWeekly: boolean;
+  count: number;
+}
+
 interface EventFormProps {
   initial: EventFormValues;
   submitLabel: string;
@@ -26,7 +31,11 @@ interface EventFormProps {
   successMessage?: string;
   resetOnSuccess?: boolean;
   extra?: React.ReactNode;
+  recurrence?: RecurrenceValue;
+  onRecurrenceChange?: (value: RecurrenceValue) => void;
 }
+
+const MAX_RECURRENCE_COUNT = 12;
 
 export function EventForm({
   initial,
@@ -35,6 +44,8 @@ export function EventForm({
   successMessage,
   resetOnSuccess,
   extra,
+  recurrence,
+  onRecurrenceChange,
 }: EventFormProps) {
   const t = useT();
   const [values, setValues] = useState<EventFormValues>(initial);
@@ -165,6 +176,40 @@ export function EventForm({
       <p className="text-xs text-foreground/50">
         {t.submission.heureLocale(t.villeLabels[values.ville], VILLE_TIMEZONES[values.ville])}
       </p>
+
+      {recurrence && onRecurrenceChange && (
+        <div className="rounded-md border border-foreground/10 p-3">
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={recurrence.repeatWeekly}
+              onChange={(e) => onRecurrenceChange({ ...recurrence, repeatWeekly: e.target.checked })}
+            />
+            {t.submission.repeatWeekly}
+          </label>
+          {recurrence.repeatWeekly && (
+            <>
+              <label className="mt-2 block text-xs text-foreground/60">
+                {t.submission.repeatCountLabel}
+                <input
+                  type="number"
+                  min={2}
+                  max={MAX_RECURRENCE_COUNT}
+                  value={recurrence.count}
+                  onChange={(e) =>
+                    onRecurrenceChange({
+                      ...recurrence,
+                      count: Math.min(MAX_RECURRENCE_COUNT, Math.max(2, Number(e.target.value) || 2)),
+                    })
+                  }
+                  className="mt-1 w-20 rounded-md border border-foreground/20 bg-transparent px-2 py-1 text-sm"
+                />
+              </label>
+              <p className="mt-1 text-xs text-foreground/50">{t.submission.repeatHint}</p>
+            </>
+          )}
+        </div>
+      )}
 
       {error && <p className="text-sm text-red-600">{error}</p>}
       {message && <p className="text-sm text-green-700">{message}</p>}

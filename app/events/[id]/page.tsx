@@ -1,12 +1,15 @@
 "use client";
 
-import { use } from "react";
+import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SaveButtons } from "@/components/SaveButtons";
+import { CalendarButtons } from "@/components/CalendarButtons";
 import { useEvents } from "@/lib/use-events";
 import { formatInVille } from "@/lib/timezone";
 import { useSavedEvents } from "@/lib/use-saved-events";
+import { useGoingFollows } from "@/lib/use-going-follows";
+import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n/context";
 
 export default function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -14,6 +17,20 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
   const { events, loading, error } = useEvents();
   const { saved, setStatus, canSave } = useSavedEvents();
   const { locale, t } = useLocale();
+  const [userId, setUserId] = useState<string | null>(null);
+  const goingFollows = useGoingFollows(id, userId);
+
+  useEffect(() => {
+    let active = true;
+    createClient()
+      .auth.getUser()
+      .then(({ data: { user } }) => {
+        if (active) setUserId(user?.id ?? null);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const event = events.find((e) => e.id === id);
 
@@ -74,7 +91,20 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
         </p>
       )}
 
-      <div className="mt-8">
+      {goingFollows.length > 0 && (
+        <p className="mt-4 text-sm text-foreground/60">
+          {t.eventDetail.goingFollows(
+            goingFollows.map((f) => f.nom).join(", "),
+            goingFollows.length
+          )}
+        </p>
+      )}
+
+      <div className="mt-6">
+        <CalendarButtons event={event} />
+      </div>
+
+      <div className="mt-6">
         {canSave ? (
           <SaveButtons status={saved[event.id]} onChange={(status) => setStatus(event.id, status)} />
         ) : (
