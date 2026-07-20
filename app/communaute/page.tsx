@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n/context";
+import { BlockReportActions } from "@/components/BlockReportActions";
 
 interface Message {
   id: string;
@@ -19,9 +20,11 @@ const BCP47_TAGS: Record<string, string> = { fr: "fr-FR", en: "en-US", el: "el-G
 export default function CommunautePage() {
   const { locale, t } = useLocale();
   const router = useRouter();
+  const [userId, setUserId] = useState<string | null>(null);
   const [ville, setVille] = useState<string | null>(null);
   const [groupId, setGroupId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [blockedIds, setBlockedIds] = useState<Set<string>>(new Set());
   const [texte, setTexte] = useState("");
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
@@ -51,6 +54,17 @@ export default function CommunautePage() {
     setMessages((data ?? []) as unknown as Message[]);
   }, []);
 
+  const loadBlocked = useCallback(async (uid: string) => {
+    const supabase = createClient();
+    const { data } = await supabase.from("blocks").select("blocker_id, blocked_id");
+    const ids = new Set<string>();
+    for (const row of data ?? []) {
+      if (row.blocker_id === uid) ids.add(row.blocked_id);
+      if (row.blocked_id === uid) ids.add(row.blocker_id);
+    }
+    setBlockedIds(ids);
+  }, []);
+
   useEffect(() => {
     let active = true;
     const supabase = createClient();
@@ -64,6 +78,8 @@ export default function CommunautePage() {
         router.push("/login");
         return;
       }
+
+      setUserId(user.id);
 
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
@@ -94,7 +110,7 @@ export default function CommunautePage() {
       }
 
       setGroupId(group.id);
-      await loadMessages(group.id);
+      await Promise.all([loadMessages(group.id), loadBlocked(user.id)]);
       if (active) setLoading(false);
     }
 
@@ -103,7 +119,7 @@ export default function CommunautePage() {
       active = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router, loadMessages]);
+  }, [router, loadMessages, loadBlocked]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -144,6 +160,8 @@ export default function CommunautePage() {
     );
   }
 
+  const visibleMessages = messages.filter((m) => !blockedIds.has(m.user_id));
+
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8">
       <h1 className="text-xl font-semibold">
@@ -153,10 +171,10 @@ export default function CommunautePage() {
       {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
 
       <div className="mt-6 flex flex-col gap-3">
-        {messages.length === 0 && !error && (
+        {visibleMessages.length === 0 && !error && (
           <p className="text-sm text-foreground/60">{t.communaute.noMessages}</p>
         )}
-        {messages.map((m) => (
+        {visibleMessages.map((m) => (
           <div key={m.id} className="rounded-lg border border-foreground/10 p-3">
             <div className="flex items-baseline justify-between gap-2 text-xs text-foreground/60">
               <Link href={`/artistes/${m.user_id}`} className="font-medium text-foreground hover:underline">
@@ -165,6 +183,14 @@ export default function CommunautePage() {
               <span>{formatDate(m.date)}</span>
             </div>
             <p className="mt-1 text-sm">{m.texte}</p>
+            {userId && m.user_id !== userId && (
+              <BlockReportActions
+                targetUserId={m.user_id}
+                targetName={m.profiles?.nom || t.communaute.anonyme}
+                onBlocked={() => setBlockedIds((prev) => new Set(prev).add(m.user_id))}
+                className="mt-1.5"
+              />
+            )}
           </div>
         ))}
       </div>

@@ -448,6 +448,12 @@ export default function ProfilPage() {
           {saving ? "…" : t.profil.save}
         </button>
       </form>
+
+      <div className="mt-6 flex flex-col gap-2 text-sm">
+        <Link href="/profil/bloques" className="text-foreground/70 underline hover:text-foreground">
+          {t.safety.blockedUsersTitle}
+        </Link>
+      </div>
     </div>
   );
 }

@@ -2,8 +2,10 @@
 
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useT } from "@/lib/i18n/context";
+import { BlockReportActions } from "@/components/BlockReportActions";
 import { ProfileType } from "@/lib/types";
 
 interface PublicProfile {
@@ -33,6 +35,7 @@ interface Post {
 export default function ArtisteProfilPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const t = useT();
+  const router = useRouter();
   const [viewerId, setViewerId] = useState<string | null>(null);
   const [profile, setProfile] = useState<PublicProfile | null | undefined>(undefined);
   const [portfolio, setPortfolio] = useState<PortfolioItem[]>([]);
@@ -156,6 +159,15 @@ export default function ArtisteProfilPage({ params }: { params: Promise<{ id: st
       <p className="mt-1 text-xs text-foreground/40">
         {t.artiste.followers(followerCount)} · {t.artiste.following(followingCount)}
       </p>
+
+      {!isOwn && viewerId && (
+        <BlockReportActions
+          targetUserId={profile.id}
+          targetName={profile.nom}
+          onBlocked={() => router.push("/artistes")}
+          className="mt-2"
+        />
+      )}
 
       {profile.bio && <p className="mt-4 text-sm">{profile.bio}</p>}
       <p className="mt-2 text-sm text-foreground/60">

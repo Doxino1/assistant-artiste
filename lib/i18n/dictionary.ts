@@ -235,6 +235,25 @@ export interface Dictionary {
     tab: string;
     today: string;
   };
+
+  safety: {
+    block: string;
+    blockConfirm: string;
+    blocked: string;
+    unblock: string;
+    report: string;
+    reportTitle: string;
+    reportReasonSpam: string;
+    reportReasonBehavior: string;
+    reportReasonImpersonation: string;
+    reportReasonOther: string;
+    reportDescriptionPlaceholder: string;
+    reportSubmit: string;
+    reportSent: string;
+    cancel: string;
+    blockedUsersTitle: string;
+    noBlockedUsers: string;
+  };
 }
 
 export const fr: Dictionary = {
@@ -463,6 +482,24 @@ export const fr: Dictionary = {
   calendar: {
     tab: "Calendrier",
     today: "Aujourd'hui",
+  },
+  safety: {
+    block: "Bloquer",
+    blockConfirm: "Bloquer cette personne ? Vous ne verrez plus son profil ni son contenu, et elle ne pourra plus vous contacter.",
+    blocked: "Bloqué",
+    unblock: "Débloquer",
+    report: "Signaler",
+    reportTitle: "Signaler",
+    reportReasonSpam: "Spam",
+    reportReasonBehavior: "Comportement inapproprié",
+    reportReasonImpersonation: "Usurpation d'identité",
+    reportReasonOther: "Autre",
+    reportDescriptionPlaceholder: "Détails (optionnel)",
+    reportSubmit: "Envoyer le signalement",
+    reportSent: "Signalement envoyé, merci.",
+    cancel: "Annuler",
+    blockedUsersTitle: "Utilisateurs bloqués",
+    noBlockedUsers: "Aucun utilisateur bloqué.",
   },
 };
 
@@ -693,6 +730,24 @@ export const en: Dictionary = {
     tab: "Calendar",
     today: "Today",
   },
+  safety: {
+    block: "Block",
+    blockConfirm: "Block this person? You won't see their profile or content anymore, and they won't be able to contact you.",
+    blocked: "Blocked",
+    unblock: "Unblock",
+    report: "Report",
+    reportTitle: "Report",
+    reportReasonSpam: "Spam",
+    reportReasonBehavior: "Inappropriate behavior",
+    reportReasonImpersonation: "Impersonation",
+    reportReasonOther: "Other",
+    reportDescriptionPlaceholder: "Details (optional)",
+    reportSubmit: "Send report",
+    reportSent: "Report sent, thank you.",
+    cancel: "Cancel",
+    blockedUsersTitle: "Blocked users",
+    noBlockedUsers: "No blocked users.",
+  },
 };
 
 export const el: Dictionary = {
@@ -921,6 +976,24 @@ export const el: Dictionary = {
   calendar: {
     tab: "Ημερολόγιο",
     today: "Σήμερα",
+  },
+  safety: {
+    block: "Αποκλεισμός",
+    blockConfirm: "Αποκλεισμός αυτού του ατόμου; Δεν θα βλέπεις πια το προφίλ ή το περιεχόμενό του, και δεν θα μπορεί να σε προσεγγίσει.",
+    blocked: "Αποκλεισμένος/η",
+    unblock: "Άρση αποκλεισμού",
+    report: "Αναφορά",
+    reportTitle: "Αναφορά",
+    reportReasonSpam: "Ανεπιθύμητο περιεχόμενο",
+    reportReasonBehavior: "Ανάρμοστη συμπεριφορά",
+    reportReasonImpersonation: "Πλαστοπροσωπία",
+    reportReasonOther: "Άλλο",
+    reportDescriptionPlaceholder: "Λεπτομέρειες (προαιρετικό)",
+    reportSubmit: "Αποστολή αναφοράς",
+    reportSent: "Η αναφορά στάλθηκε, ευχαριστούμε.",
+    cancel: "Ακύρωση",
+    blockedUsersTitle: "Αποκλεισμένοι χρήστες",
+    noBlockedUsers: "Κανένας αποκλεισμένος χρήστης.",
   },
 };
 
