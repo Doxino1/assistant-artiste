@@ -138,6 +138,7 @@ export interface Dictionary {
     heureLocale: (ville: string, tz: string) => string;
     annonceDisclaimer: string;
     submitted: string;
+    submittedTrusted: string;
     submit: string;
     repeatWeekly: string;
     repeatCountLabel: string;
@@ -439,6 +440,7 @@ export const fr: Dictionary = {
     annonceDisclaimer:
       "La transaction (paiement, échange) se fait directement entre vous, en dehors de l'application — on ne s'en occupe pas.",
     submitted: "Envoyé ! On le relit vite fait avant de le publier dans le flux.",
+    submittedTrusted: "Publié directement — tes soumissions précédentes t'ont valu la confiance de la maison.",
     submit: "Soumettre",
     repeatWeekly: "Répéter chaque semaine",
     repeatCountLabel: "Nombre d'occurrences (dont celle-ci)",
@@ -733,6 +735,7 @@ export const en: Dictionary = {
     annonceDisclaimer:
       "The transaction (payment, exchange) happens directly between you, outside the app — we don't handle it.",
     submitted: "Sent! We'll take a quick look before it goes live.",
+    submittedTrusted: "Published right away — your past submissions earned you trusted status.",
     submit: "Submit",
     repeatWeekly: "Repeat weekly",
     repeatCountLabel: "Number of occurrences (including this one)",
@@ -1028,6 +1031,7 @@ export const el: Dictionary = {
     annonceDisclaimer:
       "Η συναλλαγή (πληρωμή, ανταλλαγή) γίνεται απευθείας μεταξύ σας, εκτός εφαρμογής — δεν εμπλεκόμαστε.",
     submitted: "Στάλθηκε! Θα της ρίξουμε μια ματιά πριν δημοσιευτεί.",
+    submittedTrusted: "Δημοσιεύτηκε αμέσως — οι προηγούμενες προτάσεις σου σου χάρισαν την εμπιστοσύνη μας.",
     submit: "Υποβολή",
     repeatWeekly: "Επανάληψη κάθε εβδομάδα",
     repeatCountLabel: "Αριθμός επαναλήψεων (μαζί με αυτή)",

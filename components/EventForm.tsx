@@ -24,10 +24,19 @@ export interface RecurrenceValue {
   count: number;
 }
 
+export interface EventFormSubmitResult {
+  error: string | null;
+  // Permet à l'appelant de personnaliser le message de succès selon le
+  // résultat réel de la soumission (ex : publication immédiate pour un
+  // contributeur de confiance) plutôt que d'afficher un texte statique
+  // potentiellement faux.
+  successMessage?: string;
+}
+
 interface EventFormProps {
   initial: EventFormValues;
   submitLabel: string;
-  onSubmit: (values: EventFormValues) => Promise<string | null>;
+  onSubmit: (values: EventFormValues) => Promise<EventFormSubmitResult>;
   successMessage?: string;
   resetOnSuccess?: boolean;
   extra?: React.ReactNode;
@@ -63,14 +72,15 @@ export function EventForm({
     setError(null);
     setMessage(null);
 
-    const err = await onSubmit(values);
+    const result = await onSubmit(values);
 
     setLoading(false);
-    if (err) {
-      setError(err);
+    if (result.error) {
+      setError(result.error);
       return;
     }
-    if (successMessage) setMessage(successMessage);
+    const finalMessage = result.successMessage ?? successMessage;
+    if (finalMessage) setMessage(finalMessage);
     if (resetOnSuccess) setValues(initial);
   }
 

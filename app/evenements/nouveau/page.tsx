@@ -44,7 +44,7 @@ export default function NouvelEvenementPage() {
     };
   }, [router]);
 
-  async function handleSubmit(values: EventFormValues): Promise<string | null> {
+  async function handleSubmit(values: EventFormValues) {
     const supabase = createClient();
     const {
       data: { user },
@@ -52,7 +52,7 @@ export default function NouvelEvenementPage() {
 
     if (!user) {
       router.push("/login");
-      return null;
+      return { error: null };
     }
 
     // L'heure saisie est l'heure locale de la ville de l'événement (pas celle
@@ -85,9 +85,15 @@ export default function NouvelEvenementPage() {
       };
     });
 
-    const { error: insertError } = await supabase.from("events").insert(rows);
+    const { data: inserted, error: insertError } = await supabase
+      .from("events")
+      .insert(rows)
+      .select("statut");
 
-    return insertError ? insertError.message : null;
+    if (insertError) return { error: insertError.message };
+
+    const autoPublished = inserted?.[0]?.statut === "publie";
+    return { error: null, successMessage: autoPublished ? t.submission.submittedTrusted : t.submission.submitted };
   }
 
   if (checkingAuth) {

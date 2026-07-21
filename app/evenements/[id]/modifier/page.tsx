@@ -69,7 +69,7 @@ export default function ModifierEvenementPage({ params }: { params: Promise<{ id
     };
   }, [id, router]);
 
-  async function handleSubmit(values: EventFormValues): Promise<string | null> {
+  async function handleSubmit(values: EventFormValues) {
     const supabase = createClient();
     const dateIso = zonedTimeToUtcIso(values.date, values.heure, VILLE_TIMEZONES[values.ville]);
 
@@ -87,7 +87,7 @@ export default function ModifierEvenementPage({ params }: { params: Promise<{ id
       })
       .eq("id", id);
 
-    return error ? error.message : null;
+    return { error: error ? error.message : null };
   }
 
   async function handleWithdraw() {
