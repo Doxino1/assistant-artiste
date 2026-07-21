@@ -102,7 +102,7 @@ export default function ModifierEvenementPage({ params }: { params: Promise<{ id
   if (loading) {
     return (
       <div className="mx-auto w-full max-w-sm px-4 py-8">
-        <p className="text-sm text-foreground/60">{t.common.loading}</p>
+        <p className="text-sm text-foreground-muted">{t.common.loading}</p>
       </div>
     );
   }

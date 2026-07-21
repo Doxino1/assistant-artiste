@@ -82,7 +82,7 @@ export function EventForm({
         placeholder={t.submission.titre}
         value={values.titre}
         onChange={(e) => set("titre", e.target.value)}
-        className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+        className="rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
       />
 
       <textarea
@@ -90,13 +90,13 @@ export function EventForm({
         value={values.description}
         onChange={(e) => set("description", e.target.value)}
         rows={3}
-        className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+        className="rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
       />
 
       <select
         value={values.type}
         onChange={(e) => set("type", e.target.value as EventType)}
-        className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
+        className="rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm"
       >
         {Object.entries(t.eventTypeLabels).map(([value, label]) => (
           <option key={value} value={value}>
@@ -110,7 +110,7 @@ export function EventForm({
           <select
             value={values.sousType}
             onChange={(e) => set("sousType", e.target.value as AnnouncementSubtype)}
-            className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
+            className="rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm"
           >
             {Object.entries(t.announcementSubtypeLabels).map(([value, label]) => (
               <option key={value} value={value}>
@@ -118,7 +118,7 @@ export function EventForm({
               </option>
             ))}
           </select>
-          <p className="rounded-md bg-foreground/5 px-3 py-2 text-xs text-foreground/60">
+          <p className="rounded-lg bg-foreground/5 px-3 py-2 text-xs text-foreground-muted">
             {t.submission.annonceDisclaimer}
           </p>
         </>
@@ -127,7 +127,7 @@ export function EventForm({
       <select
         value={values.discipline}
         onChange={(e) => set("discipline", e.target.value)}
-        className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
+        className="rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm"
       >
         {DISCIPLINES.map((d) => (
           <option key={d} value={d}>
@@ -139,7 +139,7 @@ export function EventForm({
       <select
         value={values.ville}
         onChange={(e) => set("ville", e.target.value as Ville)}
-        className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
+        className="rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm"
       >
         {VILLES.map((v) => (
           <option key={v} value={v}>
@@ -154,7 +154,7 @@ export function EventForm({
         placeholder={t.submission.lieu}
         value={values.lieu}
         onChange={(e) => set("lieu", e.target.value)}
-        className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+        className="rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
       />
 
       <div className="flex gap-2">
@@ -163,14 +163,14 @@ export function EventForm({
           required
           value={values.date}
           onChange={(e) => set("date", e.target.value)}
-          className="w-1/2 rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+          className="w-1/2 rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
         />
         <input
           type="time"
           required
           value={values.heure}
           onChange={(e) => set("heure", e.target.value)}
-          className="w-1/2 rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+          className="w-1/2 rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
         />
       </div>
       <p className="text-xs text-foreground/50">
@@ -178,7 +178,7 @@ export function EventForm({
       </p>
 
       {recurrence && onRecurrenceChange && (
-        <div className="rounded-md border border-foreground/10 p-3">
+        <div className="rounded-lg border border-foreground/10 p-3">
           <label className="flex items-center gap-2 text-sm">
             <input
               type="checkbox"
@@ -189,7 +189,7 @@ export function EventForm({
           </label>
           {recurrence.repeatWeekly && (
             <>
-              <label className="mt-2 block text-xs text-foreground/60">
+              <label className="mt-2 block text-xs text-foreground-muted">
                 {t.submission.repeatCountLabel}
                 <input
                   type="number"
@@ -202,7 +202,7 @@ export function EventForm({
                       count: Math.min(MAX_RECURRENCE_COUNT, Math.max(2, Number(e.target.value) || 2)),
                     })
                   }
-                  className="mt-1 w-20 rounded-md border border-foreground/20 bg-transparent px-2 py-1 text-sm"
+                  className="mt-1 w-20 rounded-lg border border-foreground/20 bg-transparent px-2 py-1 text-sm"
                 />
               </label>
               <p className="mt-1 text-xs text-foreground/50">{t.submission.repeatHint}</p>
@@ -217,7 +217,7 @@ export function EventForm({
       <button
         type="submit"
         disabled={loading}
-        className="mt-2 rounded-full bg-foreground px-4 py-2 text-sm text-background transition disabled:opacity-50"
+        className="mt-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-foreground transition hover:opacity-90 disabled:opacity-50"
       >
         {loading ? "…" : submitLabel}
       </button>

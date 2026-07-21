@@ -16,9 +16,9 @@ export function SaveButtons({ status, onChange }: SaveButtonsProps) {
       <button
         type="button"
         onClick={() => onChange(status === "sauvegarde" ? null : "sauvegarde")}
-        className={`rounded-full border px-3 py-1 text-sm transition ${
+        className={`rounded-lg border px-3 py-1 text-sm transition ${
           status === "sauvegarde"
-            ? "border-foreground bg-foreground text-background"
+            ? "border-accent bg-accent text-accent-foreground"
             : "border-foreground/20 hover:border-foreground/40"
         }`}
       >
@@ -27,9 +27,9 @@ export function SaveButtons({ status, onChange }: SaveButtonsProps) {
       <button
         type="button"
         onClick={() => onChange(status === "je_viens" ? null : "je_viens")}
-        className={`rounded-full border px-3 py-1 text-sm transition ${
+        className={`rounded-lg border px-3 py-1 text-sm transition ${
           status === "je_viens"
-            ? "border-foreground bg-foreground text-background"
+            ? "border-accent bg-accent text-accent-foreground"
             : "border-foreground/20 hover:border-foreground/40"
         }`}
       >

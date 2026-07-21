@@ -1,18 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Piazzolla } from "next/font/google";
 import { Header } from "@/components/Header";
 import { LocaleProvider } from "@/lib/i18n/context";
 import { createClient } from "@/lib/supabase/server";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+// Inter et Piazzolla couvrent tous les alphabets utilisés par l'app (latin +
+// grec) — Fraunces/Instrument Serif n'ont pas de glyphes grecs, ce qui aurait
+// cassé la cohérence typographique pour les titres en langue EL.
+const inter = Inter({
+  variable: "--font-sans",
+  subsets: ["latin", "greek"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const piazzolla = Piazzolla({
+  variable: "--font-display",
+  subsets: ["latin", "greek"],
 });
 
 export const metadata: Metadata = {
@@ -43,7 +46,7 @@ export default async function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${piazzolla.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <LocaleProvider>

@@ -56,9 +56,9 @@ export default function UtilisateursBloquesPage() {
       <h1 className="text-xl font-semibold">{t.safety.blockedUsersTitle}</h1>
 
       <div className="mt-6 flex flex-col gap-2">
-        {blocked === null && <p className="text-sm text-foreground/60">{t.common.loading}</p>}
+        {blocked === null && <p className="text-sm text-foreground-muted">{t.common.loading}</p>}
         {blocked !== null && blocked.length === 0 && (
-          <p className="text-sm text-foreground/60">{t.safety.noBlockedUsers}</p>
+          <p className="text-sm text-foreground-muted">{t.safety.noBlockedUsers}</p>
         )}
         {(blocked ?? []).map((b) => (
           <div
@@ -69,7 +69,7 @@ export default function UtilisateursBloquesPage() {
             <button
               type="button"
               onClick={() => handleUnblock(b.blocked_id)}
-              className="rounded-full border border-foreground/20 px-3 py-1 text-xs hover:border-foreground/40"
+              className="rounded-lg border border-foreground/20 px-3 py-1 text-xs hover:border-foreground/40"
             >
               {t.safety.unblock}
             </button>

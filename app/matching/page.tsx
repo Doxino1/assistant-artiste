@@ -115,7 +115,7 @@ export default function MatchingPage() {
   if (loading) {
     return (
       <div className="mx-auto w-full max-w-2xl px-4 py-8">
-        <p className="text-sm text-foreground/60">{t.common.loading}</p>
+        <p className="text-sm text-foreground-muted">{t.common.loading}</p>
       </div>
     );
   }
@@ -123,16 +123,16 @@ export default function MatchingPage() {
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8">
       <h1 className="text-xl font-semibold">{t.matching.title}</h1>
-      <p className="mt-1 text-sm text-foreground/60">{t.matching.subtitle}</p>
+      <p className="mt-1 text-sm text-foreground-muted">{t.matching.subtitle}</p>
 
       {error && <p className="mt-6 text-sm text-red-600">{error}</p>}
 
       {!error && myTags.length === 0 && (
-        <p className="mt-6 text-sm text-foreground/60">{t.matching.needTag}</p>
+        <p className="mt-6 text-sm text-foreground-muted">{t.matching.needTag}</p>
       )}
 
       {!error && myTags.length > 0 && suggestions.length === 0 && (
-        <p className="mt-6 text-sm text-foreground/60">{t.matching.noResults}</p>
+        <p className="mt-6 text-sm text-foreground-muted">{t.matching.noResults}</p>
       )}
 
       <div className="mt-6 flex flex-col gap-3">
@@ -142,9 +142,9 @@ export default function MatchingPage() {
               <Link href={`/artistes/${s.id}`} className="font-medium hover:underline">
                 {s.nom}
               </Link>
-              <span className="text-xs text-foreground/60">{t.profileTypeLabels[s.typeProfil]}</span>
+              <span className="text-xs text-foreground-muted">{t.profileTypeLabels[s.typeProfil]}</span>
             </div>
-            <p className="mt-1 text-sm text-foreground/60">
+            <p className="mt-1 text-sm text-foreground-muted">
               {s.disciplines.map((d) => t.disciplineLabels[d] ?? d).join(", ")}
             </p>
             {s.bio && <p className="mt-2 text-sm">{s.bio}</p>}
@@ -152,7 +152,7 @@ export default function MatchingPage() {
               {s.sharedTags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full bg-foreground/5 px-2 py-0.5 text-xs text-foreground/60"
+                  className="rounded-full bg-foreground/5 px-2 py-0.5 text-xs text-foreground-muted"
                 >
                   {t.matchingTagLabels[tag]}
                 </span>
@@ -162,7 +162,7 @@ export default function MatchingPage() {
               {s.emailContact ? (
                 <a
                   href={`mailto:${s.emailContact}`}
-                  className="rounded-full border border-foreground/20 px-3 py-1 text-sm hover:border-foreground/40"
+                  className="rounded-lg border border-accent/40 px-3 py-1 text-sm text-accent hover:border-accent"
                 >
                   {t.matching.contact}
                 </a>

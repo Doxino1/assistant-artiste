@@ -107,13 +107,13 @@ export default function MesPostsPage() {
           value={legende}
           onChange={(e) => setLegende(e.target.value)}
           rows={2}
-          className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+          className="rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
         />
         {error && <p className="text-sm text-red-600">{error}</p>}
         <button
           type="submit"
           disabled={saving}
-          className="self-start rounded-full bg-foreground px-4 py-2 text-sm text-background transition disabled:opacity-50"
+          className="self-start rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-foreground transition hover:opacity-90 disabled:opacity-50"
         >
           {saving ? "…" : t.posts.publish}
         </button>
@@ -121,7 +121,7 @@ export default function MesPostsPage() {
 
       <div className="mt-6 grid grid-cols-3 gap-1">
         {posts !== null && posts.length === 0 && (
-          <p className="col-span-full text-sm text-foreground/60">{t.posts.empty}</p>
+          <p className="col-span-full text-sm text-foreground-muted">{t.posts.empty}</p>
         )}
         {(posts ?? []).map((post) => (
           <div key={post.id} className="group relative aspect-square">

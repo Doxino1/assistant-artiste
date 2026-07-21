@@ -93,7 +93,7 @@ export default function NouvelEvenementPage() {
   if (checkingAuth) {
     return (
       <div className="mx-auto w-full max-w-sm px-4 py-8">
-        <p className="text-sm text-foreground/60">{t.common.loading}</p>
+        <p className="text-sm text-foreground-muted">{t.common.loading}</p>
       </div>
     );
   }
@@ -101,7 +101,7 @@ export default function NouvelEvenementPage() {
   return (
     <div className="mx-auto w-full max-w-sm px-4 py-8">
       <h1 className="text-xl font-semibold">{t.submission.title}</h1>
-      <p className="mt-1 text-sm text-foreground/60">{t.submission.subtitle}</p>
+      <p className="mt-1 text-sm text-foreground-muted">{t.submission.subtitle}</p>
 
       <EventForm
         initial={INITIAL}

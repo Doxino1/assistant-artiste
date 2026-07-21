@@ -21,14 +21,14 @@ export function EventCard({ event }: { event: ArtEvent }) {
   return (
     <div className="rounded-lg border border-foreground/10 p-4 transition hover:border-foreground/30">
       <Link href={`/events/${event.id}`} className="block">
-        <div className="flex items-center justify-between gap-2 text-xs text-foreground/60">
+        <div className="flex items-center justify-between gap-2 text-xs text-foreground-muted">
           <span className="rounded-full bg-foreground/5 px-2 py-0.5">
             {t.eventTypeLabels[event.type]}
           </span>
           <span>{date}</span>
         </div>
         <h3 className="mt-2 font-medium">{event.titre}</h3>
-        <p className="mt-1 text-sm text-foreground/60">
+        <p className="mt-1 text-sm text-foreground-muted">
           {t.villeLabels[event.ville]} · {t.disciplineLabels[event.discipline] ?? event.discipline}
         </p>
       </Link>
@@ -36,7 +36,7 @@ export function EventCard({ event }: { event: ArtEvent }) {
         {canSave ? (
           <SaveButtons status={saved[event.id]} onChange={(status) => setStatus(event.id, status)} />
         ) : (
-          <Link href="/login" className="text-xs text-foreground/40 hover:text-foreground/60">
+          <Link href="/login" className="text-xs text-foreground/40 hover:text-foreground-muted">
             {t.saveButtons.loginToSave}
           </Link>
         )}

@@ -86,11 +86,11 @@ export function BlockReportActions({ targetUserId, targetName, onBlocked, classN
       {message && <p className="mt-1 text-xs text-green-700">{message}</p>}
 
       {showReport && (
-        <form onSubmit={handleReport} className="mt-2 flex flex-col gap-2 rounded-md border border-foreground/10 p-2">
+        <form onSubmit={handleReport} className="mt-2 flex flex-col gap-2 rounded-lg border border-foreground/10 p-2">
           <select
             value={motif}
             onChange={(e) => setMotif(e.target.value as ReportReason)}
-            className="rounded-md border border-foreground/20 bg-transparent px-2 py-1 text-xs"
+            className="rounded-lg border border-foreground/20 bg-transparent px-2 py-1 text-xs"
           >
             <option value="spam">{t.safety.reportReasonSpam}</option>
             <option value="comportement">{t.safety.reportReasonBehavior}</option>
@@ -102,20 +102,20 @@ export function BlockReportActions({ targetUserId, targetName, onBlocked, classN
             onChange={(e) => setDescription(e.target.value)}
             placeholder={t.safety.reportDescriptionPlaceholder}
             rows={2}
-            className="rounded-md border border-foreground/20 bg-transparent px-2 py-1 text-xs outline-none focus:border-foreground/50"
+            className="rounded-lg border border-foreground/20 bg-transparent px-2 py-1 text-xs outline-none focus:border-foreground/50"
           />
           <div className="flex gap-2">
             <button
               type="submit"
               disabled={busy}
-              className="rounded-full bg-foreground px-3 py-1 text-xs text-background disabled:opacity-50"
+              className="rounded-lg bg-foreground px-3 py-1 text-xs text-background disabled:opacity-50"
             >
               {busy ? "…" : t.safety.reportSubmit}
             </button>
             <button
               type="button"
               onClick={() => setShowReport(false)}
-              className="rounded-full border border-foreground/20 px-3 py-1 text-xs hover:border-foreground/40"
+              className="rounded-lg border border-foreground/20 px-3 py-1 text-xs hover:border-foreground/40"
             >
               {t.safety.cancel}
             </button>

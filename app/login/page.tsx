@@ -98,7 +98,7 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={() => setMode("connexion")}
-          className={`rounded-full border px-4 py-1.5 text-sm transition ${
+          className={`rounded-lg border px-4 py-1.5 text-sm transition ${
             mode === "connexion"
               ? "border-foreground bg-foreground text-background"
               : "border-foreground/20 hover:border-foreground/40"
@@ -109,7 +109,7 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={() => setMode("inscription")}
-          className={`rounded-full border px-4 py-1.5 text-sm transition ${
+          className={`rounded-lg border px-4 py-1.5 text-sm transition ${
             mode === "inscription"
               ? "border-foreground bg-foreground text-background"
               : "border-foreground/20 hover:border-foreground/40"
@@ -120,7 +120,7 @@ export default function LoginPage() {
       </div>
 
       {mode === "mot_de_passe_oublie" && (
-        <p className="mb-3 text-sm text-foreground/60">{t.auth.resetInstructions}</p>
+        <p className="mb-3 text-sm text-foreground-muted">{t.auth.resetInstructions}</p>
       )}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
@@ -130,7 +130,7 @@ export default function LoginPage() {
           placeholder={t.auth.email}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+          className="rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
         />
 
         {mode !== "mot_de_passe_oublie" && (
@@ -141,7 +141,7 @@ export default function LoginPage() {
             placeholder={t.auth.motDePasse}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+            className="rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
           />
         )}
 
@@ -154,7 +154,7 @@ export default function LoginPage() {
                 setError(null);
                 setMessage(null);
               }}
-              className="text-sm text-foreground/60 hover:text-foreground"
+              className="text-sm text-foreground-muted hover:text-foreground"
             >
               {t.auth.motDePasseOublie}
             </button>
@@ -162,7 +162,7 @@ export default function LoginPage() {
               type="button"
               onClick={handleResendConfirmation}
               disabled={resending}
-              className="text-sm text-foreground/60 hover:text-foreground disabled:opacity-50"
+              className="text-sm text-foreground-muted hover:text-foreground disabled:opacity-50"
             >
               {resending ? "…" : t.auth.resendConfirmation}
             </button>
@@ -176,7 +176,7 @@ export default function LoginPage() {
             placeholder={t.auth.nom}
             value={nom}
             onChange={(e) => setNom(e.target.value)}
-            className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+            className="rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
           />
         )}
 
@@ -186,7 +186,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-2 rounded-full bg-foreground px-4 py-2 text-sm text-background transition disabled:opacity-50"
+          className="mt-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-foreground transition hover:opacity-90 disabled:opacity-50"
         >
           {loading
             ? "…"

@@ -38,13 +38,13 @@ export default function SupprimerComptePage() {
       <h1 className="text-xl font-semibold text-red-600">{t.account.deleteAccount}</h1>
       <p className="mt-3 text-sm text-foreground/70">{t.account.deleteWarning}</p>
 
-      <label className="mt-6 block text-sm text-foreground/60">
+      <label className="mt-6 block text-sm text-foreground-muted">
         {t.account.deleteConfirmLabel(t.account.deleteConfirmWord)}
         <input
           type="text"
           value={confirmText}
           onChange={(e) => setConfirmText(e.target.value)}
-          className="mt-1 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+          className="mt-1 w-full rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
         />
       </label>
 
@@ -54,7 +54,7 @@ export default function SupprimerComptePage() {
         type="button"
         onClick={handleDelete}
         disabled={!canDelete || deleting}
-        className="mt-4 w-full rounded-full bg-red-600 px-4 py-2 text-sm text-white transition disabled:opacity-40"
+        className="mt-4 w-full rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition disabled:opacity-40"
       >
         {deleting ? "…" : t.account.deleteButton}
       </button>

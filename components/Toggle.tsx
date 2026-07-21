@@ -16,7 +16,7 @@ export function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: 
         aria-checked={checked}
         onClick={() => onChange(!checked)}
         className={`relative h-[18px] w-8 rounded-full transition ${
-          checked ? "bg-foreground" : "bg-foreground/20"
+          checked ? "bg-accent" : "bg-foreground/20"
         }`}
       >
         <span

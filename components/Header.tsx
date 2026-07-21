@@ -16,28 +16,28 @@ export function Header({
 
   return (
     <nav className="mx-auto flex w-full max-w-2xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 text-sm">
-      <Link href="/" className="font-medium">
+      <Link href="/" className="font-display text-base font-medium">
         {t.nav.evenements}
       </Link>
       {userEmail && (
         <>
-          <Link href="/matching" className="text-foreground/60 hover:text-foreground">
+          <Link href="/matching" className="text-foreground-muted hover:text-foreground">
             {t.nav.matching}
           </Link>
-          <Link href="/artistes" className="text-foreground/60 hover:text-foreground">
+          <Link href="/artistes" className="text-foreground-muted hover:text-foreground">
             {t.artiste.directory}
           </Link>
-          <Link href="/communaute" className="text-foreground/60 hover:text-foreground">
+          <Link href="/communaute" className="text-foreground-muted hover:text-foreground">
             {t.nav.communaute}
           </Link>
-          <Link href="/boutiques" className="text-foreground/60 hover:text-foreground">
+          <Link href="/boutiques" className="text-foreground-muted hover:text-foreground">
             {t.shops.title}
           </Link>
-          <Link href="/profil" className="text-foreground/60 hover:text-foreground">
+          <Link href="/profil" className="text-foreground-muted hover:text-foreground">
             {t.nav.profil}
           </Link>
           {isModerator && (
-            <Link href="/moderation" className="text-foreground/60 hover:text-foreground">
+            <Link href="/moderation" className="text-foreground-muted hover:text-foreground">
               {t.nav.moderation}
             </Link>
           )}
@@ -63,11 +63,11 @@ export function Header({
       <div className="ml-auto flex items-center gap-4">
         {userEmail ? (
           <>
-            <span className="text-foreground/60">{userEmail}</span>
+            <span className="text-foreground-muted">{userEmail}</span>
             <SignOutButton />
           </>
         ) : (
-          <Link href="/login" className="text-foreground/60 hover:text-foreground">
+          <Link href="/login" className="text-foreground-muted hover:text-foreground">
             {t.nav.connexion}
           </Link>
         )}

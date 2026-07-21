@@ -3,6 +3,7 @@
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { SaveButtons } from "@/components/SaveButtons";
 import { CalendarButtons } from "@/components/CalendarButtons";
 import { useEvents } from "@/lib/use-events";
@@ -37,7 +38,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
   if (loading) {
     return (
       <div className="mx-auto w-full max-w-2xl px-4 py-8">
-        <p className="text-sm text-foreground/60">{t.common.loading}</p>
+        <p className="text-sm text-foreground-muted">{t.common.loading}</p>
       </div>
     );
   }
@@ -68,11 +69,12 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
 
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8">
-      <Link href="/" className="text-sm text-foreground/60 hover:text-foreground">
+      <Link href="/" className="flex items-center gap-1 text-sm text-foreground-muted hover:text-foreground">
+        <ArrowLeft size={14} strokeWidth={1.75} />
         {t.eventDetail.back}
       </Link>
 
-      <div className="mt-4 flex items-center justify-between gap-2 text-xs text-foreground/60">
+      <div className="mt-4 flex items-center justify-between gap-2 text-xs text-foreground-muted">
         <span className="rounded-full bg-foreground/5 px-2 py-0.5">
           {t.eventTypeLabels[event.type]}
         </span>
@@ -80,19 +82,19 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
       </div>
 
       <h1 className="mt-3 text-2xl font-semibold">{event.titre}</h1>
-      <p className="mt-1 text-sm text-foreground/60">{date}</p>
-      <p className="mt-1 text-sm text-foreground/60">{event.lieu}</p>
+      <p className="mt-1 text-sm text-foreground-muted">{date}</p>
+      <p className="mt-1 text-sm text-foreground-muted">{event.lieu}</p>
 
       <p className="mt-6 text-base leading-relaxed">{event.description}</p>
 
       {event.type === "annonce" && (
-        <p className="mt-4 rounded-md bg-foreground/5 px-3 py-2 text-xs text-foreground/60">
+        <p className="mt-4 rounded-lg bg-foreground/5 px-3 py-2 text-xs text-foreground-muted">
           {t.eventDetail.annonceDisclaimer}
         </p>
       )}
 
       {goingFollows.length > 0 && (
-        <p className="mt-4 text-sm text-foreground/60">
+        <p className="mt-4 text-sm text-foreground-muted">
           {t.eventDetail.goingFollows(
             goingFollows.map((f) => f.nom).join(", "),
             goingFollows.length
@@ -108,7 +110,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
         {canSave ? (
           <SaveButtons status={saved[event.id]} onChange={(status) => setStatus(event.id, status)} />
         ) : (
-          <Link href="/login" className="text-sm text-foreground/40 hover:text-foreground/60">
+          <Link href="/login" className="text-sm text-foreground/40 hover:text-foreground-muted">
             {t.saveButtons.loginToSave}
           </Link>
         )}

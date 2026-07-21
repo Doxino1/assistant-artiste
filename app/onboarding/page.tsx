@@ -10,7 +10,7 @@ const VILLES: Ville[] = ["Paris", "Athènes"];
 const TOTAL_STEPS = 5;
 
 function chipClass(active: boolean) {
-  return `rounded-full border px-3 py-1 text-sm transition ${
+  return `rounded-lg border px-3 py-1 text-sm transition ${
     active
       ? "border-foreground bg-foreground text-background"
       : "border-foreground/20 hover:border-foreground/40"
@@ -101,22 +101,22 @@ export default function OnboardingPage() {
         {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
           <div
             key={i}
-            className={`h-1 flex-1 rounded-full ${i < step ? "bg-foreground" : "bg-foreground/10"}`}
+            className={`h-1 flex-1 rounded-full ${i < step ? "bg-accent" : "bg-foreground/10"}`}
           />
         ))}
       </div>
 
       {step === 1 && (
         <div className="mt-6">
-          <h1 className="text-lg font-medium">{t.onboarding.step1Title}</h1>
-          <p className="mt-1 text-sm text-foreground/60">{t.onboarding.step1Hint}</p>
+          <h1 className="font-display text-xl font-medium">{t.onboarding.step1Title}</h1>
+          <p className="mt-1 text-sm text-foreground-muted">{t.onboarding.step1Hint}</p>
           <div className="mt-4 flex flex-col gap-2">
             {VILLES.map((v) => (
               <button
                 key={v}
                 type="button"
                 onClick={() => setVille(v)}
-                className={`rounded-md border px-3 py-2.5 text-left text-sm transition ${
+                className={`rounded-lg border px-3 py-2.5 text-left text-sm transition ${
                   ville === v
                     ? "border-foreground bg-foreground text-background"
                     : "border-foreground/20 hover:border-foreground/40"
@@ -131,8 +131,8 @@ export default function OnboardingPage() {
 
       {step === 2 && (
         <div className="mt-6">
-          <h1 className="text-lg font-medium">{t.onboarding.step2Title}</h1>
-          <p className="mt-1 text-sm text-foreground/60">{t.onboarding.step2Hint}</p>
+          <h1 className="font-display text-xl font-medium">{t.onboarding.step2Title}</h1>
+          <p className="mt-1 text-sm text-foreground-muted">{t.onboarding.step2Hint}</p>
           <div className="mt-4 flex flex-wrap gap-2">
             {DISCIPLINES.map((d) => (
               <button key={d} type="button" onClick={() => toggleDiscipline(d)} className={chipClass(disciplines.includes(d))}>
@@ -145,14 +145,14 @@ export default function OnboardingPage() {
 
       {step === 3 && (
         <div className="mt-6">
-          <h1 className="text-lg font-medium">{t.onboarding.step3Title}</h1>
+          <h1 className="font-display text-xl font-medium">{t.onboarding.step3Title}</h1>
           <div className="mt-4 flex flex-col gap-2">
             {PROFILE_TYPES.map((pt) => (
               <button
                 key={pt}
                 type="button"
                 onClick={() => setTypeProfil(pt)}
-                className={`rounded-md border px-3 py-2.5 text-left text-sm transition ${
+                className={`rounded-lg border px-3 py-2.5 text-left text-sm transition ${
                   typeProfil === pt
                     ? "border-foreground bg-foreground text-background"
                     : "border-foreground/20 hover:border-foreground/40"
@@ -167,8 +167,8 @@ export default function OnboardingPage() {
 
       {step === 4 && (
         <div className="mt-6">
-          <h1 className="text-lg font-medium">{t.onboarding.step4Title}</h1>
-          <p className="mt-1 text-sm text-foreground/60">{t.onboarding.step4Hint}</p>
+          <h1 className="font-display text-xl font-medium">{t.onboarding.step4Title}</h1>
+          <p className="mt-1 text-sm text-foreground-muted">{t.onboarding.step4Hint}</p>
           <div className="mt-4 flex flex-wrap gap-2">
             {MATCHING_TAGS.map((tag) => (
               <button key={tag} type="button" onClick={() => toggleMatchingTag(tag)} className={chipClass(matchingTags.includes(tag))}>
@@ -181,8 +181,8 @@ export default function OnboardingPage() {
 
       {step === 5 && (
         <div className="mt-6">
-          <h1 className="text-lg font-medium">{t.onboarding.step5Title}</h1>
-          <p className="mt-1 text-sm text-foreground/60">{t.onboarding.step5Intro}</p>
+          <h1 className="font-display text-xl font-medium">{t.onboarding.step5Title}</h1>
+          <p className="mt-1 text-sm text-foreground-muted">{t.onboarding.step5Intro}</p>
           <div className="mt-4 rounded-lg border border-foreground/10 p-4">
             <p className="text-xs text-foreground/50">{t.weeklyEmail.subject(3, t.villeLabels[ville])}</p>
             <p className="mt-3 text-sm font-medium">{t.weeklyEmail.greeting(nom || "…")}</p>
@@ -202,7 +202,7 @@ export default function OnboardingPage() {
 
       <div className="mt-6 flex items-center justify-between gap-2">
         {step > 1 ? (
-          <button type="button" onClick={goBack} className="text-sm text-foreground/60 hover:text-foreground">
+          <button type="button" onClick={goBack} className="text-sm text-foreground-muted hover:text-foreground">
             {t.onboarding.back}
           </button>
         ) : (
@@ -211,7 +211,7 @@ export default function OnboardingPage() {
 
         <div className="flex items-center gap-3">
           {step === 4 && (
-            <button type="button" onClick={goNext} className="text-sm text-foreground/60 hover:text-foreground">
+            <button type="button" onClick={goNext} className="text-sm text-foreground-muted hover:text-foreground">
               {t.onboarding.skip}
             </button>
           )}
@@ -221,7 +221,7 @@ export default function OnboardingPage() {
               type="button"
               onClick={goNext}
               disabled={step === 2 && disciplines.length === 0}
-              className="rounded-full bg-foreground px-4 py-2 text-sm text-background transition disabled:opacity-40"
+              className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-foreground transition hover:opacity-90 disabled:opacity-40"
             >
               {t.onboarding.next}
             </button>
@@ -230,7 +230,7 @@ export default function OnboardingPage() {
               type="button"
               onClick={finish}
               disabled={saving}
-              className="rounded-full bg-foreground px-4 py-2 text-sm text-background transition disabled:opacity-50"
+              className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-foreground transition hover:opacity-90 disabled:opacity-50"
             >
               {saving ? "…" : t.onboarding.finish}
             </button>

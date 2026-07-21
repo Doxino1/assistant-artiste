@@ -30,7 +30,7 @@ interface MySubmission {
 }
 
 function pillClass(active: boolean) {
-  return `rounded-full border px-4 py-1.5 text-sm transition ${
+  return `rounded-lg border px-4 py-1.5 text-sm transition ${
     active
       ? "border-foreground bg-foreground text-background"
       : "border-foreground/20 hover:border-foreground/40"
@@ -128,7 +128,7 @@ export default function EvenementsPage() {
         {userId && (
           <Link
             href="/evenements/nouveau"
-            className="rounded-full bg-foreground px-4 py-1.5 text-sm text-background transition hover:opacity-90"
+            className="rounded-lg bg-accent px-4 py-1.5 text-sm font-medium text-accent-foreground transition hover:opacity-90"
           >
             {t.evenements.proposer}
           </Link>
@@ -150,7 +150,7 @@ export default function EvenementsPage() {
             placeholder={t.evenements.searchPlaceholder}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="mb-4 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+            className="mb-4 w-full rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
           />
 
           <div className="mb-2 -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -190,10 +190,10 @@ export default function EvenementsPage() {
           </div>
 
           <div className="flex flex-col gap-3">
-            {loading && <p className="text-sm text-foreground/60">{t.common.loading}</p>}
+            {loading && <p className="text-sm text-foreground-muted">{t.common.loading}</p>}
             {error && <p className="text-sm text-red-600">{t.evenements.loadError(error)}</p>}
             {!loading && !error && events.length === 0 && (
-              <p className="text-sm text-foreground/60">{t.evenements.noResults}</p>
+              <p className="text-sm text-foreground-muted">{t.evenements.noResults}</p>
             )}
             {events.map((event) => (
               <EventCard key={event.id} event={event} />
@@ -230,10 +230,10 @@ export default function EvenementsPage() {
 
       {tab === "mes" && (
         <>
-          {checkingUser && <p className="text-sm text-foreground/60">{t.common.loading}</p>}
+          {checkingUser && <p className="text-sm text-foreground-muted">{t.common.loading}</p>}
 
           {!checkingUser && !userId && (
-            <p className="text-sm text-foreground/60">
+            <p className="text-sm text-foreground-muted">
               <Link href="/login" className="underline hover:text-foreground">
                 {t.evenements.loginLink}
               </Link>{" "}
@@ -244,10 +244,10 @@ export default function EvenementsPage() {
           {!checkingUser && userId && (
             <>
               <section>
-                <h2 className="text-sm font-medium text-foreground/60">{t.evenements.jeViens}</h2>
+                <h2 className="text-sm font-medium text-foreground-muted">{t.evenements.jeViens}</h2>
                 <div className="mt-3 flex flex-col gap-3">
                   {goingEvents.length === 0 && (
-                    <p className="text-sm text-foreground/60">{t.evenements.noneYet}</p>
+                    <p className="text-sm text-foreground-muted">{t.evenements.noneYet}</p>
                   )}
                   {goingEvents.map((event) => (
                     <EventCard key={event.id} event={event} />
@@ -256,10 +256,10 @@ export default function EvenementsPage() {
               </section>
 
               <section className="mt-8">
-                <h2 className="text-sm font-medium text-foreground/60">{t.evenements.sauvegardes}</h2>
+                <h2 className="text-sm font-medium text-foreground-muted">{t.evenements.sauvegardes}</h2>
                 <div className="mt-3 flex flex-col gap-3">
                   {savedEvents.length === 0 && (
-                    <p className="text-sm text-foreground/60">{t.evenements.noneYet}</p>
+                    <p className="text-sm text-foreground-muted">{t.evenements.noneYet}</p>
                   )}
                   {savedEvents.map((event) => (
                     <EventCard key={event.id} event={event} />
@@ -268,13 +268,13 @@ export default function EvenementsPage() {
               </section>
 
               <section className="mt-8">
-                <h2 className="text-sm font-medium text-foreground/60">{t.evenements.mesSoumissions}</h2>
+                <h2 className="text-sm font-medium text-foreground-muted">{t.evenements.mesSoumissions}</h2>
                 <div className="mt-3 flex flex-col gap-3">
                   {submissions === null && (
-                    <p className="text-sm text-foreground/60">{t.common.loading}</p>
+                    <p className="text-sm text-foreground-muted">{t.common.loading}</p>
                   )}
                   {submissions !== null && submissions.length === 0 && (
-                    <p className="text-sm text-foreground/60">{t.evenements.noSubmissions}</p>
+                    <p className="text-sm text-foreground-muted">{t.evenements.noSubmissions}</p>
                   )}
                   {(submissions ?? []).map((s) => (
                     <div key={s.id} className="rounded-lg border border-foreground/10 p-4">
@@ -284,7 +284,7 @@ export default function EvenementsPage() {
                           className={`rounded-full px-2 py-0.5 text-xs ${
                             s.statut === "publie"
                               ? "bg-green-600/10 text-green-700"
-                              : "bg-foreground/5 text-foreground/60"
+                              : "bg-foreground/5 text-foreground-muted"
                           }`}
                         >
                           {s.statut === "publie"
@@ -292,7 +292,7 @@ export default function EvenementsPage() {
                             : t.evenements.statutEnAttente}
                         </span>
                       </div>
-                      <p className="mt-1 text-sm text-foreground/60">
+                      <p className="mt-1 text-sm text-foreground-muted">
                         {t.villeLabels[s.ville]} ·{" "}
                         {formatInVille(s.date, s.ville, {
                           day: "numeric",
@@ -304,7 +304,7 @@ export default function EvenementsPage() {
                       <div className="mt-2 flex gap-3 text-xs">
                         <Link
                           href={`/evenements/${s.id}/modifier`}
-                          className="text-foreground/60 underline hover:text-foreground"
+                          className="text-foreground-muted underline hover:text-foreground"
                         >
                           {t.evenements.editLink}
                         </Link>

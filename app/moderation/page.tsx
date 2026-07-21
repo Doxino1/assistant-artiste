@@ -69,15 +69,15 @@ export default function ModerationPage() {
       <h1 className="text-xl font-semibold">{t.moderation.title}</h1>
 
       {error && <p className="mt-6 text-sm text-red-600">{t.moderation.loadError(error)}</p>}
-      {events === null && !error && <p className="mt-6 text-sm text-foreground/60">{t.common.loading}</p>}
+      {events === null && !error && <p className="mt-6 text-sm text-foreground-muted">{t.common.loading}</p>}
       {events !== null && events.length === 0 && (
-        <p className="mt-6 text-sm text-foreground/60">{t.moderation.empty}</p>
+        <p className="mt-6 text-sm text-foreground-muted">{t.moderation.empty}</p>
       )}
 
       <div className="mt-6 flex flex-col gap-3">
         {(events ?? []).map((event) => (
           <div key={event.id} className="rounded-lg border border-foreground/10 p-4">
-            <div className="flex items-center justify-between gap-2 text-xs text-foreground/60">
+            <div className="flex items-center justify-between gap-2 text-xs text-foreground-muted">
               <span className="rounded-full bg-foreground/5 px-2 py-0.5">
                 {t.eventTypeLabels[event.type as keyof typeof t.eventTypeLabels] ?? event.type}
               </span>
@@ -91,7 +91,7 @@ export default function ModerationPage() {
               </span>
             </div>
             <h3 className="mt-2 font-medium">{event.titre}</h3>
-            <p className="mt-1 text-sm text-foreground/60">
+            <p className="mt-1 text-sm text-foreground-muted">
               {t.villeLabels[event.ville]} ·{" "}
               {event.discipline ? (t.disciplineLabels[event.discipline] ?? event.discipline) : ""} ·{" "}
               {event.lieu}
@@ -105,7 +105,7 @@ export default function ModerationPage() {
                 type="button"
                 disabled={busyId === event.id}
                 onClick={() => handlePublish(event.id)}
-                className="rounded-full bg-foreground px-3 py-1 text-sm text-background transition disabled:opacity-50"
+                className="rounded-lg bg-foreground px-3 py-1 text-sm text-background transition disabled:opacity-50"
               >
                 {t.moderation.publish}
               </button>
@@ -113,7 +113,7 @@ export default function ModerationPage() {
                 type="button"
                 disabled={busyId === event.id}
                 onClick={() => handleReject(event.id)}
-                className="rounded-full border border-red-600/40 px-3 py-1 text-sm text-red-600 transition hover:border-red-600 disabled:opacity-50"
+                className="rounded-lg border border-red-600/40 px-3 py-1 text-sm text-red-600 transition hover:border-red-600 disabled:opacity-50"
               >
                 {t.moderation.reject}
               </button>

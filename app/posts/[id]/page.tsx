@@ -99,7 +99,7 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
   if (post === undefined) {
     return (
       <div className="mx-auto w-full max-w-md px-4 py-8">
-        <p className="text-sm text-foreground/60">{t.common.loading}</p>
+        <p className="text-sm text-foreground-muted">{t.common.loading}</p>
       </div>
     );
   }
@@ -127,7 +127,7 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
         {post.legende}
       </p>
 
-      <h2 className="mt-6 text-sm font-medium text-foreground/60">{t.posts.comments}</h2>
+      <h2 className="mt-6 text-sm font-medium text-foreground-muted">{t.posts.comments}</h2>
       <div className="mt-3 flex flex-col gap-2">
         {visibleComments.map((c) => (
           <div key={c.id} className="text-sm">
@@ -154,12 +154,12 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
             placeholder={t.posts.addComment}
             value={texte}
             onChange={(e) => setTexte(e.target.value)}
-            className="flex-1 rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+            className="flex-1 rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
           />
           <button
             type="submit"
             disabled={sending}
-            className="rounded-full bg-foreground px-4 py-2 text-sm text-background transition disabled:opacity-50"
+            className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-foreground transition hover:opacity-90 disabled:opacity-50"
           >
             {sending ? "…" : t.posts.send}
           </button>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { BadgeCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useT } from "@/lib/i18n/context";
 import { ProfileType, Ville } from "@/lib/types";
@@ -18,7 +19,7 @@ interface ArtisteRow {
 const VILLES: Ville[] = ["Paris", "Athènes"];
 
 function pillClass(active: boolean) {
-  return `rounded-full border px-4 py-1.5 text-sm transition ${
+  return `rounded-lg border px-4 py-1.5 text-sm transition ${
     active
       ? "border-foreground bg-foreground text-background"
       : "border-foreground/20 hover:border-foreground/40"
@@ -58,9 +59,9 @@ export default function ArtistesPage() {
       </div>
 
       <div className="flex flex-col gap-3">
-        {artistes === null && <p className="text-sm text-foreground/60">{t.common.loading}</p>}
+        {artistes === null && <p className="text-sm text-foreground-muted">{t.common.loading}</p>}
         {artistes !== null && artistes.length === 0 && (
-          <p className="text-sm text-foreground/60">{t.evenements.noResults}</p>
+          <p className="text-sm text-foreground-muted">{t.evenements.noResults}</p>
         )}
         {(artistes ?? []).map((a) => (
           <Link
@@ -72,14 +73,14 @@ export default function ArtistesPage() {
               <h3 className="flex items-center gap-1 font-medium">
                 {a.nom}
                 {a.verified && (a.type_profil === "galerie" || a.type_profil === "institution") && (
-                  <span title={t.artiste.verified} className="text-blue-600">
-                    ✓
+                  <span title={t.artiste.verified}>
+                    <BadgeCheck size={15} strokeWidth={2} className="text-accent" />
                   </span>
                 )}
               </h3>
-              <span className="text-xs text-foreground/60">{t.profileTypeLabels[a.type_profil]}</span>
+              <span className="text-xs text-foreground-muted">{t.profileTypeLabels[a.type_profil]}</span>
             </div>
-            <p className="mt-1 text-sm text-foreground/60">
+            <p className="mt-1 text-sm text-foreground-muted">
               {a.disciplines.map((d) => t.disciplineLabels[d] ?? d).join(", ")}
             </p>
           </Link>

@@ -155,7 +155,7 @@ export default function CommunautePage() {
   if (loading) {
     return (
       <div className="mx-auto w-full max-w-2xl px-4 py-8">
-        <p className="text-sm text-foreground/60">{t.common.loading}</p>
+        <p className="text-sm text-foreground-muted">{t.common.loading}</p>
       </div>
     );
   }
@@ -172,11 +172,11 @@ export default function CommunautePage() {
 
       <div className="mt-6 flex flex-col gap-3">
         {visibleMessages.length === 0 && !error && (
-          <p className="text-sm text-foreground/60">{t.communaute.noMessages}</p>
+          <p className="text-sm text-foreground-muted">{t.communaute.noMessages}</p>
         )}
         {visibleMessages.map((m) => (
           <div key={m.id} className="rounded-lg border border-foreground/10 p-3">
-            <div className="flex items-baseline justify-between gap-2 text-xs text-foreground/60">
+            <div className="flex items-baseline justify-between gap-2 text-xs text-foreground-muted">
               <Link href={`/artistes/${m.user_id}`} className="font-medium text-foreground hover:underline">
                 {m.profiles?.nom || t.communaute.anonyme}
               </Link>
@@ -202,12 +202,12 @@ export default function CommunautePage() {
           placeholder={t.communaute.placeholder}
           value={texte}
           onChange={(e) => setTexte(e.target.value)}
-          className="flex-1 rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+          className="flex-1 rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
         />
         <button
           type="submit"
           disabled={sending}
-          className="rounded-full bg-foreground px-4 py-2 text-sm text-background transition disabled:opacity-50"
+          className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-foreground transition hover:opacity-90 disabled:opacity-50"
         >
           {sending ? "…" : t.communaute.send}
         </button>

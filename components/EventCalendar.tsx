@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { EventCard } from "./EventCard";
 import { VILLE_TIMEZONES } from "@/lib/timezone";
 import { useLocale } from "@/lib/i18n/context";
@@ -78,17 +79,19 @@ export function EventCalendar({ events, ville }: { events: ArtEvent[]; ville: Vi
         <button
           type="button"
           onClick={() => setMonth((m) => new Date(m.getFullYear(), m.getMonth() - 1, 1))}
-          className="rounded-full border border-foreground/20 px-3 py-1 text-sm hover:border-foreground/40"
+          className="rounded-lg border border-foreground/20 p-1.5 hover:border-foreground/40"
+          aria-label="Mois précédent"
         >
-          ←
+          <ChevronLeft size={16} strokeWidth={1.75} />
         </button>
-        <span className="text-sm font-medium capitalize">{monthLabel}</span>
+        <span className="font-display text-sm font-medium capitalize">{monthLabel}</span>
         <button
           type="button"
           onClick={() => setMonth((m) => new Date(m.getFullYear(), m.getMonth() + 1, 1))}
-          className="rounded-full border border-foreground/20 px-3 py-1 text-sm hover:border-foreground/40"
+          className="rounded-lg border border-foreground/20 p-1.5 hover:border-foreground/40"
+          aria-label="Mois suivant"
         >
-          →
+          <ChevronRight size={16} strokeWidth={1.75} />
         </button>
       </div>
 
@@ -112,7 +115,7 @@ export function EventCalendar({ events, ville }: { events: ArtEvent[]; ville: Vi
               key={i}
               type="button"
               onClick={() => setSelectedDay(key === selectedDay ? null : key)}
-              className={`flex aspect-square flex-col items-center justify-center rounded-md text-sm transition ${
+              className={`flex aspect-square flex-col items-center justify-center rounded-lg text-sm transition ${
                 key === selectedDay
                   ? "bg-foreground text-background"
                   : count > 0
@@ -124,7 +127,7 @@ export function EventCalendar({ events, ville }: { events: ArtEvent[]; ville: Vi
               {count > 0 && (
                 <span
                   className={`mt-0.5 h-1 w-1 rounded-full ${
-                    key === selectedDay ? "bg-background" : "bg-foreground"
+                    key === selectedDay ? "bg-background" : "bg-accent"
                   }`}
                 />
               )}
@@ -136,7 +139,7 @@ export function EventCalendar({ events, ville }: { events: ArtEvent[]; ville: Vi
       {selectedDay && (
         <div className="mt-6 flex flex-col gap-3">
           {selectedEvents.length === 0 && (
-            <p className="text-sm text-foreground/60">{t.evenements.noResults}</p>
+            <p className="text-sm text-foreground-muted">{t.evenements.noResults}</p>
           )}
           {selectedEvents.map((event) => (
             <EventCard key={event.id} event={event} />

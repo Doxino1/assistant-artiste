@@ -3,6 +3,7 @@
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { BadgeCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useT } from "@/lib/i18n/context";
 import { BlockReportActions } from "@/components/BlockReportActions";
@@ -118,7 +119,7 @@ export default function ArtisteProfilPage({ params }: { params: Promise<{ id: st
   if (profile === undefined) {
     return (
       <div className="mx-auto w-full max-w-2xl px-4 py-8">
-        <p className="text-sm text-foreground/60">{t.common.loading}</p>
+        <p className="text-sm text-foreground-muted">{t.common.loading}</p>
       </div>
     );
   }
@@ -140,12 +141,12 @@ export default function ArtisteProfilPage({ params }: { params: Promise<{ id: st
           <h1 className="flex items-center gap-1.5 text-xl font-semibold">
             {profile.nom}
             {profile.verified && (profile.type_profil === "galerie" || profile.type_profil === "institution") && (
-              <span title={t.artiste.verified} className="text-base text-blue-600">
-                ✓
+              <span title={t.artiste.verified}>
+                <BadgeCheck size={18} strokeWidth={2} className="text-accent" />
               </span>
             )}
           </h1>
-          <p className="text-sm text-foreground/60">
+          <p className="text-sm text-foreground-muted">
             {t.profileTypeLabels[profile.type_profil]} · {t.villeLabels[profile.ville as "Paris" | "Athènes"]}
           </p>
         </div>
@@ -153,10 +154,10 @@ export default function ArtisteProfilPage({ params }: { params: Promise<{ id: st
           <button
             type="button"
             onClick={toggleFollow}
-            className={`rounded-full border px-4 py-1.5 text-sm transition ${
+            className={`rounded-lg border px-4 py-1.5 text-sm font-medium transition ${
               following
-                ? "border-foreground bg-foreground text-background"
-                : "border-foreground/20 hover:border-foreground/40"
+                ? "border-foreground/20 hover:border-foreground/40"
+                : "border-accent bg-accent text-accent-foreground hover:opacity-90"
             }`}
           >
             {following ? t.artiste.unfollow : t.artiste.follow}
@@ -178,11 +179,11 @@ export default function ArtisteProfilPage({ params }: { params: Promise<{ id: st
       )}
 
       {profile.bio && <p className="mt-4 text-sm">{profile.bio}</p>}
-      <p className="mt-2 text-sm text-foreground/60">
+      <p className="mt-2 text-sm text-foreground-muted">
         {profile.disciplines.map((d) => t.disciplineLabels[d] ?? d).join(", ")}
       </p>
 
-      <h2 className="mt-8 text-sm font-medium text-foreground/60">{t.artiste.portfolio}</h2>
+      <h2 className="mt-8 text-sm font-medium text-foreground-muted">{t.artiste.portfolio}</h2>
       {profile.portfolio_public || isOwn ? (
         <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {portfolio.map((item) => (
@@ -194,7 +195,7 @@ export default function ArtisteProfilPage({ params }: { params: Promise<{ id: st
                 <div className="aspect-square w-full rounded bg-foreground/5" />
               )}
               <p className="mt-2 text-sm font-medium">{item.titre}</p>
-              <p className="text-xs text-foreground/60">
+              <p className="text-xs text-foreground-muted">
                 {[item.technique, item.annee].filter(Boolean).join(" · ")}
               </p>
             </div>
@@ -204,7 +205,7 @@ export default function ArtisteProfilPage({ params }: { params: Promise<{ id: st
         <p className="mt-2 text-sm text-foreground/40">{t.portfolio.private}</p>
       )}
 
-      <h2 className="mt-8 text-sm font-medium text-foreground/60">{t.artiste.posts}</h2>
+      <h2 className="mt-8 text-sm font-medium text-foreground-muted">{t.artiste.posts}</h2>
       {profile.posts_public || isOwn ? (
         <div className="mt-3 grid grid-cols-3 gap-1">
           {posts.map((post) => (

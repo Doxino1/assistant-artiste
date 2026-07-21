@@ -106,28 +106,28 @@ export default function PortfolioPage() {
       <h1 className="text-xl font-semibold">{t.portfolio.title}</h1>
 
       <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-3 rounded-lg border border-foreground/10 p-4">
-        <h2 className="text-sm font-medium text-foreground/60">{t.portfolio.addTitle}</h2>
+        <h2 className="text-sm font-medium text-foreground-muted">{t.portfolio.addTitle}</h2>
         <input
           type="text"
           required
           placeholder={t.portfolio.titre}
           value={titre}
           onChange={(e) => setTitre(e.target.value)}
-          className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+          className="rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
         />
         <input
           type="text"
           placeholder={t.portfolio.technique}
           value={technique}
           onChange={(e) => setTechnique(e.target.value)}
-          className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+          className="rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
         />
         <input
           type="number"
           placeholder={t.portfolio.annee}
           value={annee}
           onChange={(e) => setAnnee(e.target.value)}
-          className="rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+          className="rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
         />
         <input
           type="file"
@@ -139,7 +139,7 @@ export default function PortfolioPage() {
         <button
           type="submit"
           disabled={saving}
-          className="self-start rounded-full bg-foreground px-4 py-2 text-sm text-background transition disabled:opacity-50"
+          className="self-start rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-foreground transition hover:opacity-90 disabled:opacity-50"
         >
           {saving ? "…" : t.portfolio.add}
         </button>
@@ -147,7 +147,7 @@ export default function PortfolioPage() {
 
       <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
         {items !== null && items.length === 0 && (
-          <p className="col-span-full text-sm text-foreground/60">{t.portfolio.empty}</p>
+          <p className="col-span-full text-sm text-foreground-muted">{t.portfolio.empty}</p>
         )}
         {(items ?? []).map((item) => (
           <div key={item.id} className="rounded-lg border border-foreground/10 p-2">
@@ -158,7 +158,7 @@ export default function PortfolioPage() {
               <div className="aspect-square w-full rounded bg-foreground/5" />
             )}
             <p className="mt-2 text-sm font-medium">{item.titre}</p>
-            <p className="text-xs text-foreground/60">
+            <p className="text-xs text-foreground-muted">
               {[item.technique, item.annee].filter(Boolean).join(" · ")}
             </p>
             <button

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Lock } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useT } from "@/lib/i18n/context";
 import { Toggle } from "@/components/Toggle";
@@ -34,7 +35,7 @@ function initials(nom: string) {
 
 function tabClass(active: boolean) {
   return `flex-1 flex items-center justify-center gap-1.5 border-b-2 py-2 text-sm font-medium transition ${
-    active ? "border-foreground text-foreground" : "border-transparent text-foreground/50 hover:text-foreground/70"
+    active ? "border-accent text-foreground" : "border-transparent text-foreground/50 hover:text-foreground/70"
   }`;
 }
 
@@ -206,7 +207,7 @@ export default function ProfilPage() {
   if (loading) {
     return (
       <div className="mx-auto w-full max-w-sm px-4 py-8">
-        <p className="text-sm text-foreground/60">{t.common.loading}</p>
+        <p className="text-sm text-foreground-muted">{t.common.loading}</p>
       </div>
     );
   }
@@ -215,14 +216,14 @@ export default function ProfilPage() {
     <div className="mx-auto w-full max-w-sm px-4 py-8">
       {/* En-tête */}
       <div className="flex flex-col items-center text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-foreground/10 text-lg font-medium">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent font-display text-lg font-medium text-accent-foreground">
           {initials(nom)}
         </div>
         <p className="mt-2 text-base font-medium">{nom}</p>
         <span className="mt-1.5 rounded-full bg-foreground/5 px-2.5 py-0.5 text-xs text-foreground/70">
           {t.profileTypeLabels[typeProfil]}
         </span>
-        <p className="mt-2 text-sm text-foreground/60">
+        <p className="mt-2 text-sm text-foreground-muted">
           {disciplines.map((d) => t.disciplineLabels[d] ?? d).join(" · ")}
         </p>
 
@@ -289,7 +290,7 @@ export default function ProfilPage() {
 
           <div className="flex flex-col gap-2">
             {portfolio.map((item) => (
-              <div key={item.id} className="flex gap-2.5 rounded-lg bg-foreground/5 p-2.5">
+              <div key={item.id} className="flex gap-2.5 rounded-lg bg-surface p-2.5">
                 {item.image_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={item.image_url} alt={item.titre} className="h-[52px] w-[52px] shrink-0 rounded object-cover" />
@@ -298,7 +299,7 @@ export default function ProfilPage() {
                 )}
                 <div>
                   <p className="text-sm font-medium">{item.titre}</p>
-                  <p className="mt-0.5 text-xs text-foreground/60">
+                  <p className="mt-0.5 text-xs text-foreground-muted">
                     {[item.technique, item.annee].filter(Boolean).join(" · ")}
                   </p>
                 </div>
@@ -306,7 +307,7 @@ export default function ProfilPage() {
             ))}
             <Link
               href="/profil/portfolio"
-              className="rounded-full border border-foreground/20 py-2 text-center text-sm hover:border-foreground/40"
+              className="rounded-lg border border-foreground/20 py-2 text-center text-sm hover:border-foreground/40"
             >
               + {t.portfolio.addPiece}
             </Link>
@@ -317,41 +318,44 @@ export default function ProfilPage() {
       {/* Bibliothèque privée */}
       <Link
         href="/profil/bibliotheque"
-        className="mt-6 block rounded-lg bg-foreground/5 p-3 transition hover:bg-foreground/10"
+        className="mt-6 flex items-start gap-2 rounded-lg bg-surface p-3 transition hover:bg-foreground/5"
       >
-        <p className="text-sm text-foreground/70">🔒 {t.library.title}</p>
-        <p className="mt-1 text-xs text-foreground/50">{t.library.subtitle}</p>
+        <Lock size={16} strokeWidth={1.75} className="mt-0.5 shrink-0 text-foreground/70" />
+        <span>
+          <p className="text-sm text-foreground/70">{t.library.title}</p>
+          <p className="mt-1 text-xs text-foreground/50">{t.library.subtitle}</p>
+        </span>
       </Link>
 
       {/* Bio */}
       {bio && (
-        <div className="mt-3 rounded-lg bg-foreground/5 p-3">
-          <p className="text-sm text-foreground/60">{t.profil.bio}</p>
+        <div className="mt-3 rounded-lg bg-surface p-3">
+          <p className="text-sm text-foreground-muted">{t.profil.bio}</p>
           <p className="mt-1 text-sm leading-relaxed">{bio}</p>
         </div>
       )}
 
       {/* Paramètres */}
-      <h2 className="mt-10 text-sm font-medium text-foreground/60">{t.profil.settingsTitle}</h2>
+      <h2 className="mt-10 text-sm font-medium text-foreground-muted">{t.profil.settingsTitle}</h2>
 
       <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-3">
-        <label className="text-sm text-foreground/60">
+        <label className="text-sm text-foreground-muted">
           {t.profil.nom}
           <input
             type="text"
             required
             value={nom}
             onChange={(e) => setNom(e.target.value)}
-            className="mt-1 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+            className="mt-1 w-full rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
           />
         </label>
 
-        <label className="text-sm text-foreground/60">
+        <label className="text-sm text-foreground-muted">
           {t.profil.ville}
           <select
             value={ville}
             onChange={(e) => setVille(e.target.value as Ville)}
-            className="mt-1 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm"
           >
             {VILLES.map((v) => (
               <option key={v} value={v}>
@@ -361,12 +365,12 @@ export default function ProfilPage() {
           </select>
         </label>
 
-        <label className="text-sm text-foreground/60">
+        <label className="text-sm text-foreground-muted">
           {t.profil.typeProfil}
           <select
             value={typeProfil}
             onChange={(e) => setTypeProfil(e.target.value as ProfileType)}
-            className="mt-1 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm"
           >
             {PROFILE_TYPES.map((pt) => (
               <option key={pt} value={pt}>
@@ -376,7 +380,7 @@ export default function ProfilPage() {
           </select>
         </label>
 
-        <div className="text-sm text-foreground/60">
+        <div className="text-sm text-foreground-muted">
           {t.profil.disciplines}
           <div className="mt-1 flex flex-wrap gap-2">
             {DISCIPLINES.map((d) => (
@@ -384,7 +388,7 @@ export default function ProfilPage() {
                 key={d}
                 type="button"
                 onClick={() => toggleDiscipline(d)}
-                className={`rounded-full border px-3 py-1 text-sm transition ${
+                className={`rounded-lg border px-3 py-1 text-sm transition ${
                   disciplines.includes(d)
                     ? "border-foreground bg-foreground text-background"
                     : "border-foreground/20 hover:border-foreground/40"
@@ -396,17 +400,17 @@ export default function ProfilPage() {
           </div>
         </div>
 
-        <label className="text-sm text-foreground/60">
+        <label className="text-sm text-foreground-muted">
           {t.profil.bio}
           <textarea
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             rows={4}
-            className="mt-1 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+            className="mt-1 w-full rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
           />
         </label>
 
-        <div className="text-sm text-foreground/60">
+        <div className="text-sm text-foreground-muted">
           {t.profil.jeCherche}
           <div className="mt-1 flex flex-wrap gap-2">
             {MATCHING_TAGS.map((tag) => (
@@ -414,7 +418,7 @@ export default function ProfilPage() {
                 key={tag}
                 type="button"
                 onClick={() => toggleMatchingTag(tag)}
-                className={`rounded-full border px-3 py-1 text-sm transition ${
+                className={`rounded-lg border px-3 py-1 text-sm transition ${
                   matchingTags.includes(tag)
                     ? "border-foreground bg-foreground text-background"
                     : "border-foreground/20 hover:border-foreground/40"
@@ -426,14 +430,14 @@ export default function ProfilPage() {
           </div>
         </div>
 
-        <label className="text-sm text-foreground/60">
+        <label className="text-sm text-foreground-muted">
           {t.profil.emailContact} <span className="text-foreground/40">{t.profil.emailContactHint}</span>
           <input
             type="email"
             value={emailContact}
             onChange={(e) => setEmailContact(e.target.value)}
             placeholder={t.profil.emailContactPlaceholder}
-            className="mt-1 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+            className="mt-1 w-full rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
           />
         </label>
 
@@ -443,7 +447,7 @@ export default function ProfilPage() {
         <button
           type="submit"
           disabled={saving}
-          className="mt-2 rounded-full bg-foreground px-4 py-2 text-sm text-background transition disabled:opacity-50"
+          className="mt-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-foreground transition hover:opacity-90 disabled:opacity-50"
         >
           {saving ? "…" : t.profil.save}
         </button>
@@ -456,11 +460,11 @@ export default function ProfilPage() {
       </div>
 
       <div className="mt-8 border-t border-foreground/10 pt-4">
-        <h2 className="text-sm font-medium text-foreground/60">{t.account.exportData}</h2>
+        <h2 className="text-sm font-medium text-foreground-muted">{t.account.exportData}</h2>
         <p className="mt-1 text-xs text-foreground/50">{t.account.exportHint}</p>
         <a
           href="/api/account/export"
-          className="mt-2 inline-block rounded-full border border-foreground/20 px-4 py-2 text-sm hover:border-foreground/40"
+          className="mt-2 inline-block rounded-lg border border-foreground/20 px-4 py-2 text-sm hover:border-foreground/40"
         >
           {t.account.exportButton}
         </a>

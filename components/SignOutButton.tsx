@@ -21,7 +21,7 @@ export function SignOutButton() {
     <button
       type="button"
       onClick={handleSignOut}
-      className="text-foreground/60 hover:text-foreground"
+      className="text-foreground-muted hover:text-foreground"
     >
       {t.nav.deconnexion}
     </button>
