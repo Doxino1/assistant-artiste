@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { SignOutButton } from "./SignOutButton";
 import { useLocale } from "@/lib/i18n/context";
 import { LOCALE_LABELS, LOCALES } from "@/lib/i18n/dictionary";
@@ -13,6 +14,8 @@ export function Header({
   isModerator: boolean;
 }) {
   const { locale, setLocale, t } = useLocale();
+  const pathname = usePathname();
+  const onLoginPage = pathname === "/login";
 
   return (
     <nav className="mx-auto flex w-full max-w-2xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 text-sm">
@@ -67,9 +70,11 @@ export function Header({
             <SignOutButton />
           </>
         ) : (
-          <Link href="/login" className="text-foreground-muted hover:text-foreground">
-            {t.nav.connexion}
-          </Link>
+          !onLoginPage && (
+            <Link href="/login" className="text-foreground-muted hover:text-foreground">
+              {t.nav.connexion}
+            </Link>
+          )
         )}
       </div>
     </nav>
