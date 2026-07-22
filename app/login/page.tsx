@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { useT } from "@/lib/i18n/context";
+import { useLocale } from "@/lib/i18n/context";
 
 type Mode = "connexion" | "inscription" | "mot_de_passe_oublie";
 
 export default function LoginPage() {
-  const t = useT();
+  const { locale, t } = useLocale();
   const router = useRouter();
   const [mode, setMode] = useState<Mode>("connexion");
   const [email, setEmail] = useState("");
@@ -56,7 +56,7 @@ export default function LoginPage() {
       email,
       password,
       options: {
-        data: { nom },
+        data: { nom, langue: locale },
         emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
