@@ -7,6 +7,7 @@ import { BadgeCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useT } from "@/lib/i18n/context";
 import { BlockReportActions } from "@/components/BlockReportActions";
+import { ContactLinks } from "@/components/ContactLinks";
 import { ProfileType } from "@/lib/types";
 
 interface PublicProfile {
@@ -19,6 +20,10 @@ interface PublicProfile {
   portfolio_public: boolean;
   posts_public: boolean;
   verified: boolean;
+  email_contact: string | null;
+  instagram_handle: string | null;
+  tiktok_handle: string | null;
+  twitter_handle: string | null;
 }
 
 interface PortfolioItem {
@@ -61,7 +66,9 @@ export default function ArtisteProfilPage({ params }: { params: Promise<{ id: st
         await Promise.all([
           supabase
             .from("profiles")
-            .select("id, nom, bio, ville, disciplines, type_profil, portfolio_public, posts_public, verified")
+            .select(
+              "id, nom, bio, ville, disciplines, type_profil, portfolio_public, posts_public, verified, email_contact, instagram_handle, tiktok_handle, twitter_handle"
+            )
             .eq("id", id)
             .single(),
           supabase
@@ -182,6 +189,15 @@ export default function ArtisteProfilPage({ params }: { params: Promise<{ id: st
       <p className="mt-2 text-sm text-foreground-muted">
         {profile.disciplines.map((d) => t.disciplineLabels[d] ?? d).join(", ")}
       </p>
+
+      <div className="mt-3">
+        <ContactLinks
+          email={profile.email_contact}
+          instagram={profile.instagram_handle}
+          tiktok={profile.tiktok_handle}
+          twitter={profile.twitter_handle}
+        />
+      </div>
 
       <h2 className="mt-8 text-sm font-medium text-foreground-muted">{t.artiste.portfolio}</h2>
       {profile.portfolio_public || isOwn ? (

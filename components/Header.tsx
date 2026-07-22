@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SignOutButton } from "./SignOutButton";
-import { useLocale } from "@/lib/i18n/context";
-import { LOCALE_LABELS, LOCALES } from "@/lib/i18n/dictionary";
+import { useT } from "@/lib/i18n/context";
 
 export function Header({
   userEmail,
@@ -13,41 +12,13 @@ export function Header({
   userEmail: string | null;
   isModerator: boolean;
 }) {
-  const { locale, setLocale, t } = useLocale();
+  const t = useT();
   const pathname = usePathname();
   const onLoginPage = pathname === "/login";
 
   return (
-    <nav className="mx-auto flex w-full max-w-2xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 text-sm">
-      <Link href="/" className="font-display text-base font-medium">
-        {t.nav.evenements}
-      </Link>
-      {userEmail && (
-        <>
-          <Link href="/communaute" className="text-foreground-muted hover:text-foreground">
-            {t.nav.communaute}
-          </Link>
-          <Link href="/profil" className="text-foreground-muted hover:text-foreground">
-            {t.nav.profil}
-          </Link>
-        </>
-      )}
-
-      <div className="flex gap-1">
-        {LOCALES.map((l) => (
-          <button
-            key={l}
-            onClick={() => setLocale(l)}
-            className={`rounded px-1.5 py-0.5 text-xs transition ${
-              locale === l
-                ? "bg-foreground text-background"
-                : "text-foreground/40 hover:text-foreground/70"
-            }`}
-          >
-            {LOCALE_LABELS[l]}
-          </button>
-        ))}
-      </div>
+    <nav className="mx-auto flex w-full max-w-2xl items-center gap-4 px-4 py-3 text-sm">
+      <span className="font-display text-base font-medium">{t.nav.evenements}</span>
 
       <div className="ml-auto flex items-center gap-4">
         {userEmail ? (
@@ -57,7 +28,7 @@ export function Header({
                 {t.nav.moderation}
               </Link>
             )}
-            <span className="text-foreground-muted">{userEmail}</span>
+            <span className="hidden text-foreground-muted sm:inline">{userEmail}</span>
             <SignOutButton />
           </>
         ) : (

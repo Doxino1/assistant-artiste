@@ -50,6 +50,7 @@ export interface Dictionary {
     tabCarte: string;
     proposer: string;
     searchPlaceholder: string;
+    filtersButton: string;
     tousTypes: string;
     toutesDisciplines: string;
     loadError: (message: string) => string;
@@ -127,6 +128,14 @@ export interface Dictionary {
     postsSubtitle: string;
     portfolioSubtitle: string;
     settingsTitle: string;
+    settingsLink: string;
+    contactSectionTitle: string;
+    instagramLabel: string;
+    tiktokLabel: string;
+    twitterLabel: string;
+    socialPlaceholder: string;
+    languageLabel: string;
+    weeklyEmailTitle: string;
   };
 
   submission: {
@@ -356,8 +365,9 @@ export const fr: Dictionary = {
     tabTous: "Tous",
     tabMes: "Mes événements",
     tabCarte: "Carte",
-    proposer: "+ Proposer",
+    proposer: "+ Ajouter un événement",
     searchPlaceholder: "Rechercher un événement…",
+    filtersButton: "Filtres",
     tousTypes: "Tous types",
     toutesDisciplines: "Toutes disciplines",
     loadError: (message) => `Petit souci pour charger les événements (${message}) — réessaie dans un instant.`,
@@ -431,6 +441,14 @@ export const fr: Dictionary = {
     postsSubtitle: "Ce que tu partages au fil de l'eau",
     portfolioSubtitle: "Ta sélection de travail, vitrine pro",
     settingsTitle: "Paramètres du profil",
+    settingsLink: "Réglages",
+    contactSectionTitle: "Contact",
+    instagramLabel: "Instagram",
+    tiktokLabel: "TikTok",
+    twitterLabel: "Twitter / X",
+    socialPlaceholder: "nom d'utilisateur, sans le @",
+    languageLabel: "Langue",
+    weeklyEmailTitle: "Ton email hebdomadaire",
   },
   submission: {
     title: "Proposer un événement",
@@ -653,8 +671,9 @@ export const en: Dictionary = {
     tabTous: "All",
     tabMes: "My events",
     tabCarte: "Map",
-    proposer: "+ Submit",
+    proposer: "+ Add event",
     searchPlaceholder: "Search an event…",
+    filtersButton: "Filters",
     tousTypes: "All types",
     toutesDisciplines: "All disciplines",
     loadError: (message) => `Trouble loading events (${message}) — try again in a moment.`,
@@ -728,6 +747,14 @@ export const en: Dictionary = {
     postsSubtitle: "What you share as you go",
     portfolioSubtitle: "Your curated work, a professional showcase",
     settingsTitle: "Profile settings",
+    settingsLink: "Settings",
+    contactSectionTitle: "Contact",
+    instagramLabel: "Instagram",
+    tiktokLabel: "TikTok",
+    twitterLabel: "Twitter / X",
+    socialPlaceholder: "username, without the @",
+    languageLabel: "Language",
+    weeklyEmailTitle: "Your weekly email",
   },
   submission: {
     title: "Submit an event",
@@ -950,8 +977,9 @@ export const el: Dictionary = {
     tabTous: "Όλες",
     tabMes: "Οι εκδηλώσεις μου",
     tabCarte: "Χάρτης",
-    proposer: "+ Πρόταση",
+    proposer: "+ Προσθήκη εκδήλωσης",
     searchPlaceholder: "Αναζήτηση εκδήλωσης…",
+    filtersButton: "Φίλτρα",
     tousTypes: "Όλοι οι τύποι",
     toutesDisciplines: "Όλες οι ειδικότητες",
     loadError: (message) => `Πρόβλημα στη φόρτωση των εκδηλώσεων (${message}) — δοκίμασε ξανά σε λίγο.`,
@@ -1026,6 +1054,14 @@ export const el: Dictionary = {
     postsSubtitle: "Ό,τι μοιράζεσαι στην πορεία",
     portfolioSubtitle: "Η επιλεγμένη δουλειά σου, επαγγελματική βιτρίνα",
     settingsTitle: "Ρυθμίσεις προφίλ",
+    settingsLink: "Ρυθμίσεις",
+    contactSectionTitle: "Επικοινωνία",
+    instagramLabel: "Instagram",
+    tiktokLabel: "TikTok",
+    twitterLabel: "Twitter / X",
+    socialPlaceholder: "όνομα χρήστη, χωρίς το @",
+    languageLabel: "Γλώσσα",
+    weeklyEmailTitle: "Το εβδομαδιαίο email σου",
   },
   submission: {
     title: "Πρόταση εκδήλωσης",

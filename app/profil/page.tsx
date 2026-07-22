@@ -3,13 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Lock } from "lucide-react";
+import { Lock, Settings } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useT } from "@/lib/i18n/context";
 import { Toggle } from "@/components/Toggle";
-import { DISCIPLINES, MATCHING_TAGS, MatchingTag, PROFILE_TYPES, ProfileType, Ville } from "@/lib/types";
+import { ProfileType } from "@/lib/types";
 
-const VILLES: Ville[] = ["Paris", "Athènes"];
 type Tab = "posts" | "portfolio";
 
 interface Post {
@@ -43,18 +42,12 @@ export default function ProfilPage() {
   const t = useT();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
 
   const [nom, setNom] = useState("");
-  const [ville, setVille] = useState<Ville>("Paris");
   const [typeProfil, setTypeProfil] = useState<ProfileType>("amateur");
   const [disciplines, setDisciplines] = useState<string[]>([]);
   const [bio, setBio] = useState("");
-  const [emailContact, setEmailContact] = useState("");
-  const [matchingTags, setMatchingTags] = useState<MatchingTag[]>([]);
   const [portfolioPublic, setPortfolioPublic] = useState(true);
   const [postsPublic, setPostsPublic] = useState(true);
 
@@ -82,7 +75,6 @@ export default function ProfilPage() {
 
       const [
         { data, error: fetchError },
-        { data: tags, error: tagsError },
         { data: userPosts },
         { data: items },
         { count: followers },
@@ -90,10 +82,9 @@ export default function ProfilPage() {
       ] = await Promise.all([
         supabase
           .from("profiles")
-          .select("nom, ville, disciplines, type_profil, bio, email_contact, portfolio_public, posts_public")
+          .select("nom, ville, disciplines, type_profil, bio, portfolio_public, posts_public")
           .eq("id", user.id)
           .single(),
-        supabase.from("matching_tags").select("tag").eq("user_id", user.id),
         supabase.from("posts").select("id, image, legende").eq("user_id", user.id).order("date", { ascending: false }),
         supabase
           .from("portfolio_items")
@@ -106,20 +97,13 @@ export default function ProfilPage() {
 
       if (!active) return;
 
-      if (fetchError) {
-        setError(fetchError.message);
-      } else if (data) {
+      if (!fetchError && data) {
         setNom(data.nom ?? "");
-        setVille((data.ville as Ville) || "Paris");
         setTypeProfil(data.type_profil as ProfileType);
         setDisciplines(data.disciplines ?? []);
         setBio(data.bio ?? "");
-        setEmailContact(data.email_contact ?? "");
         setPortfolioPublic(data.portfolio_public);
         setPostsPublic(data.posts_public);
-      }
-      if (!tagsError && tags) {
-        setMatchingTags(tags.map((row) => row.tag as MatchingTag));
       }
       setPosts(userPosts ?? []);
       setPortfolio(items ?? []);
@@ -134,14 +118,6 @@ export default function ProfilPage() {
     };
   }, [router]);
 
-  function toggleDiscipline(d: string) {
-    setDisciplines((prev) => (prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d]));
-  }
-
-  function toggleMatchingTag(tag: MatchingTag) {
-    setMatchingTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]));
-  }
-
   async function setVisibility(field: "portfolio_public" | "posts_public", value: boolean) {
     if (!userId) return;
     if (field === "portfolio_public") setPortfolioPublic(value);
@@ -149,59 +125,6 @@ export default function ProfilPage() {
 
     const supabase = createClient();
     await supabase.from("profiles").update({ [field]: value }).eq("id", userId);
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setSaving(true);
-    setError(null);
-    setMessage(null);
-
-    const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      router.push("/login");
-      return;
-    }
-
-    const { error: updateError } = await supabase
-      .from("profiles")
-      .update({
-        nom,
-        ville,
-        type_profil: typeProfil,
-        disciplines,
-        bio,
-        email_contact: emailContact || null,
-      })
-      .eq("id", user.id);
-
-    if (updateError) {
-      setSaving(false);
-      setError(updateError.message);
-      return;
-    }
-
-    const { error: deleteTagsError } = await supabase
-      .from("matching_tags")
-      .delete()
-      .eq("user_id", user.id);
-
-    if (!deleteTagsError && matchingTags.length > 0) {
-      await supabase
-        .from("matching_tags")
-        .insert(matchingTags.map((tag) => ({ user_id: user.id, tag })));
-    }
-
-    setSaving(false);
-    if (deleteTagsError) {
-      setError(deleteTagsError.message);
-      return;
-    }
-    setMessage(t.profil.saved);
   }
 
   if (loading) {
@@ -214,6 +137,17 @@ export default function ProfilPage() {
 
   return (
     <div className="mx-auto w-full max-w-sm px-4 py-8">
+      <div className="flex justify-end">
+        <Link
+          href="/profil/parametres"
+          aria-label={t.profil.settingsLink}
+          title={t.profil.settingsLink}
+          className="rounded-lg border border-foreground/20 p-1.5 hover:border-foreground/40"
+        >
+          <Settings size={18} strokeWidth={1.75} />
+        </Link>
+      </div>
+
       {/* En-tête */}
       <div className="flex flex-col items-center text-center">
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent font-display text-lg font-medium text-accent-foreground">
@@ -334,147 +268,6 @@ export default function ProfilPage() {
           <p className="mt-1 text-sm leading-relaxed">{bio}</p>
         </div>
       )}
-
-      {/* Paramètres */}
-      <h2 className="mt-10 text-sm font-medium text-foreground-muted">{t.profil.settingsTitle}</h2>
-
-      <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-3">
-        <label className="text-sm text-foreground-muted">
-          {t.profil.nom}
-          <input
-            type="text"
-            required
-            value={nom}
-            onChange={(e) => setNom(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
-          />
-        </label>
-
-        <label className="text-sm text-foreground-muted">
-          {t.profil.ville}
-          <select
-            value={ville}
-            onChange={(e) => setVille(e.target.value as Ville)}
-            className="mt-1 w-full rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm"
-          >
-            {VILLES.map((v) => (
-              <option key={v} value={v}>
-                {t.villeLabels[v]}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className="text-sm text-foreground-muted">
-          {t.profil.typeProfil}
-          <select
-            value={typeProfil}
-            onChange={(e) => setTypeProfil(e.target.value as ProfileType)}
-            className="mt-1 w-full rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm"
-          >
-            {PROFILE_TYPES.map((pt) => (
-              <option key={pt} value={pt}>
-                {t.profileTypeLabels[pt]}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <div className="text-sm text-foreground-muted">
-          {t.profil.disciplines}
-          <div className="mt-1 flex flex-wrap gap-2">
-            {DISCIPLINES.map((d) => (
-              <button
-                key={d}
-                type="button"
-                onClick={() => toggleDiscipline(d)}
-                className={`rounded-lg border px-3 py-1 text-sm transition ${
-                  disciplines.includes(d)
-                    ? "border-foreground bg-foreground text-background"
-                    : "border-foreground/20 hover:border-foreground/40"
-                }`}
-              >
-                {t.disciplineLabels[d]}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <label className="text-sm text-foreground-muted">
-          {t.profil.bio}
-          <textarea
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            rows={4}
-            className="mt-1 w-full rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
-          />
-        </label>
-
-        <div className="text-sm text-foreground-muted">
-          {t.profil.jeCherche}
-          <div className="mt-1 flex flex-wrap gap-2">
-            {MATCHING_TAGS.map((tag) => (
-              <button
-                key={tag}
-                type="button"
-                onClick={() => toggleMatchingTag(tag)}
-                className={`rounded-lg border px-3 py-1 text-sm transition ${
-                  matchingTags.includes(tag)
-                    ? "border-foreground bg-foreground text-background"
-                    : "border-foreground/20 hover:border-foreground/40"
-                }`}
-              >
-                {t.matchingTagLabels[tag]}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <label className="text-sm text-foreground-muted">
-          {t.profil.emailContact} <span className="text-foreground/40">{t.profil.emailContactHint}</span>
-          <input
-            type="email"
-            value={emailContact}
-            onChange={(e) => setEmailContact(e.target.value)}
-            placeholder={t.profil.emailContactPlaceholder}
-            className="mt-1 w-full rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
-          />
-        </label>
-
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        {message && <p className="text-sm text-green-700">{message}</p>}
-
-        <button
-          type="submit"
-          disabled={saving}
-          className="mt-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-foreground transition hover:opacity-90 disabled:opacity-50"
-        >
-          {saving ? "…" : t.profil.save}
-        </button>
-      </form>
-
-      <div className="mt-6 flex flex-col gap-2 text-sm">
-        <Link href="/profil/bloques" className="text-foreground/70 underline hover:text-foreground">
-          {t.safety.blockedUsersTitle}
-        </Link>
-      </div>
-
-      <div className="mt-8 border-t border-foreground/10 pt-4">
-        <h2 className="text-sm font-medium text-foreground-muted">{t.account.exportData}</h2>
-        <p className="mt-1 text-xs text-foreground/50">{t.account.exportHint}</p>
-        <a
-          href="/api/account/export"
-          className="mt-2 inline-block rounded-lg border border-foreground/20 px-4 py-2 text-sm hover:border-foreground/40"
-        >
-          {t.account.exportButton}
-        </a>
-      </div>
-
-      <div className="mt-4">
-        <Link href="/profil/supprimer" className="text-sm text-red-600 underline hover:text-red-700">
-          {t.account.deleteAccount}
-        </Link>
-      </div>
     </div>
   );
 }

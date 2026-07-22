@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Piazzolla } from "next/font/google";
 import { Header } from "@/components/Header";
+import { BottomNav } from "@/components/BottomNav";
 import { LocaleProvider } from "@/lib/i18n/context";
 import { createClient } from "@/lib/supabase/server";
 import "./globals.css";
@@ -53,7 +54,8 @@ export default async function RootLayout({
           <header className="border-b border-foreground/10">
             <Header userEmail={user?.email ?? null} isModerator={isModerator} />
           </header>
-          {children}
+          <div className={user ? "pb-20" : ""}>{children}</div>
+          <BottomNav show={!!user} />
         </LocaleProvider>
       </body>
     </html>

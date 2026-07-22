@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { Store } from "lucide-react";
+import { Store, Filter, X } from "lucide-react";
 import { EventCard } from "@/components/EventCard";
 import { EventCalendar } from "@/components/EventCalendar";
 import { useEvents } from "@/lib/use-events";
@@ -48,6 +48,8 @@ export default function EvenementsPage() {
   const [type, setType] = useState<EventType | "">("");
   const [discipline, setDiscipline] = useState("");
   const [query, setQuery] = useState("");
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const activeFilterCount = (type ? 1 : 0) + (discipline ? 1 : 0);
 
   const [userId, setUserId] = useState<string | null>(null);
   const [checkingUser, setCheckingUser] = useState(true);
@@ -112,7 +114,7 @@ export default function EvenementsPage() {
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8">
       <div className="mb-6 flex items-center justify-between gap-2">
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <button onClick={() => setTab("tous")} className={pillClass(tab === "tous")}>
             {t.evenements.tabTous}
           </button>
@@ -125,25 +127,23 @@ export default function EvenementsPage() {
           <button onClick={() => setTab("mes")} className={pillClass(tab === "mes")}>
             {t.evenements.tabMes}
           </button>
-        </div>
-        <div className="flex items-center gap-2">
           <Link
             href="/boutiques"
             aria-label={t.shops.title}
             title={t.shops.title}
-            className="rounded-lg border border-foreground/20 p-1.5 hover:border-foreground/40"
+            className="ml-2 rounded-lg border border-foreground/20 p-1.5 hover:border-foreground/40"
           >
             <Store size={16} strokeWidth={1.75} />
           </Link>
-          {userId && (
-            <Link
-              href="/evenements/nouveau"
-              className="rounded-lg bg-accent px-4 py-1.5 text-sm text-accent-foreground transition hover:opacity-90"
-            >
-              {t.evenements.proposer}
-            </Link>
-          )}
         </div>
+        {userId && (
+          <Link
+            href="/evenements/nouveau"
+            className="rounded-lg bg-accent px-4 py-1.5 text-sm text-accent-foreground transition hover:opacity-90"
+          >
+            {t.evenements.proposer}
+          </Link>
+        )}
       </div>
 
       {tab === "tous" && (
@@ -156,49 +156,95 @@ export default function EvenementsPage() {
             ))}
           </div>
 
-          <input
-            type="search"
-            placeholder={t.evenements.searchPlaceholder}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="mb-4 w-full rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
-          />
-
-          <div className="mb-2 -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className={`flex items-center gap-2 ${activeFilterCount > 0 || filtersOpen ? "mb-2" : "mb-6"}`}>
+            <input
+              type="search"
+              placeholder={t.evenements.searchPlaceholder}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="w-full rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+            />
             <button
-              onClick={() => setType("")}
-              className={`shrink-0 whitespace-nowrap ${pillClass(type === "")}`}
+              onClick={() => setFiltersOpen((o) => !o)}
+              aria-label={t.evenements.filtersButton}
+              title={t.evenements.filtersButton}
+              className={`relative shrink-0 rounded-lg border p-2 transition ${
+                filtersOpen
+                  ? "border-foreground bg-foreground text-background"
+                  : "border-foreground/20 hover:border-foreground/40"
+              }`}
             >
-              {t.evenements.tousTypes}
+              <Filter size={16} strokeWidth={1.75} />
+              {activeFilterCount > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] font-medium text-accent-foreground">
+                  {activeFilterCount}
+                </span>
+              )}
             </button>
-            {Object.entries(t.eventTypeLabels).map(([value, label]) => (
-              <button
-                key={value}
-                onClick={() => setType(value as EventType)}
-                className={`shrink-0 whitespace-nowrap ${pillClass(type === value)}`}
-              >
-                {label}
-              </button>
-            ))}
           </div>
 
-          <div className="mb-6 -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <button
-              onClick={() => setDiscipline("")}
-              className={`shrink-0 whitespace-nowrap ${pillClass(discipline === "")}`}
-            >
-              {t.evenements.toutesDisciplines}
-            </button>
-            {DISCIPLINES.map((d) => (
-              <button
-                key={d}
-                onClick={() => setDiscipline(d)}
-                className={`shrink-0 whitespace-nowrap ${pillClass(discipline === d)}`}
-              >
-                {t.disciplineLabels[d]}
-              </button>
-            ))}
-          </div>
+          {!filtersOpen && activeFilterCount > 0 && (
+            <div className="mb-4 flex flex-wrap gap-2">
+              {type && (
+                <button
+                  onClick={() => setType("")}
+                  className="flex items-center gap-1 rounded-full border border-foreground/20 px-3 py-1 text-xs hover:border-foreground/40"
+                >
+                  {t.eventTypeLabels[type]}
+                  <X size={12} strokeWidth={2} />
+                </button>
+              )}
+              {discipline && (
+                <button
+                  onClick={() => setDiscipline("")}
+                  className="flex items-center gap-1 rounded-full border border-foreground/20 px-3 py-1 text-xs hover:border-foreground/40"
+                >
+                  {t.disciplineLabels[discipline] ?? discipline}
+                  <X size={12} strokeWidth={2} />
+                </button>
+              )}
+            </div>
+          )}
+
+          {filtersOpen && (
+            <div className="mb-6 rounded-lg border border-foreground/10 p-3">
+              <div className="mb-2 -mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <button
+                  onClick={() => setType("")}
+                  className={`shrink-0 whitespace-nowrap ${pillClass(type === "")}`}
+                >
+                  {t.evenements.tousTypes}
+                </button>
+                {Object.entries(t.eventTypeLabels).map(([value, label]) => (
+                  <button
+                    key={value}
+                    onClick={() => setType(value as EventType)}
+                    className={`shrink-0 whitespace-nowrap ${pillClass(type === value)}`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <button
+                  onClick={() => setDiscipline("")}
+                  className={`shrink-0 whitespace-nowrap ${pillClass(discipline === "")}`}
+                >
+                  {t.evenements.toutesDisciplines}
+                </button>
+                {DISCIPLINES.map((d) => (
+                  <button
+                    key={d}
+                    onClick={() => setDiscipline(d)}
+                    className={`shrink-0 whitespace-nowrap ${pillClass(discipline === d)}`}
+                  >
+                    {t.disciplineLabels[d]}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="flex flex-col gap-3">
             {loading && <p className="text-sm text-foreground-muted">{t.common.loading}</p>}
