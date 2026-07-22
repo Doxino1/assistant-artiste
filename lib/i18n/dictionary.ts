@@ -242,6 +242,8 @@ export interface Dictionary {
     add: string;
     empty: string;
     delete: string;
+    tabList: string;
+    tabMap: string;
   };
 
   calendar: {
@@ -537,6 +539,8 @@ export const fr: Dictionary = {
     add: "Ajouter",
     empty: "Aucune boutique par ici pour l'instant.",
     delete: "Supprimer",
+    tabList: "Liste",
+    tabMap: "Carte",
   },
   calendar: {
     tab: "Calendrier",
@@ -832,6 +836,8 @@ export const en: Dictionary = {
     add: "Add",
     empty: "No shops listed yet.",
     delete: "Delete",
+    tabList: "List",
+    tabMap: "Map",
   },
   calendar: {
     tab: "Calendar",
@@ -1128,6 +1134,8 @@ export const el: Dictionary = {
     add: "Προσθήκη",
     empty: "Κανένα κατάστημα ακόμη.",
     delete: "Διαγραφή",
+    tabList: "Λίστα",
+    tabMap: "Χάρτης",
   },
   calendar: {
     tab: "Ημερολόγιο",

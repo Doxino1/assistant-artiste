@@ -24,26 +24,12 @@ export function Header({
       </Link>
       {userEmail && (
         <>
-          <Link href="/matching" className="text-foreground-muted hover:text-foreground">
-            {t.nav.matching}
-          </Link>
-          <Link href="/artistes" className="text-foreground-muted hover:text-foreground">
-            {t.artiste.directory}
-          </Link>
           <Link href="/communaute" className="text-foreground-muted hover:text-foreground">
             {t.nav.communaute}
-          </Link>
-          <Link href="/boutiques" className="text-foreground-muted hover:text-foreground">
-            {t.shops.title}
           </Link>
           <Link href="/profil" className="text-foreground-muted hover:text-foreground">
             {t.nav.profil}
           </Link>
-          {isModerator && (
-            <Link href="/moderation" className="text-foreground-muted hover:text-foreground">
-              {t.nav.moderation}
-            </Link>
-          )}
         </>
       )}
 
@@ -66,6 +52,11 @@ export function Header({
       <div className="ml-auto flex items-center gap-4">
         {userEmail ? (
           <>
+            {isModerator && (
+              <Link href="/moderation" className="text-xs text-foreground-muted hover:text-foreground">
+                {t.nav.moderation}
+              </Link>
+            )}
             <span className="text-foreground-muted">{userEmail}</span>
             <SignOutButton />
           </>

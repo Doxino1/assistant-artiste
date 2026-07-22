@@ -18,7 +18,7 @@ interface Suggestion {
   sharedTags: MatchingTag[];
 }
 
-export default function MatchingPage() {
+export function MatchingTab() {
   const t = useT();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -113,29 +113,24 @@ export default function MatchingPage() {
   }, [router]);
 
   if (loading) {
-    return (
-      <div className="mx-auto w-full max-w-2xl px-4 py-8">
-        <p className="text-sm text-foreground-muted">{t.common.loading}</p>
-      </div>
-    );
+    return <p className="text-sm text-foreground-muted">{t.common.loading}</p>;
   }
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-4 py-8">
-      <h1 className="text-xl font-semibold">{t.matching.title}</h1>
-      <p className="mt-1 text-sm text-foreground-muted">{t.matching.subtitle}</p>
+    <div>
+      <p className="mb-6 text-sm text-foreground-muted">{t.matching.subtitle}</p>
 
-      {error && <p className="mt-6 text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
 
       {!error && myTags.length === 0 && (
-        <p className="mt-6 text-sm text-foreground-muted">{t.matching.needTag}</p>
+        <p className="text-sm text-foreground-muted">{t.matching.needTag}</p>
       )}
 
       {!error && myTags.length > 0 && suggestions.length === 0 && (
-        <p className="mt-6 text-sm text-foreground-muted">{t.matching.noResults}</p>
+        <p className="text-sm text-foreground-muted">{t.matching.noResults}</p>
       )}
 
-      <div className="mt-6 flex flex-col gap-3">
+      <div className="flex flex-col gap-3">
         {suggestions.map((s) => (
           <div key={s.id} className="rounded-lg border border-foreground/10 p-4">
             <div className="flex items-center justify-between gap-2">

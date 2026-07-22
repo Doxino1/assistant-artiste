@@ -26,7 +26,7 @@ function pillClass(active: boolean) {
   }`;
 }
 
-export default function ArtistesPage() {
+export function ArtistesTab() {
   const t = useT();
   const [ville, setVille] = useState<Ville>("Paris");
   const [artistes, setArtistes] = useState<ArtisteRow[] | null>(null);
@@ -48,8 +48,7 @@ export default function ArtistesPage() {
   }, [ville]);
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-4 py-8">
-      <h1 className="text-xl font-semibold">{t.artiste.directory}</h1>
+    <div>
       <div className="mb-6 flex gap-2">
         {VILLES.map((v) => (
           <button key={v} onClick={() => setVille(v)} className={pillClass(ville === v)}>

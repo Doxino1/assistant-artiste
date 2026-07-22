@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { Store } from "lucide-react";
 import { EventCard } from "@/components/EventCard";
 import { EventCalendar } from "@/components/EventCalendar";
 import { useEvents } from "@/lib/use-events";
@@ -125,14 +126,24 @@ export default function EvenementsPage() {
             {t.evenements.tabMes}
           </button>
         </div>
-        {userId && (
+        <div className="flex items-center gap-2">
           <Link
-            href="/evenements/nouveau"
-            className="rounded-lg bg-accent px-4 py-1.5 text-sm font-medium text-accent-foreground transition hover:opacity-90"
+            href="/boutiques"
+            aria-label={t.shops.title}
+            title={t.shops.title}
+            className="rounded-lg border border-foreground/20 p-1.5 hover:border-foreground/40"
           >
-            {t.evenements.proposer}
+            <Store size={16} strokeWidth={1.75} />
           </Link>
-        )}
+          {userId && (
+            <Link
+              href="/evenements/nouveau"
+              className="rounded-lg bg-accent px-4 py-1.5 text-sm text-accent-foreground transition hover:opacity-90"
+            >
+              {t.evenements.proposer}
+            </Link>
+          )}
+        </div>
       </div>
 
       {tab === "tous" && (
