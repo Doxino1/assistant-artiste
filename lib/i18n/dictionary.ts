@@ -181,6 +181,7 @@ export interface Dictionary {
     subject: (count: number, ville: string) => string;
     greeting: (nom: string) => string;
     intro: (ville: string) => string;
+    communityLine: (matches: number, messages: number, ville: string) => string;
   };
 
   moderation: {
@@ -494,6 +495,18 @@ export const fr: Dictionary = {
     subject: (count, ville) => `${count} événement${count > 1 ? "s" : ""} à ${ville} cette semaine`,
     greeting: (nom) => `Bonjour ${nom},`,
     intro: (ville) => `Voici les événements à ${ville} pour les 7 prochains jours :`,
+    communityLine: (matches, messages, ville) => {
+      const parts: string[] = [];
+      if (matches > 0) {
+        parts.push(
+          `${matches} nouvelle${matches > 1 ? "s" : ""} correspondance${matches > 1 ? "s" : ""} avec ce que tu cherches`
+        );
+      }
+      if (messages > 0) {
+        parts.push(`${messages} nouveau${messages > 1 ? "x" : ""} message${messages > 1 ? "s" : ""} dans le groupe ${ville}`);
+      }
+      return parts.join(" et ");
+    },
   },
   moderation: {
     title: "Modération",
@@ -801,6 +814,16 @@ export const en: Dictionary = {
     subject: (count, ville) => `${count} event${count > 1 ? "s" : ""} in ${ville} this week`,
     greeting: (nom) => `Hi ${nom},`,
     intro: (ville) => `Here are the events in ${ville} for the next 7 days:`,
+    communityLine: (matches, messages, ville) => {
+      const parts: string[] = [];
+      if (matches > 0) {
+        parts.push(`${matches} new ${matches > 1 ? "people match" : "person matches"} what you're looking for`);
+      }
+      if (messages > 0) {
+        parts.push(`${messages} new message${messages > 1 ? "s" : ""} in the ${ville} group`);
+      }
+      return parts.join(", and ");
+    },
   },
   moderation: {
     title: "Moderation",
@@ -1109,6 +1132,12 @@ export const el: Dictionary = {
     subject: (count, ville) => `${count} εκδήλωση${count > 1 ? "εις" : ""} στην ${ville} αυτή την εβδομάδα`,
     greeting: (nom) => `Γεια σου ${nom},`,
     intro: (ville) => `Ορίστε οι εκδηλώσεις στην ${ville} για τις επόμενες 7 μέρες:`,
+    communityLine: (matches, messages, ville) => {
+      const parts: string[] = [];
+      if (matches > 0) parts.push(`${matches} νέες αντιστοιχίσεις με αυτό που ψάχνεις`);
+      if (messages > 0) parts.push(`${messages} νέα μηνύματα στην ομάδα ${ville}`);
+      return parts.join(" και ");
+    },
   },
   moderation: {
     title: "Έλεγχος",
