@@ -38,6 +38,10 @@ function pillClass(active: boolean) {
   }`;
 }
 
+function toggleValue<T>(list: T[], value: T): T[] {
+  return list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
+}
+
 export default function EvenementsPage() {
   const t = useT();
   const { events: allEvents, loading, error } = useEvents();
@@ -46,11 +50,11 @@ export default function EvenementsPage() {
   const [view, setView] = useState<ViewMode>("liste");
   const [showSaved, setShowSaved] = useState(false);
   const [ville, setVille] = useState<Ville>("Paris");
-  const [type, setType] = useState<EventType | "">("");
-  const [discipline, setDiscipline] = useState("");
+  const [types, setTypes] = useState<EventType[]>([]);
+  const [disciplines, setDisciplines] = useState<string[]>([]);
   const [query, setQuery] = useState("");
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const activeFilterCount = (type ? 1 : 0) + (discipline ? 1 : 0);
+  const activeFilterCount = types.length + disciplines.length;
 
   const [userId, setUserId] = useState<string | null>(null);
   const [checkingUser, setCheckingUser] = useState(true);
@@ -93,8 +97,8 @@ export default function EvenementsPage() {
     return allEvents
       .filter((e) => new Date(e.date).getTime() >= now)
       .filter((e) => e.ville === ville)
-      .filter((e) => !type || e.type === type)
-      .filter((e) => !discipline || e.discipline === discipline)
+      .filter((e) => types.length === 0 || types.includes(e.type))
+      .filter((e) => disciplines.length === 0 || disciplines.includes(e.discipline))
       .filter(
         (e) =>
           !q ||
@@ -102,7 +106,7 @@ export default function EvenementsPage() {
           e.description.toLowerCase().includes(q)
       )
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  }, [allEvents, ville, type, discipline, query, now]);
+  }, [allEvents, ville, types, disciplines, query, now]);
 
   const savedEvents = allEvents
     .filter((e) => saved[e.id] === "sauvegarde")
@@ -237,24 +241,26 @@ export default function EvenementsPage() {
 
           {!filtersOpen && activeFilterCount > 0 && (
             <div className="mb-4 flex flex-wrap gap-2">
-              {type && (
+              {types.map((v) => (
                 <button
-                  onClick={() => setType("")}
+                  key={v}
+                  onClick={() => setTypes((prev) => toggleValue(prev, v))}
                   className="flex items-center gap-1 rounded-full border border-foreground/20 px-3 py-1 text-xs hover:border-foreground/40"
                 >
-                  {t.eventTypeLabels[type]}
+                  {t.eventTypeLabels[v]}
                   <X size={12} strokeWidth={2} />
                 </button>
-              )}
-              {discipline && (
+              ))}
+              {disciplines.map((d) => (
                 <button
-                  onClick={() => setDiscipline("")}
+                  key={d}
+                  onClick={() => setDisciplines((prev) => toggleValue(prev, d))}
                   className="flex items-center gap-1 rounded-full border border-foreground/20 px-3 py-1 text-xs hover:border-foreground/40"
                 >
-                  {t.disciplineLabels[discipline] ?? discipline}
+                  {t.disciplineLabels[d] ?? d}
                   <X size={12} strokeWidth={2} />
                 </button>
-              )}
+              ))}
             </div>
           )}
 
@@ -274,16 +280,16 @@ export default function EvenementsPage() {
 
               <div className="mb-2 -mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <button
-                  onClick={() => setType("")}
-                  className={`shrink-0 whitespace-nowrap ${pillClass(type === "")}`}
+                  onClick={() => setTypes([])}
+                  className={`shrink-0 whitespace-nowrap ${pillClass(types.length === 0)}`}
                 >
                   {t.evenements.tousTypes}
                 </button>
                 {Object.entries(t.eventTypeLabels).map(([value, label]) => (
                   <button
                     key={value}
-                    onClick={() => setType(value as EventType)}
-                    className={`shrink-0 whitespace-nowrap ${pillClass(type === value)}`}
+                    onClick={() => setTypes((prev) => toggleValue(prev, value as EventType))}
+                    className={`shrink-0 whitespace-nowrap ${pillClass(types.includes(value as EventType))}`}
                   >
                     {label}
                   </button>
@@ -292,16 +298,16 @@ export default function EvenementsPage() {
 
               <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <button
-                  onClick={() => setDiscipline("")}
-                  className={`shrink-0 whitespace-nowrap ${pillClass(discipline === "")}`}
+                  onClick={() => setDisciplines([])}
+                  className={`shrink-0 whitespace-nowrap ${pillClass(disciplines.length === 0)}`}
                 >
                   {t.evenements.toutesDisciplines}
                 </button>
                 {DISCIPLINES.map((d) => (
                   <button
                     key={d}
-                    onClick={() => setDiscipline(d)}
-                    className={`shrink-0 whitespace-nowrap ${pillClass(discipline === d)}`}
+                    onClick={() => setDisciplines((prev) => toggleValue(prev, d))}
+                    className={`shrink-0 whitespace-nowrap ${pillClass(disciplines.includes(d))}`}
                   >
                     {t.disciplineLabels[d]}
                   </button>
