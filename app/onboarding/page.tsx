@@ -12,7 +12,7 @@ const TOTAL_STEPS = 5;
 function chipClass(active: boolean) {
   return `rounded-lg border px-3 py-1 text-sm transition ${
     active
-      ? "border-foreground bg-foreground text-background"
+      ? "border-accent bg-accent text-accent-foreground"
       : "border-foreground/20 hover:border-foreground/40"
   }`;
 }
@@ -118,7 +118,7 @@ export default function OnboardingPage() {
                 onClick={() => setVille(v)}
                 className={`rounded-lg border px-3 py-2.5 text-left text-sm transition ${
                   ville === v
-                    ? "border-foreground bg-foreground text-background"
+                    ? "border-accent bg-accent text-accent-foreground"
                     : "border-foreground/20 hover:border-foreground/40"
                 }`}
               >
@@ -154,7 +154,7 @@ export default function OnboardingPage() {
                 onClick={() => setTypeProfil(pt)}
                 className={`rounded-lg border px-3 py-2.5 text-left text-sm transition ${
                   typeProfil === pt
-                    ? "border-foreground bg-foreground text-background"
+                    ? "border-accent bg-accent text-accent-foreground"
                     : "border-foreground/20 hover:border-foreground/40"
                 }`}
               >

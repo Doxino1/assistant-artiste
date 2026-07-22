@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ShieldCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n/context";
 import { LOCALE_LABELS, LOCALES } from "@/lib/i18n/dictionary";
 import { DISCIPLINES, MATCHING_TAGS, MatchingTag, PROFILE_TYPES, ProfileType, Ville } from "@/lib/types";
+import { SignOutButton } from "@/components/SignOutButton";
 
 const VILLES: Ville[] = ["Paris", "Athènes"];
 
@@ -29,6 +30,8 @@ export default function ParametresPage() {
   const [tiktokHandle, setTiktokHandle] = useState("");
   const [twitterHandle, setTwitterHandle] = useState("");
   const [matchingTags, setMatchingTags] = useState<MatchingTag[]>([]);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [isModerator, setIsModerator] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -44,11 +47,13 @@ export default function ParametresPage() {
         return;
       }
 
+      setUserEmail(user.email ?? null);
+
       const [{ data, error: fetchError }, { data: tags, error: tagsError }] = await Promise.all([
         supabase
           .from("profiles")
           .select(
-            "nom, ville, disciplines, type_profil, bio, email_contact, instagram_handle, tiktok_handle, twitter_handle"
+            "nom, ville, disciplines, type_profil, bio, email_contact, instagram_handle, tiktok_handle, twitter_handle, is_moderator"
           )
           .eq("id", user.id)
           .single(),
@@ -69,6 +74,7 @@ export default function ParametresPage() {
         setInstagramHandle(data.instagram_handle ?? "");
         setTiktokHandle(data.tiktok_handle ?? "");
         setTwitterHandle(data.twitter_handle ?? "");
+        setIsModerator(data.is_moderator === true);
       }
       if (!tagsError && tags) {
         setMatchingTags(tags.map((row) => row.tag as MatchingTag));
@@ -215,7 +221,7 @@ export default function ParametresPage() {
                 onClick={() => toggleDiscipline(d)}
                 className={`rounded-lg border px-3 py-1 text-sm transition ${
                   disciplines.includes(d)
-                    ? "border-foreground bg-foreground text-background"
+                    ? "border-accent bg-accent text-accent-foreground"
                     : "border-foreground/20 hover:border-foreground/40"
                 }`}
               >
@@ -245,7 +251,7 @@ export default function ParametresPage() {
                 onClick={() => toggleMatchingTag(tag)}
                 className={`rounded-lg border px-3 py-1 text-sm transition ${
                   matchingTags.includes(tag)
-                    ? "border-foreground bg-foreground text-background"
+                    ? "border-accent bg-accent text-accent-foreground"
                     : "border-foreground/20 hover:border-foreground/40"
                 }`}
               >
@@ -318,7 +324,7 @@ export default function ParametresPage() {
               onClick={() => setLocale(l)}
               className={`rounded-lg border px-3 py-1.5 text-sm transition ${
                 locale === l
-                  ? "border-foreground bg-foreground text-background"
+                  ? "border-accent bg-accent text-accent-foreground"
                   : "border-foreground/20 hover:border-foreground/40"
               }`}
             >
@@ -330,7 +336,7 @@ export default function ParametresPage() {
 
       <div className="mt-8 border-t border-foreground/10 pt-4">
         <h2 className="text-sm font-medium text-foreground-muted">{t.profil.weeklyEmailTitle}</h2>
-        <div className="mt-3 rounded-lg border border-foreground/10 p-4">
+        <div className="mt-3 rounded-lg bg-surface p-4 shadow-soft">
           <p className="text-xs text-foreground/50">{t.weeklyEmail.subject(3, t.villeLabels[ville])}</p>
           <p className="mt-3 text-sm font-medium">{t.weeklyEmail.greeting(nom || "…")}</p>
           <p className="mt-2 text-sm text-foreground/70">{t.weeklyEmail.intro(t.villeLabels[ville])}</p>
@@ -341,6 +347,23 @@ export default function ParametresPage() {
               </li>
             ))}
           </ul>
+        </div>
+      </div>
+
+      <div className="mt-8 border-t border-foreground/10 pt-4">
+        <h2 className="text-sm font-medium text-foreground-muted">{t.profil.accountSectionTitle}</h2>
+        <p className="mt-2 text-sm text-foreground-muted">{userEmail}</p>
+        {isModerator && (
+          <Link
+            href="/moderation"
+            className="mt-2 flex items-center gap-1.5 text-sm text-accent hover:opacity-80"
+          >
+            <ShieldCheck size={15} strokeWidth={1.75} />
+            {t.nav.moderation}
+          </Link>
+        )}
+        <div className="mt-3">
+          <SignOutButton />
         </div>
       </div>
 

@@ -100,7 +100,7 @@ export default function LoginPage() {
           onClick={() => setMode("connexion")}
           className={`rounded-lg border px-4 py-1.5 text-sm transition ${
             mode === "connexion"
-              ? "border-foreground bg-foreground text-background"
+              ? "border-accent bg-accent text-accent-foreground"
               : "border-foreground/20 hover:border-foreground/40"
           }`}
         >
@@ -111,7 +111,7 @@ export default function LoginPage() {
           onClick={() => setMode("inscription")}
           className={`rounded-lg border px-4 py-1.5 text-sm transition ${
             mode === "inscription"
-              ? "border-foreground bg-foreground text-background"
+              ? "border-accent bg-accent text-accent-foreground"
               : "border-foreground/20 hover:border-foreground/40"
           }`}
         >

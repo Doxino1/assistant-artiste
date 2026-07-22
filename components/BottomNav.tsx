@@ -18,24 +18,26 @@ export function BottomNav({ show }: { show: boolean }) {
   ];
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-foreground/10 bg-background">
-      <div className="mx-auto flex w-full max-w-2xl">
+    <div className="fixed inset-x-0 bottom-0 z-40 flex justify-center px-4 pb-4">
+      <nav className="flex items-center gap-1 rounded-full bg-surface p-1.5 shadow-soft">
         {items.map(({ href, label, Icon }) => {
           const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
           return (
             <Link
               key={href}
               href={href}
-              className={`flex flex-1 flex-col items-center gap-0.5 py-2.5 text-xs transition ${
-                active ? "text-accent" : "text-foreground/40 hover:text-foreground/60"
+              className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-medium transition ${
+                active
+                  ? "bg-accent text-accent-foreground"
+                  : "text-foreground-muted hover:text-foreground"
               }`}
             >
-              <Icon size={22} strokeWidth={active ? 2.25 : 1.75} />
-              <span className={active ? "font-medium" : ""}>{label}</span>
+              <Icon size={18} strokeWidth={1.75} />
+              <span>{label}</span>
             </Link>
           );
         })}
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 }

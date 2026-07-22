@@ -21,7 +21,7 @@ const VILLES: Ville[] = ["Paris", "Athènes"];
 function pillClass(active: boolean) {
   return `rounded-lg border px-4 py-1.5 text-sm transition ${
     active
-      ? "border-foreground bg-foreground text-background"
+      ? "border-accent bg-accent text-accent-foreground"
       : "border-foreground/20 hover:border-foreground/40"
   }`;
 }

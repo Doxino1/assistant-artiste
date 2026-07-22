@@ -117,7 +117,7 @@ export function EventCalendar({ events, ville }: { events: ArtEvent[]; ville: Vi
               onClick={() => setSelectedDay(key === selectedDay ? null : key)}
               className={`flex aspect-square flex-col items-center justify-center rounded-lg text-sm transition ${
                 key === selectedDay
-                  ? "bg-foreground text-background"
+                  ? "bg-accent text-accent-foreground"
                   : count > 0
                     ? "bg-foreground/5 hover:bg-foreground/10"
                     : "hover:bg-foreground/5"

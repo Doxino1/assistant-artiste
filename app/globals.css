@@ -8,6 +8,25 @@
   --border: #e5e1d8;
   --accent: #c4622d;
   --accent-foreground: #ffffff;
+
+  /* Un seul font rond et chaleureux partout — pas de pairing serif/sans. */
+  --font-display: var(--font-sans);
+
+  /* Badges de catégorie d'événement — un ton pastel distinct par type,
+     jamais de texte noir sur fond coloré. */
+  --badge-vernissage-bg: #f1e6fa;
+  --badge-vernissage-fg: #6b3fa0;
+  --badge-workshop-bg: #dff4ef;
+  --badge-workshop-fg: #22796b;
+  --badge-open-call-bg: #fce4dd;
+  --badge-open-call-fg: #c1502f;
+  --badge-expo-bg: #e3ecfc;
+  --badge-expo-fg: #3a5aa6;
+  --badge-annonce-bg: #fbe1ec;
+  --badge-annonce-fg: #a73d6c;
+
+  /* Ombre douce "bubbly" — sous les cartes et le bouton flottant. */
+  --shadow-soft: 0 2px 8px rgba(43, 39, 36, 0.06), 0 8px 24px rgba(43, 39, 36, 0.08);
 }
 
 @theme inline {
@@ -20,6 +39,27 @@
   --color-accent-foreground: var(--accent-foreground);
   --font-sans: var(--font-sans);
   --font-display: var(--font-display);
+
+  --color-badge-vernissage-bg: var(--badge-vernissage-bg);
+  --color-badge-vernissage-fg: var(--badge-vernissage-fg);
+  --color-badge-workshop-bg: var(--badge-workshop-bg);
+  --color-badge-workshop-fg: var(--badge-workshop-fg);
+  --color-badge-open-call-bg: var(--badge-open-call-bg);
+  --color-badge-open-call-fg: var(--badge-open-call-fg);
+  --color-badge-expo-bg: var(--badge-expo-bg);
+  --color-badge-expo-fg: var(--badge-expo-fg);
+  --color-badge-annonce-bg: var(--badge-annonce-bg);
+  --color-badge-annonce-fg: var(--badge-annonce-fg);
+
+  /* Coins beaucoup plus arrondis (esthétique "bubbly") — rounded-lg suffit
+     à rendre les boutons/badges compacts entièrement en pilule (le rayon
+     dépasse la moitié de leur hauteur, la valeur se clampe automatiquement),
+     tout en gardant un arrondi 20px+ raisonnable sur les cartes plus hautes. */
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 1.75rem;
+
+  --shadow-soft: var(--shadow-soft);
 }
 
 body {
@@ -28,8 +68,6 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
-h1,
-h2,
-h3 {
-  font-family: var(--font-display), Georgia, serif;
+.shadow-soft {
+  box-shadow: var(--shadow-soft);
 }

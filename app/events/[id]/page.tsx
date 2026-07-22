@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { SaveButtons } from "@/components/SaveButtons";
 import { CalendarButtons } from "@/components/CalendarButtons";
+import { EventTypeBadge } from "@/components/EventTypeBadge";
 import { useEvents } from "@/lib/use-events";
 import { formatInVille } from "@/lib/timezone";
 import { useSavedEvents } from "@/lib/use-saved-events";
@@ -75,9 +76,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
       </Link>
 
       <div className="mt-4 flex items-center justify-between gap-2 text-xs text-foreground-muted">
-        <span className="rounded-full bg-foreground/5 px-2 py-0.5">
-          {t.eventTypeLabels[event.type]}
-        </span>
+        <EventTypeBadge type={event.type} />
         <span>{t.villeLabels[event.ville]}</span>
       </div>
 

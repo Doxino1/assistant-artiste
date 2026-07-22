@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { Store, Filter, X } from "lucide-react";
+import { List, CalendarDays, Map as MapIcon, Bookmark, Store, Filter, X, Plus, ChevronDown } from "lucide-react";
 import { EventCard } from "@/components/EventCard";
 import { EventCalendar } from "@/components/EventCalendar";
 import { useEvents } from "@/lib/use-events";
@@ -19,7 +19,7 @@ const EventMap = dynamic(() => import("@/components/EventMap").then((m) => m.Eve
   ssr: false,
 });
 
-type Tab = "tous" | "calendrier" | "carte" | "mes";
+type ViewMode = "liste" | "calendrier" | "carte";
 type SubmissionStatut = "en_attente" | "publie";
 
 interface MySubmission {
@@ -33,7 +33,7 @@ interface MySubmission {
 function pillClass(active: boolean) {
   return `rounded-lg border px-4 py-1.5 text-sm transition ${
     active
-      ? "border-foreground bg-foreground text-background"
+      ? "border-accent bg-accent text-accent-foreground"
       : "border-foreground/20 hover:border-foreground/40"
   }`;
 }
@@ -43,7 +43,8 @@ export default function EvenementsPage() {
   const { events: allEvents, loading, error } = useEvents();
   const { saved } = useSavedEvents();
 
-  const [tab, setTab] = useState<Tab>("tous");
+  const [view, setView] = useState<ViewMode>("liste");
+  const [showSaved, setShowSaved] = useState(false);
   const [ville, setVille] = useState<Ville>("Paris");
   const [type, setType] = useState<EventType | "">("");
   const [discipline, setDiscipline] = useState("");
@@ -71,7 +72,7 @@ export default function EvenementsPage() {
   }, []);
 
   useEffect(() => {
-    if (tab !== "mes" || !userId) return;
+    if (!showSaved || !userId) return;
     let active = true;
     createClient()
       .from("events")
@@ -85,7 +86,7 @@ export default function EvenementsPage() {
     return () => {
       active = false;
     };
-  }, [tab, userId]);
+  }, [showSaved, userId]);
 
   const events = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -112,51 +113,102 @@ export default function EvenementsPage() {
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-4 py-8">
-      <div className="mb-6 flex items-center justify-between gap-2">
+    <div className="relative mx-auto w-full max-w-2xl px-4 py-8">
+      <div className="flex items-center justify-between gap-2">
+        <h1 className="font-display text-xl font-semibold">{t.nav.evenements}</h1>
+        {!checkingUser && !userId && (
+          <Link href="/login" className="text-sm text-accent hover:opacity-80">
+            {t.nav.connexion}
+          </Link>
+        )}
+      </div>
+
+      {!showSaved && (
+        <button
+          onClick={() => setFiltersOpen(true)}
+          className="mt-1 flex items-center gap-0.5 text-sm text-foreground-muted hover:text-foreground"
+        >
+          {t.villeLabels[ville]}
+          <ChevronDown size={14} strokeWidth={1.75} />
+        </button>
+      )}
+
+      <div className="mt-4 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1 rounded-full bg-surface p-1">
+          <button
+            onClick={() => {
+              setShowSaved(false);
+              setView("liste");
+            }}
+            aria-label={t.evenements.tabTous}
+            title={t.evenements.tabTous}
+            className={`flex items-center justify-center rounded-full p-2 transition ${
+              !showSaved && view === "liste"
+                ? "bg-accent text-accent-foreground"
+                : "text-foreground-muted hover:text-foreground"
+            }`}
+          >
+            <List size={18} strokeWidth={1.75} />
+          </button>
+          <button
+            onClick={() => {
+              setShowSaved(false);
+              setView("calendrier");
+            }}
+            aria-label={t.calendar.tab}
+            title={t.calendar.tab}
+            className={`flex items-center justify-center rounded-full p-2 transition ${
+              !showSaved && view === "calendrier"
+                ? "bg-accent text-accent-foreground"
+                : "text-foreground-muted hover:text-foreground"
+            }`}
+          >
+            <CalendarDays size={18} strokeWidth={1.75} />
+          </button>
+          <button
+            onClick={() => {
+              setShowSaved(false);
+              setView("carte");
+            }}
+            aria-label={t.evenements.tabCarte}
+            title={t.evenements.tabCarte}
+            className={`flex items-center justify-center rounded-full p-2 transition ${
+              !showSaved && view === "carte"
+                ? "bg-accent text-accent-foreground"
+                : "text-foreground-muted hover:text-foreground"
+            }`}
+          >
+            <MapIcon size={18} strokeWidth={1.75} />
+          </button>
+        </div>
+
         <div className="flex items-center gap-2">
-          <button onClick={() => setTab("tous")} className={pillClass(tab === "tous")}>
-            {t.evenements.tabTous}
-          </button>
-          <button onClick={() => setTab("calendrier")} className={pillClass(tab === "calendrier")}>
-            {t.calendar.tab}
-          </button>
-          <button onClick={() => setTab("carte")} className={pillClass(tab === "carte")}>
-            {t.evenements.tabCarte}
-          </button>
-          <button onClick={() => setTab("mes")} className={pillClass(tab === "mes")}>
-            {t.evenements.tabMes}
+          <button
+            onClick={() => setShowSaved((s) => !s)}
+            aria-label={t.evenements.tabMes}
+            title={t.evenements.tabMes}
+            className={`flex h-9 w-9 items-center justify-center rounded-full transition ${
+              showSaved
+                ? "bg-accent text-accent-foreground"
+                : "border border-foreground/20 text-foreground-muted hover:text-foreground"
+            }`}
+          >
+            <Bookmark size={16} strokeWidth={1.75} />
           </button>
           <Link
             href="/boutiques"
             aria-label={t.shops.title}
             title={t.shops.title}
-            className="ml-2 rounded-lg border border-foreground/20 p-1.5 hover:border-foreground/40"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-foreground/20 text-foreground-muted hover:text-foreground"
           >
             <Store size={16} strokeWidth={1.75} />
           </Link>
         </div>
-        {userId && (
-          <Link
-            href="/evenements/nouveau"
-            className="rounded-lg bg-accent px-4 py-1.5 text-sm text-accent-foreground transition hover:opacity-90"
-          >
-            {t.evenements.proposer}
-          </Link>
-        )}
       </div>
 
-      {tab === "tous" && (
+      {!showSaved && (
         <>
-          <div className="mb-6 flex gap-2">
-            {VILLES.map((v) => (
-              <button key={v} onClick={() => setVille(v)} className={pillClass(ville === v)}>
-                {t.villeLabels[v]}
-              </button>
-            ))}
-          </div>
-
-          <div className={`flex items-center gap-2 ${activeFilterCount > 0 || filtersOpen ? "mb-2" : "mb-6"}`}>
+          <div className={`flex items-center gap-2 ${activeFilterCount > 0 || filtersOpen ? "mt-4 mb-2" : "mt-4 mb-6"}`}>
             <input
               type="search"
               placeholder={t.evenements.searchPlaceholder}
@@ -170,7 +222,7 @@ export default function EvenementsPage() {
               title={t.evenements.filtersButton}
               className={`relative shrink-0 rounded-lg border p-2 transition ${
                 filtersOpen
-                  ? "border-foreground bg-foreground text-background"
+                  ? "border-accent bg-accent text-accent-foreground"
                   : "border-foreground/20 hover:border-foreground/40"
               }`}
             >
@@ -207,7 +259,19 @@ export default function EvenementsPage() {
           )}
 
           {filtersOpen && (
-            <div className="mb-6 rounded-lg border border-foreground/10 p-3">
+            <div className="mb-6 rounded-lg bg-surface p-3 shadow-soft">
+              <div className="mb-2 -mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {VILLES.map((v) => (
+                  <button
+                    key={v}
+                    onClick={() => setVille(v)}
+                    className={`shrink-0 whitespace-nowrap ${pillClass(ville === v)}`}
+                  >
+                    {t.villeLabels[v]}
+                  </button>
+                ))}
+              </div>
+
               <div className="mb-2 -mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <button
                   onClick={() => setType("")}
@@ -246,46 +310,26 @@ export default function EvenementsPage() {
             </div>
           )}
 
-          <div className="flex flex-col gap-3">
-            {loading && <p className="text-sm text-foreground-muted">{t.common.loading}</p>}
-            {error && <p className="text-sm text-red-600">{t.evenements.loadError(error)}</p>}
-            {!loading && !error && events.length === 0 && (
-              <p className="text-sm text-foreground-muted">{t.evenements.noResults}</p>
-            )}
-            {events.map((event) => (
-              <EventCard key={event.id} event={event} />
-            ))}
-          </div>
+          {view === "liste" && (
+            <div className="flex flex-col gap-3">
+              {loading && <p className="text-sm text-foreground-muted">{t.common.loading}</p>}
+              {error && <p className="text-sm text-red-600">{t.evenements.loadError(error)}</p>}
+              {!loading && !error && events.length === 0 && (
+                <p className="text-sm text-foreground-muted">{t.evenements.noResults}</p>
+              )}
+              {events.map((event) => (
+                <EventCard key={event.id} event={event} />
+              ))}
+            </div>
+          )}
+
+          {view === "calendrier" && <EventCalendar events={events} ville={ville} />}
+
+          {view === "carte" && <EventMap key={ville} events={events} ville={ville} />}
         </>
       )}
 
-      {tab === "calendrier" && (
-        <>
-          <div className="mb-6 flex gap-2">
-            {VILLES.map((v) => (
-              <button key={v} onClick={() => setVille(v)} className={pillClass(ville === v)}>
-                {t.villeLabels[v]}
-              </button>
-            ))}
-          </div>
-          <EventCalendar events={events} ville={ville} />
-        </>
-      )}
-
-      {tab === "carte" && (
-        <>
-          <div className="mb-6 flex gap-2">
-            {VILLES.map((v) => (
-              <button key={v} onClick={() => setVille(v)} className={pillClass(ville === v)}>
-                {t.villeLabels[v]}
-              </button>
-            ))}
-          </div>
-          <EventMap key={ville} events={events} ville={ville} />
-        </>
-      )}
-
-      {tab === "mes" && (
+      {showSaved && (
         <>
           {checkingUser && <p className="text-sm text-foreground-muted">{t.common.loading}</p>}
 
@@ -334,7 +378,7 @@ export default function EvenementsPage() {
                     <p className="text-sm text-foreground-muted">{t.evenements.noSubmissions}</p>
                   )}
                   {(submissions ?? []).map((s) => (
-                    <div key={s.id} className="rounded-lg border border-foreground/10 p-4">
+                    <div key={s.id} className="rounded-lg bg-surface p-4 shadow-soft">
                       <div className="flex items-center justify-between gap-2">
                         <h3 className="font-medium">{s.titre}</h3>
                         <span
@@ -373,6 +417,17 @@ export default function EvenementsPage() {
             </>
           )}
         </>
+      )}
+
+      {userId && (
+        <Link
+          href="/evenements/nouveau"
+          aria-label={t.evenements.proposer}
+          title={t.evenements.proposer}
+          className="fixed bottom-24 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-accent text-accent-foreground shadow-soft transition hover:opacity-90"
+        >
+          <Plus size={26} strokeWidth={2} />
+        </Link>
       )}
     </div>
   );

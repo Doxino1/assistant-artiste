@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatInVille } from "@/lib/timezone";
 import { useLocale } from "@/lib/i18n/context";
-import { Ville } from "@/lib/types";
+import { EventTypeBadge } from "@/components/EventTypeBadge";
+import { EventType, Ville } from "@/lib/types";
 
 interface PendingEvent {
   id: string;
@@ -76,11 +77,9 @@ export default function ModerationPage() {
 
       <div className="mt-6 flex flex-col gap-3">
         {(events ?? []).map((event) => (
-          <div key={event.id} className="rounded-lg border border-foreground/10 p-4">
+          <div key={event.id} className="rounded-lg bg-surface p-4 shadow-soft">
             <div className="flex items-center justify-between gap-2 text-xs text-foreground-muted">
-              <span className="rounded-full bg-foreground/5 px-2 py-0.5">
-                {t.eventTypeLabels[event.type as keyof typeof t.eventTypeLabels] ?? event.type}
-              </span>
+              <EventTypeBadge type={event.type as EventType} />
               <span>
                 {formatInVille(
                   event.date,
@@ -105,7 +104,7 @@ export default function ModerationPage() {
                 type="button"
                 disabled={busyId === event.id}
                 onClick={() => handlePublish(event.id)}
-                className="rounded-lg bg-foreground px-3 py-1 text-sm text-background transition disabled:opacity-50"
+                className="rounded-lg bg-accent px-3 py-1 text-sm text-accent-foreground transition hover:opacity-90 disabled:opacity-50"
               >
                 {t.moderation.publish}
               </button>

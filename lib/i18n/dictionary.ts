@@ -129,6 +129,7 @@ export interface Dictionary {
     portfolioSubtitle: string;
     settingsTitle: string;
     settingsLink: string;
+    accountSectionTitle: string;
     contactSectionTitle: string;
     instagramLabel: string;
     tiktokLabel: string;
@@ -376,7 +377,7 @@ export const fr: Dictionary = {
     loginLink: "Connecte-toi",
     jeViens: "Je viens",
     sauvegardes: "Sauvegardés",
-    noneYet: "Rien par ici pour l'instant.",
+    noneYet: "Rien par ici pour l'instant — reviens bientôt, ou sois le·la premier·ère à en ajouter un.",
     mesSoumissions: "Mes soumissions",
     noSubmissions: "Tu n'as encore rien proposé.",
     statutEnAttente: "En attente de validation",
@@ -442,6 +443,7 @@ export const fr: Dictionary = {
     portfolioSubtitle: "Ta sélection de travail, vitrine pro",
     settingsTitle: "Paramètres du profil",
     settingsLink: "Réglages",
+    accountSectionTitle: "Compte",
     contactSectionTitle: "Contact",
     instagramLabel: "Instagram",
     tiktokLabel: "TikTok",
@@ -682,7 +684,7 @@ export const en: Dictionary = {
     loginLink: "Sign in",
     jeViens: "Going",
     sauvegardes: "Saved",
-    noneYet: "Nothing here yet.",
+    noneYet: "Nothing here yet — check back soon, or be the first to add one.",
     mesSoumissions: "My submissions",
     noSubmissions: "You haven't submitted anything yet.",
     statutEnAttente: "Pending review",
@@ -748,6 +750,7 @@ export const en: Dictionary = {
     portfolioSubtitle: "Your curated work, a professional showcase",
     settingsTitle: "Profile settings",
     settingsLink: "Settings",
+    accountSectionTitle: "Account",
     contactSectionTitle: "Contact",
     instagramLabel: "Instagram",
     tiktokLabel: "TikTok",
@@ -988,7 +991,7 @@ export const el: Dictionary = {
     loginLink: "Σύνδεση",
     jeViens: "Θα έρθω",
     sauvegardes: "Αποθηκευμένα",
-    noneYet: "Τίποτα ακόμη.",
+    noneYet: "Τίποτα ακόμη — πέρασε ξανά σύντομα, ή πρόσθεσε το πρώτο εσύ.",
     mesSoumissions: "Οι προτάσεις μου",
     noSubmissions: "Δεν έχεις προτείνει καμία εκδήλωση ακόμη.",
     statutEnAttente: "Σε αναμονή έγκρισης",
@@ -1055,6 +1058,7 @@ export const el: Dictionary = {
     portfolioSubtitle: "Η επιλεγμένη δουλειά σου, επαγγελματική βιτρίνα",
     settingsTitle: "Ρυθμίσεις προφίλ",
     settingsLink: "Ρυθμίσεις",
+    accountSectionTitle: "Λογαριασμός",
     contactSectionTitle: "Επικοινωνία",
     instagramLabel: "Instagram",
     tiktokLabel: "TikTok",
