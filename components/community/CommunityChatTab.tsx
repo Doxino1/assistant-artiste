@@ -6,6 +6,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n/context";
 import { BlockReportActions } from "@/components/BlockReportActions";
+import { Ville } from "@/lib/types";
 
 interface Message {
   id: string;
@@ -15,13 +16,22 @@ interface Message {
   profiles: { nom: string } | null;
 }
 
+const VILLES: Ville[] = ["Paris", "Athènes"];
 const BCP47_TAGS: Record<string, string> = { fr: "fr-FR", en: "en-US", el: "el-GR" };
+
+function pillClass(active: boolean) {
+  return `rounded-lg border px-4 py-1.5 text-sm transition ${
+    active
+      ? "border-accent bg-accent text-accent-foreground"
+      : "border-foreground/20 hover:border-foreground/40"
+  }`;
+}
 
 export function CommunityChatTab() {
   const { locale, t } = useLocale();
   const router = useRouter();
   const [userId, setUserId] = useState<string | null>(null);
-  const [ville, setVille] = useState<string | null>(null);
+  const [ville, setVille] = useState<Ville | null>(null);
   const [groupId, setGroupId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [blockedIds, setBlockedIds] = useState<Set<string>>(new Set());
@@ -65,11 +75,14 @@ export function CommunityChatTab() {
     setBlockedIds(ids);
   }, []);
 
+  // Récupère l'utilisateur une seule fois et initialise la ville affichée sur
+  // sa ville de profil — ensuite l'utilisateur peut basculer librement sur
+  // l'autre ville sans que ça touche à son profil.
   useEffect(() => {
     let active = true;
     const supabase = createClient();
 
-    async function load() {
+    async function init() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -79,7 +92,9 @@ export function CommunityChatTab() {
         return;
       }
 
+      if (!active) return;
       setUserId(user.id);
+      await loadBlocked(user.id);
 
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
@@ -94,12 +109,32 @@ export function CommunityChatTab() {
         return;
       }
 
-      setVille(profile.ville);
+      setVille(profile.ville as Ville);
+    }
+
+    init();
+    return () => {
+      active = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router, loadBlocked]);
+
+  // Recharge le groupe + les messages à chaque changement de ville affichée —
+  // c'est cette dépendance qui manquait, la ville du profil n'était lue
+  // qu'une fois au montage donc changer de ville ne rechargeait jamais rien.
+  useEffect(() => {
+    if (!ville) return;
+    let active = true;
+    const supabase = createClient();
+
+    async function loadGroup() {
+      setLoading(true);
+      setError(null);
 
       const { data: group, error: groupError } = await supabase
         .from("groups")
         .select("id")
-        .eq("ville", profile.ville)
+        .eq("ville", ville)
         .single();
 
       if (!active) return;
@@ -110,16 +145,16 @@ export function CommunityChatTab() {
       }
 
       setGroupId(group.id);
-      await Promise.all([loadMessages(group.id), loadBlocked(user.id)]);
+      await loadMessages(group.id);
       if (active) setLoading(false);
     }
 
-    load();
+    loadGroup();
     return () => {
       active = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router, loadMessages, loadBlocked]);
+  }, [ville, loadMessages]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -152,62 +187,71 @@ export function CommunityChatTab() {
     await loadMessages(groupId);
   }
 
-  if (loading) {
-    return <p className="text-sm text-foreground-muted">{t.common.loading}</p>;
-  }
-
   const visibleMessages = messages.filter((m) => !blockedIds.has(m.user_id));
 
   return (
     <div>
-      <h2 className="font-display text-lg font-medium">
-        {t.communaute.title(ville ? (t.villeLabels[ville as keyof typeof t.villeLabels] ?? ville) : "")}
-      </h2>
-
-      {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
-
-      <div className="mt-6 flex flex-col gap-3">
-        {visibleMessages.length === 0 && !error && (
-          <p className="text-sm text-foreground-muted">{t.communaute.noMessages}</p>
-        )}
-        {visibleMessages.map((m) => (
-          <div key={m.id} className="rounded-lg border border-foreground/10 p-3">
-            <div className="flex items-baseline justify-between gap-2 text-xs text-foreground-muted">
-              <Link href={`/artistes/${m.user_id}`} className="font-medium text-foreground hover:underline">
-                {m.profiles?.nom || t.communaute.anonyme}
-              </Link>
-              <span>{formatDate(m.date)}</span>
-            </div>
-            <p className="mt-1 text-sm">{m.texte}</p>
-            {userId && m.user_id !== userId && (
-              <BlockReportActions
-                targetUserId={m.user_id}
-                targetName={m.profiles?.nom || t.communaute.anonyme}
-                onBlocked={() => setBlockedIds((prev) => new Set(prev).add(m.user_id))}
-                className="mt-1.5"
-              />
-            )}
-          </div>
+      <div className="mb-4 flex gap-2">
+        {VILLES.map((v) => (
+          <button key={v} onClick={() => setVille(v)} className={pillClass(ville === v)}>
+            {t.villeLabels[v]}
+          </button>
         ))}
       </div>
 
-      <form onSubmit={handleSubmit} className="mt-6 flex gap-2">
-        <input
-          type="text"
-          required
-          placeholder={t.communaute.placeholder}
-          value={texte}
-          onChange={(e) => setTexte(e.target.value)}
-          className="flex-1 rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
-        />
-        <button
-          type="submit"
-          disabled={sending}
-          className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-foreground transition hover:opacity-90 disabled:opacity-50"
-        >
-          {sending ? "…" : t.communaute.send}
-        </button>
-      </form>
+      <h2 className="font-display text-lg font-medium">
+        {t.communaute.title(ville ? (t.villeLabels[ville] ?? ville) : "")}
+      </h2>
+
+      {loading && <p className="mt-4 text-sm text-foreground-muted">{t.common.loading}</p>}
+      {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+
+      {!loading && (
+        <>
+          <div className="mt-6 flex flex-col gap-3">
+            {visibleMessages.length === 0 && !error && (
+              <p className="text-sm text-foreground-muted">{t.communaute.noMessages}</p>
+            )}
+            {visibleMessages.map((m) => (
+              <div key={m.id} className="rounded-lg border border-foreground/10 p-3">
+                <div className="flex items-baseline justify-between gap-2 text-xs text-foreground-muted">
+                  <Link href={`/artistes/${m.user_id}`} className="font-medium text-foreground hover:underline">
+                    {m.profiles?.nom || t.communaute.anonyme}
+                  </Link>
+                  <span>{formatDate(m.date)}</span>
+                </div>
+                <p className="mt-1 text-sm">{m.texte}</p>
+                {userId && m.user_id !== userId && (
+                  <BlockReportActions
+                    targetUserId={m.user_id}
+                    targetName={m.profiles?.nom || t.communaute.anonyme}
+                    onBlocked={() => setBlockedIds((prev) => new Set(prev).add(m.user_id))}
+                    className="mt-1.5"
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+
+          <form onSubmit={handleSubmit} className="mt-6 flex gap-2">
+            <input
+              type="text"
+              required
+              placeholder={t.communaute.placeholder}
+              value={texte}
+              onChange={(e) => setTexte(e.target.value)}
+              className="flex-1 rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+            />
+            <button
+              type="submit"
+              disabled={sending}
+              className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-foreground transition hover:opacity-90 disabled:opacity-50"
+            >
+              {sending ? "…" : t.communaute.send}
+            </button>
+          </form>
+        </>
+      )}
     </div>
   );
 }
