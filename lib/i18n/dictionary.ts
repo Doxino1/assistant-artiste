@@ -102,6 +102,10 @@ export interface Dictionary {
     accountCreated: string;
     resendConfirmation: string;
     resendConfirmationSent: string;
+    acceptTermsPrefix: string;
+    acceptTermsCgu: string;
+    acceptTermsAnd: string;
+    acceptTermsPrivacy: string;
   };
 
   resetPassword: {
@@ -444,6 +448,10 @@ export const fr: Dictionary = {
     accountCreated: "Compte créé ! Vérifie ta boîte mail pour confirmer ton adresse avant de te connecter.",
     resendConfirmation: "Tu n'as pas reçu l'email ?",
     resendConfirmationSent: "Email de confirmation renvoyé — vérifie ta boîte mail.",
+    acceptTermsPrefix: "J'accepte les ",
+    acceptTermsCgu: "CGU",
+    acceptTermsAnd: " et la ",
+    acceptTermsPrivacy: "Politique de confidentialité",
   },
   resetPassword: {
     title: "Nouveau mot de passe",
@@ -791,6 +799,10 @@ export const en: Dictionary = {
     accountCreated: "Account created! Check your inbox to confirm your address before signing in.",
     resendConfirmation: "Didn't get the email?",
     resendConfirmationSent: "Confirmation email resent — check your inbox.",
+    acceptTermsPrefix: "I accept the ",
+    acceptTermsCgu: "Terms of Use",
+    acceptTermsAnd: " and the ",
+    acceptTermsPrivacy: "Privacy Policy",
   },
   resetPassword: {
     title: "New password",
@@ -1136,6 +1148,10 @@ export const el: Dictionary = {
     accountCreated: "Ο λογαριασμός δημιουργήθηκε! Έλεγξε τα εισερχόμενά σου για να επιβεβαιώσεις πριν συνδεθείς.",
     resendConfirmation: "Δεν έλαβες το email;",
     resendConfirmationSent: "Το email επιβεβαίωσης στάλθηκε ξανά — έλεγξε τα εισερχόμενά σου.",
+    acceptTermsPrefix: "Αποδέχομαι τους ",
+    acceptTermsCgu: "Όρους Χρήσης",
+    acceptTermsAnd: " και την ",
+    acceptTermsPrivacy: "Πολιτική Απορρήτου",
   },
   resetPassword: {
     title: "Νέος κωδικός",

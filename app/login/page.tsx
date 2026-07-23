@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n/context";
 
@@ -14,6 +15,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nom, setNom] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -178,6 +180,28 @@ export default function LoginPage() {
             onChange={(e) => setNom(e.target.value)}
             className="rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
           />
+        )}
+
+        {mode === "inscription" && (
+          <label className="flex items-start gap-2 text-sm text-foreground-muted">
+            <input
+              type="checkbox"
+              required
+              checked={acceptedTerms}
+              onChange={(e) => setAcceptedTerms(e.target.checked)}
+              className="mt-0.5"
+            />
+            <span>
+              {t.auth.acceptTermsPrefix}
+              <Link href="/cgu" target="_blank" className="underline hover:text-foreground">
+                {t.auth.acceptTermsCgu}
+              </Link>
+              {t.auth.acceptTermsAnd}
+              <Link href="/confidentialite" target="_blank" className="underline hover:text-foreground">
+                {t.auth.acceptTermsPrivacy}
+              </Link>
+            </span>
+          </label>
         )}
 
         {error && <p className="text-sm text-red-600">{error}</p>}
