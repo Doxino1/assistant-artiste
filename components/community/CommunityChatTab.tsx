@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { X } from "lucide-react";
+import { ChevronDown, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n/context";
 import { BlockReportActions } from "@/components/BlockReportActions";
@@ -279,9 +279,14 @@ export function CommunityChatTab() {
                       <button
                         type="button"
                         onClick={() => toggleThread(m.id)}
-                        className="text-xs font-medium text-accent hover:opacity-80"
+                        className="flex items-center gap-1 text-xs font-medium text-accent hover:opacity-80"
                       >
                         {t.communaute.repliesToggle(replies.length)}
+                        <ChevronDown
+                          size={14}
+                          strokeWidth={2}
+                          className={`transition-transform ${expandedThreads.has(m.id) ? "rotate-180" : ""}`}
+                        />
                       </button>
                       {expandedThreads.has(m.id) && (
                         <div className="mt-2 flex flex-col gap-2 border-l-2 border-foreground/10 pl-3">

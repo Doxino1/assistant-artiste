@@ -2,6 +2,7 @@
 
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useT } from "@/lib/i18n/context";
 import { BlockReportActions } from "@/components/BlockReportActions";
@@ -25,6 +26,7 @@ interface Comment {
 export default function PostDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const t = useT();
+  const router = useRouter();
   const [userId, setUserId] = useState<string | null>(null);
   const [post, setPost] = useState<PostDetail | null | undefined>(undefined);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -126,6 +128,14 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
         </Link>{" "}
         {post.legende}
       </p>
+      {userId && post.user_id !== userId && (
+        <BlockReportActions
+          targetUserId={post.user_id}
+          targetName={post.profiles?.nom || ""}
+          onBlocked={() => router.push("/")}
+          className="mt-1.5"
+        />
+      )}
 
       <h2 className="mt-6 text-sm font-medium text-foreground-muted">{t.posts.comments}</h2>
       <div className="mt-3 flex flex-col gap-2">
