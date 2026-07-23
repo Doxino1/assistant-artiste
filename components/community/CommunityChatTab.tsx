@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useLocale } from "@/lib/i18n/context";
 import { BlockReportActions } from "@/components/BlockReportActions";
@@ -13,7 +14,13 @@ interface Message {
   texte: string;
   date: string;
   user_id: string;
+  parent_id: string | null;
   profiles: { nom: string } | null;
+}
+
+interface ReplyTarget {
+  id: string;
+  nom: string;
 }
 
 const VILLES: Ville[] = ["Paris", "Athènes"];
@@ -39,6 +46,8 @@ export function CommunityChatTab() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [replyingTo, setReplyingTo] = useState<ReplyTarget | null>(null);
+  const [expandedThreads, setExpandedThreads] = useState<Set<string>>(new Set());
 
   function formatDate(iso: string) {
     return new Date(iso).toLocaleString(BCP47_TAGS[locale] ?? "fr-FR", {
@@ -53,7 +62,7 @@ export function CommunityChatTab() {
     const supabase = createClient();
     const { data, error: fetchError } = await supabase
       .from("group_messages")
-      .select("id, texte, date, user_id, profiles(nom)")
+      .select("id, texte, date, user_id, parent_id, profiles(nom)")
       .eq("group_id", group)
       .order("date", { ascending: true });
 
@@ -173,9 +182,12 @@ export function CommunityChatTab() {
       return;
     }
 
-    const { error: insertError } = await supabase
-      .from("group_messages")
-      .insert({ group_id: groupId, user_id: user.id, texte: texte.trim() });
+    const { error: insertError } = await supabase.from("group_messages").insert({
+      group_id: groupId,
+      user_id: user.id,
+      texte: texte.trim(),
+      parent_id: replyingTo?.id ?? null,
+    });
 
     setSending(false);
     if (insertError) {
@@ -184,10 +196,31 @@ export function CommunityChatTab() {
     }
 
     setTexte("");
+    if (replyingTo) {
+      setExpandedThreads((prev) => new Set(prev).add(replyingTo.id));
+      setReplyingTo(null);
+    }
     await loadMessages(groupId);
   }
 
+  function toggleThread(id: string) {
+    setExpandedThreads((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
   const visibleMessages = messages.filter((m) => !blockedIds.has(m.user_id));
+  const topLevel = visibleMessages.filter((m) => !m.parent_id);
+  const repliesByParent = new Map<string, Message[]>();
+  for (const m of visibleMessages) {
+    if (!m.parent_id) continue;
+    const list = repliesByParent.get(m.parent_id) ?? [];
+    list.push(m);
+    repliesByParent.set(m.parent_id, list);
+  }
 
   return (
     <div>
@@ -209,31 +242,98 @@ export function CommunityChatTab() {
       {!loading && (
         <>
           <div className="mt-6 flex flex-col gap-3">
-            {visibleMessages.length === 0 && !error && (
+            {topLevel.length === 0 && !error && (
               <p className="text-sm text-foreground-muted">{t.communaute.noMessages}</p>
             )}
-            {visibleMessages.map((m) => (
-              <div key={m.id} className="rounded-lg border border-foreground/10 p-3">
-                <div className="flex items-baseline justify-between gap-2 text-xs text-foreground-muted">
-                  <Link href={`/artistes/${m.user_id}`} className="font-medium text-foreground hover:underline">
-                    {m.profiles?.nom || t.communaute.anonyme}
-                  </Link>
-                  <span>{formatDate(m.date)}</span>
+            {topLevel.map((m) => {
+              const replies = repliesByParent.get(m.id) ?? [];
+              const nom = m.profiles?.nom || t.communaute.anonyme;
+              return (
+                <div key={m.id} className="rounded-lg border border-foreground/10 p-3">
+                  <div className="flex items-baseline justify-between gap-2 text-xs text-foreground-muted">
+                    <Link href={`/artistes/${m.user_id}`} className="font-medium text-foreground hover:underline">
+                      {nom}
+                    </Link>
+                    <span>{formatDate(m.date)}</span>
+                  </div>
+                  <p className="mt-1 text-sm">{m.texte}</p>
+                  <div className="mt-2 flex items-center gap-3 text-xs">
+                    <button
+                      type="button"
+                      onClick={() => setReplyingTo({ id: m.id, nom })}
+                      className="text-foreground-muted hover:text-foreground"
+                    >
+                      {t.communaute.reply}
+                    </button>
+                    {userId && m.user_id !== userId && (
+                      <BlockReportActions
+                        targetUserId={m.user_id}
+                        targetName={nom}
+                        onBlocked={() => setBlockedIds((prev) => new Set(prev).add(m.user_id))}
+                      />
+                    )}
+                  </div>
+
+                  {replies.length > 0 && (
+                    <div className="mt-2">
+                      <button
+                        type="button"
+                        onClick={() => toggleThread(m.id)}
+                        className="text-xs font-medium text-accent hover:opacity-80"
+                      >
+                        {t.communaute.repliesToggle(replies.length)}
+                      </button>
+                      {expandedThreads.has(m.id) && (
+                        <div className="mt-2 flex flex-col gap-2 border-l-2 border-foreground/10 pl-3">
+                          {replies.map((r) => {
+                            const replyNom = r.profiles?.nom || t.communaute.anonyme;
+                            return (
+                              <div key={r.id} className="rounded-lg bg-surface p-2.5">
+                                <div className="flex items-baseline justify-between gap-2 text-xs text-foreground-muted">
+                                  <Link
+                                    href={`/artistes/${r.user_id}`}
+                                    className="font-medium text-foreground hover:underline"
+                                  >
+                                    {replyNom}
+                                  </Link>
+                                  <span>{formatDate(r.date)}</span>
+                                </div>
+                                <p className="mt-1 text-sm">{r.texte}</p>
+                                {userId && r.user_id !== userId && (
+                                  <BlockReportActions
+                                    targetUserId={r.user_id}
+                                    targetName={replyNom}
+                                    onBlocked={() => setBlockedIds((prev) => new Set(prev).add(r.user_id))}
+                                    className="mt-1.5"
+                                  />
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
-                <p className="mt-1 text-sm">{m.texte}</p>
-                {userId && m.user_id !== userId && (
-                  <BlockReportActions
-                    targetUserId={m.user_id}
-                    targetName={m.profiles?.nom || t.communaute.anonyme}
-                    onBlocked={() => setBlockedIds((prev) => new Set(prev).add(m.user_id))}
-                    className="mt-1.5"
-                  />
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
 
-          <form onSubmit={handleSubmit} className="mt-6 flex gap-2">
+          {replyingTo && (
+            <div className="mt-6 flex items-center justify-between gap-2 rounded-lg bg-surface px-3 py-1.5 text-xs text-foreground-muted">
+              <span>{t.communaute.replyingTo(replyingTo.nom)}</span>
+              <button
+                type="button"
+                onClick={() => setReplyingTo(null)}
+                aria-label={t.common.cancel}
+                className="text-foreground/40 hover:text-foreground"
+              >
+                <X size={14} strokeWidth={2} />
+              </button>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className={`flex gap-2 ${replyingTo ? "mt-2" : "mt-6"}`}>
             <input
               type="text"
               required

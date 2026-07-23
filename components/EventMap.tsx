@@ -1,25 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
+import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { ArtEvent, Ville } from "@/lib/types";
 import { formatInVille } from "@/lib/timezone";
 import { useLocale } from "@/lib/i18n/context";
 
-// Icônes par défaut de Leaflet servies depuis un CDN plutôt qu'importées
-// localement : évite les incertitudes de résolution d'assets du bundler
-// (Turbopack) pour des fichiers issus de node_modules.
-const markerIcon = L.icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
+// Petits points pleins plutôt que la grosse épingle par défaut de Leaflet —
+// plusieurs événements proches restent lisibles au lieu de se chevaucher.
+const DOT_STYLE = { color: "#ffffff", weight: 1.5, fillColor: "#c4622d", fillOpacity: 0.9 };
 
 const CITY_CENTER: Record<Ville, [number, number]> = {
   Paris: [48.8566, 2.3522],
@@ -42,7 +32,7 @@ export function EventMap({ events, ville }: { events: ArtEvent[]; ville: Ville }
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           {withCoords.map((event) => (
-            <Marker key={event.id} position={[event.lat, event.lng]} icon={markerIcon}>
+            <CircleMarker key={event.id} center={[event.lat, event.lng]} radius={7} pathOptions={DOT_STYLE}>
               <Popup>
                 <Link href={`/events/${event.id}`}>{event.titre}</Link>
                 <br />
@@ -53,7 +43,7 @@ export function EventMap({ events, ville }: { events: ArtEvent[]; ville: Ville }
                   locale
                 )}
               </Popup>
-            </Marker>
+            </CircleMarker>
           ))}
         </MapContainer>
       </div>

@@ -181,6 +181,9 @@ export interface Dictionary {
     send: string;
     anonyme: string;
     groupNotFound: string;
+    reply: string;
+    replyingTo: (nom: string) => string;
+    repliesToggle: (count: number) => string;
   };
 
   weeklyEmail: {
@@ -516,6 +519,9 @@ export const fr: Dictionary = {
     send: "Envoyer",
     anonyme: "Anonyme",
     groupNotFound: "Groupe introuvable pour cette ville.",
+    reply: "Répondre",
+    replyingTo: (nom) => `Réponse à ${nom}`,
+    repliesToggle: (count) => (count > 1 ? `${count} réponses` : `${count} réponse`),
   },
   weeklyEmail: {
     subject: (count, ville) => `${count} événement${count > 1 ? "s" : ""} à ${ville} cette semaine`,
@@ -854,6 +860,9 @@ export const en: Dictionary = {
     send: "Send",
     anonyme: "Anonymous",
     groupNotFound: "No group found for this city.",
+    reply: "Reply",
+    replyingTo: (nom) => `Replying to ${nom}`,
+    repliesToggle: (count) => (count > 1 ? `${count} replies` : `${count} reply`),
   },
   weeklyEmail: {
     subject: (count, ville) => `${count} event${count > 1 ? "s" : ""} in ${ville} this week`,
@@ -1195,6 +1204,9 @@ export const el: Dictionary = {
     send: "Αποστολή",
     anonyme: "Ανώνυμος",
     groupNotFound: "Δεν βρέθηκε κοινότητα για αυτή την πόλη.",
+    reply: "Απάντηση",
+    replyingTo: (nom) => `Απάντηση σε ${nom}`,
+    repliesToggle: (count) => (count > 1 ? `${count} απαντήσεις` : `${count} απάντηση`),
   },
   weeklyEmail: {
     subject: (count, ville) => `${count} εκδήλωση${count > 1 ? "εις" : ""} στην ${ville} αυτή την εβδομάδα`,
