@@ -167,7 +167,10 @@ export async function sendWeeklyEmails({ dryRun, onLog }: SendWeeklyEmailsOption
     { data: groups, error: groupsError },
     { data: recentMessages, error: messagesError },
   ] = await Promise.all([
-    supabase.from("profiles").select("id, nom, ville, disciplines, langue_preferee, created_at"),
+    supabase
+      .from("profiles")
+      .select("id, nom, ville, disciplines, langue_preferee, created_at")
+      .eq("recoit_email_hebdo", true),
     supabase
       .from("events")
       .select("id, titre, description, type, discipline, ville, date, lieu")

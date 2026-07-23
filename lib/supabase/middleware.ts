@@ -2,7 +2,15 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 // Chemins accessibles même si le parcours d'inscription n'est pas terminé.
-const ONBOARDING_EXEMPT_PREFIXES = ["/onboarding", "/login", "/auth", "/api"];
+const ONBOARDING_EXEMPT_PREFIXES = [
+  "/onboarding",
+  "/login",
+  "/auth",
+  "/api",
+  "/mentions-legales",
+  "/confidentialite",
+  "/cgu",
+];
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });

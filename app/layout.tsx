@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Comfortaa } from "next/font/google";
 import { BottomNav } from "@/components/BottomNav";
+import { PublicFooter } from "@/components/PublicFooter";
 import { LocaleProvider } from "@/lib/i18n/context";
 import { createClient } from "@/lib/supabase/server";
 import "./globals.css";
@@ -33,8 +34,9 @@ export default async function RootLayout({
     <html lang="fr" className={`${comfortaa.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <LocaleProvider>
-          <div className={user ? "pb-24" : ""}>{children}</div>
+          <div className={`flex-1 ${user ? "pb-24" : ""}`}>{children}</div>
           <BottomNav show={!!user} />
+          {!user && <PublicFooter />}
         </LocaleProvider>
       </body>
     </html>

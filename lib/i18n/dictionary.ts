@@ -140,6 +140,11 @@ export interface Dictionary {
     socialPlaceholder: string;
     languageLabel: string;
     weeklyEmailTitle: string;
+    weeklyEmailToggle: string;
+    legalLinksTitle: string;
+    mentionsLegales: string;
+    confidentialite: string;
+    cgu: string;
   };
 
   submission: {
@@ -475,6 +480,11 @@ export const fr: Dictionary = {
     socialPlaceholder: "nom d'utilisateur, sans le @",
     languageLabel: "Langue",
     weeklyEmailTitle: "Ton email hebdomadaire",
+    weeklyEmailToggle: "Recevoir l'email hebdomadaire",
+    legalLinksTitle: "Informations légales",
+    mentionsLegales: "Mentions légales",
+    confidentialite: "Politique de confidentialité",
+    cgu: "Conditions générales d'utilisation",
   },
   submission: {
     title: "Proposer un événement",
@@ -817,6 +827,11 @@ export const en: Dictionary = {
     socialPlaceholder: "username, without the @",
     languageLabel: "Language",
     weeklyEmailTitle: "Your weekly email",
+    weeklyEmailToggle: "Receive the weekly email",
+    legalLinksTitle: "Legal information",
+    mentionsLegales: "Legal notice (Mentions légales)",
+    confidentialite: "Privacy policy",
+    cgu: "Terms of use",
   },
   submission: {
     title: "Submit an event",
@@ -1157,6 +1172,11 @@ export const el: Dictionary = {
     socialPlaceholder: "όνομα χρήστη, χωρίς το @",
     languageLabel: "Γλώσσα",
     weeklyEmailTitle: "Το εβδομαδιαίο email σου",
+    weeklyEmailToggle: "Λήψη του εβδομαδιαίου email",
+    legalLinksTitle: "Νομικές πληροφορίες",
+    mentionsLegales: "Νομική σημείωση (Mentions légales)",
+    confidentialite: "Πολιτική απορρήτου",
+    cgu: "Όροι χρήσης",
   },
   submission: {
     title: "Πρόταση εκδήλωσης",

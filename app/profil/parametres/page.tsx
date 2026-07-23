@@ -31,7 +31,9 @@ export default function ParametresPage() {
   const [twitterHandle, setTwitterHandle] = useState("");
   const [matchingTags, setMatchingTags] = useState<MatchingTag[]>([]);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [isModerator, setIsModerator] = useState(false);
+  const [recoitEmailHebdo, setRecoitEmailHebdo] = useState(true);
 
   useEffect(() => {
     let active = true;
@@ -48,12 +50,13 @@ export default function ParametresPage() {
       }
 
       setUserEmail(user.email ?? null);
+      setUserId(user.id);
 
       const [{ data, error: fetchError }, { data: tags, error: tagsError }] = await Promise.all([
         supabase
           .from("profiles")
           .select(
-            "nom, ville, disciplines, type_profil, bio, email_contact, instagram_handle, tiktok_handle, twitter_handle, is_moderator"
+            "nom, ville, disciplines, type_profil, bio, email_contact, instagram_handle, tiktok_handle, twitter_handle, is_moderator, recoit_email_hebdo"
           )
           .eq("id", user.id)
           .single(),
@@ -75,6 +78,7 @@ export default function ParametresPage() {
         setTiktokHandle(data.tiktok_handle ?? "");
         setTwitterHandle(data.twitter_handle ?? "");
         setIsModerator(data.is_moderator === true);
+        setRecoitEmailHebdo(data.recoit_email_hebdo !== false);
       }
       if (!tagsError && tags) {
         setMatchingTags(tags.map((row) => row.tag as MatchingTag));
@@ -87,6 +91,13 @@ export default function ParametresPage() {
       active = false;
     };
   }, [router]);
+
+  async function handleToggleEmailHebdo(value: boolean) {
+    if (!userId) return;
+    setRecoitEmailHebdo(value);
+    const supabase = createClient();
+    await supabase.from("profiles").update({ recoit_email_hebdo: value }).eq("id", userId);
+  }
 
   function toggleDiscipline(d: string) {
     setDisciplines((prev) => (prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d]));
@@ -348,6 +359,24 @@ export default function ParametresPage() {
             ))}
           </ul>
         </div>
+        <div className="mt-3 flex items-center justify-between gap-2">
+          <span className="text-sm text-foreground-muted">{t.profil.weeklyEmailToggle}</span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={recoitEmailHebdo}
+            onClick={() => handleToggleEmailHebdo(!recoitEmailHebdo)}
+            className={`relative h-[18px] w-8 shrink-0 rounded-full transition ${
+              recoitEmailHebdo ? "bg-accent" : "bg-foreground/20"
+            }`}
+          >
+            <span
+              className={`absolute top-0.5 h-[14px] w-[14px] rounded-full bg-background transition ${
+                recoitEmailHebdo ? "left-[16px]" : "left-0.5"
+              }`}
+            />
+          </button>
+        </div>
       </div>
 
       <div className="mt-8 border-t border-foreground/10 pt-4">
@@ -388,6 +417,21 @@ export default function ParametresPage() {
         <Link href="/profil/supprimer" className="text-sm text-red-600 underline hover:text-red-700">
           {t.account.deleteAccount}
         </Link>
+      </div>
+
+      <div className="mt-8 border-t border-foreground/10 pt-4">
+        <h2 className="text-sm font-medium text-foreground-muted">{t.profil.legalLinksTitle}</h2>
+        <div className="mt-2 flex flex-col gap-1.5 text-sm">
+          <Link href="/mentions-legales" className="text-foreground/70 underline hover:text-foreground">
+            {t.profil.mentionsLegales}
+          </Link>
+          <Link href="/confidentialite" className="text-foreground/70 underline hover:text-foreground">
+            {t.profil.confidentialite}
+          </Link>
+          <Link href="/cgu" className="text-foreground/70 underline hover:text-foreground">
+            {t.profil.cgu}
+          </Link>
+        </div>
       </div>
     </div>
   );
