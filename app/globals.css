@@ -24,6 +24,14 @@
   --badge-expo-fg: #3a5aa6;
   --badge-annonce-bg: #fbe1ec;
   --badge-annonce-fg: #a73d6c;
+  --badge-residency-bg: #fcefd1;
+  --badge-residency-fg: #a9720a;
+
+  /* Badges de coût — gratuit/payant, jamais de texte noir sur fond coloré. */
+  --badge-free-bg: #e1f5e5;
+  --badge-free-fg: #2f7d4f;
+  --badge-paid-bg: #e6eaf0;
+  --badge-paid-fg: #4c5a73;
 
   /* Ombre douce "bubbly" — sous les cartes et le bouton flottant. */
   --shadow-soft: 0 2px 8px rgba(43, 39, 36, 0.06), 0 8px 24px rgba(43, 39, 36, 0.08);
@@ -50,6 +58,12 @@
   --color-badge-expo-fg: var(--badge-expo-fg);
   --color-badge-annonce-bg: var(--badge-annonce-bg);
   --color-badge-annonce-fg: var(--badge-annonce-fg);
+  --color-badge-residency-bg: var(--badge-residency-bg);
+  --color-badge-residency-fg: var(--badge-residency-fg);
+  --color-badge-free-bg: var(--badge-free-bg);
+  --color-badge-free-fg: var(--badge-free-fg);
+  --color-badge-paid-bg: var(--badge-paid-bg);
+  --color-badge-paid-fg: var(--badge-paid-fg);
 
   /* Coins beaucoup plus arrondis (esthétique "bubbly") — rounded-lg suffit
      à rendre les boutons/badges compacts entièrement en pilule (le rayon

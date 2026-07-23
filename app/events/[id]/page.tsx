@@ -7,6 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import { SaveButtons } from "@/components/SaveButtons";
 import { CalendarButtons } from "@/components/CalendarButtons";
 import { EventTypeBadge } from "@/components/EventTypeBadge";
+import { CostBadge } from "@/components/CostBadge";
 import { useEvents } from "@/lib/use-events";
 import { formatInVille } from "@/lib/timezone";
 import { useSavedEvents } from "@/lib/use-saved-events";
@@ -76,13 +77,17 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
       </Link>
 
       <div className="mt-4 flex items-center justify-between gap-2 text-xs text-foreground-muted">
-        <EventTypeBadge type={event.type} />
+        <div className="flex items-center gap-1.5">
+          <EventTypeBadge type={event.type} />
+          {event.coutType && <CostBadge type={event.coutType} />}
+        </div>
         <span>{t.villeLabels[event.ville]}</span>
       </div>
 
       <h1 className="mt-3 text-2xl font-semibold">{event.titre}</h1>
       <p className="mt-1 text-sm text-foreground-muted">{date}</p>
       <p className="mt-1 text-sm text-foreground-muted">{event.lieu}</p>
+      {event.coutDetail && <p className="mt-1 text-sm text-foreground-muted">{event.coutDetail}</p>}
 
       <p className="mt-6 text-base leading-relaxed">{event.description}</p>
 

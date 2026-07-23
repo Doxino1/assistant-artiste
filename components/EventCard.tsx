@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { SaveButtons } from "./SaveButtons";
 import { EventTypeBadge } from "./EventTypeBadge";
+import { CostBadge } from "./CostBadge";
 import { ArtEvent } from "@/lib/types";
 import { formatInVille } from "@/lib/timezone";
 import { useSavedEvents } from "@/lib/use-saved-events";
@@ -23,7 +24,10 @@ export function EventCard({ event }: { event: ArtEvent }) {
     <div className="rounded-lg bg-surface p-4 shadow-soft transition hover:-translate-y-0.5">
       <Link href={`/events/${event.id}`} className="block">
         <div className="flex items-center justify-between gap-2 text-xs text-foreground-muted">
-          <EventTypeBadge type={event.type} />
+          <div className="flex items-center gap-1.5">
+            <EventTypeBadge type={event.type} />
+            {event.coutType && <CostBadge type={event.coutType} />}
+          </div>
           <span>{date}</span>
         </div>
         <h3 className="mt-2 font-medium">{event.titre}</h3>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { VILLE_TIMEZONES } from "@/lib/timezone";
 import { useT } from "@/lib/i18n/context";
-import { AnnouncementSubtype, DISCIPLINES, EventType, Ville } from "@/lib/types";
+import { AnnouncementSubtype, CoutType, DISCIPLINES, EventType, EVENT_TYPES_WITH_COST, Ville } from "@/lib/types";
 
 const VILLES: Ville[] = ["Paris", "Athènes"];
 
@@ -17,6 +17,8 @@ export interface EventFormValues {
   date: string;
   heure: string;
   lieu: string;
+  coutType: CoutType | "";
+  coutDetail: string;
 }
 
 export interface RecurrenceValue {
@@ -114,6 +116,34 @@ export function EventForm({
           </option>
         ))}
       </select>
+
+      {EVENT_TYPES_WITH_COST.includes(values.type) && (
+        <>
+          <select
+            required
+            aria-label={t.submission.coutLabel}
+            value={values.coutType}
+            onChange={(e) => set("coutType", e.target.value as CoutType)}
+            className="rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm"
+          >
+            <option value="" disabled>
+              {t.submission.coutPlaceholder}
+            </option>
+            {Object.entries(t.coutLabels).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+          <input
+            type="text"
+            placeholder={t.submission.coutDetailPlaceholder}
+            value={values.coutDetail}
+            onChange={(e) => set("coutDetail", e.target.value)}
+            className="rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
+          />
+        </>
+      )}
 
       {values.type === "annonce" && (
         <>

@@ -1,5 +1,6 @@
 import type {
   AnnouncementSubtype,
+  CoutType,
   EventType,
   MatchingTag,
   ProfileType,
@@ -23,6 +24,7 @@ export interface Dictionary {
   profileTypeLabels: Record<ProfileType, string>;
   matchingTagLabels: Record<MatchingTag, string>;
   disciplineLabels: Record<string, string>;
+  coutLabels: Record<CoutType, string>;
 
   nav: {
     evenements: string;
@@ -53,6 +55,7 @@ export interface Dictionary {
     filtersButton: string;
     tousTypes: string;
     toutesDisciplines: string;
+    tousCouts: string;
     loadError: (message: string) => string;
     noResults: string;
     loginToSee: string;
@@ -153,10 +156,13 @@ export interface Dictionary {
     repeatWeekly: string;
     repeatCountLabel: string;
     repeatHint: string;
+    coutLabel: string;
+    coutPlaceholder: string;
+    coutDetailPlaceholder: string;
   };
 
   map: {
-    noCoordinates: (count: number) => string;
+    noCoordinates: (count: number, kind: "events" | "shops") => string;
   };
 
   matching: {
@@ -192,6 +198,11 @@ export interface Dictionary {
     rejectConfirm: string;
     submittedBy: (nom: string) => string;
     loadError: (message: string) => string;
+    shops: {
+      title: string;
+      empty: string;
+      rejectConfirm: string;
+    };
   };
 
   portfolio: {
@@ -255,6 +266,9 @@ export interface Dictionary {
     delete: string;
     tabList: string;
     tabMap: string;
+    disciplineLabel: string;
+    submitPending: string;
+    loginToPropose: string;
   };
 
   calendar: {
@@ -320,6 +334,7 @@ export const fr: Dictionary = {
     expo: "Exposition",
     workshop: "Workshop",
     open_call: "Open call",
+    residency: "Résidence",
     annonce: "Annonce",
   },
   announcementSubtypeLabels: {
@@ -344,6 +359,10 @@ export const fr: Dictionary = {
     Sculpture: "Sculpture",
     Performance: "Performance",
     Multidisciplinaire: "Multidisciplinaire",
+  },
+  coutLabels: {
+    gratuit: "Gratuit",
+    payant: "Payant",
   },
   nav: {
     evenements: "Événements",
@@ -372,6 +391,7 @@ export const fr: Dictionary = {
     filtersButton: "Filtres",
     tousTypes: "Tous types",
     toutesDisciplines: "Toutes disciplines",
+    tousCouts: "Tous",
     loadError: (message) => `Petit souci pour charger les événements (${message}) — réessaie dans un instant.`,
     noResults: "Rien ne correspond à ces filtres — essaie d'en retirer un ou deux.",
     loginToSee: "pour voir tes événements.",
@@ -468,12 +488,18 @@ export const fr: Dictionary = {
     repeatWeekly: "Répéter chaque semaine",
     repeatCountLabel: "Nombre d'occurrences (dont celle-ci)",
     repeatHint: "Chaque occurrence est soumise à validation séparément.",
+    coutLabel: "Coût",
+    coutPlaceholder: "— Choisis —",
+    coutDetailPlaceholder: "Détail (optionnel) — ex : 50€ de frais de dossier",
   },
   map: {
-    noCoordinates: (count) =>
-      count > 1
-        ? `${count} événements sans localisation précise — retrouve-les dans la liste.`
-        : `${count} événement sans localisation précise — retrouve-le dans la liste.`,
+    noCoordinates: (count, kind) => {
+      const nom = kind === "shops" ? "boutique" : "événement";
+      const pronomSingulier = kind === "shops" ? "la" : "le";
+      return count > 1
+        ? `${count} ${nom}s sans localisation précise — retrouve-les dans la liste.`
+        : `${count} ${nom} sans localisation précise — retrouve-${pronomSingulier} dans la liste.`;
+    },
   },
   matching: {
     title: "Suggestions de matching",
@@ -516,6 +542,11 @@ export const fr: Dictionary = {
     rejectConfirm: "Rejeter et supprimer cet événement ? Impossible de revenir en arrière.",
     submittedBy: (nom) => `Soumis par ${nom}`,
     loadError: (message) => `Petit souci pour charger les soumissions (${message}).`,
+    shops: {
+      title: "Boutiques en attente",
+      empty: "Aucune boutique en attente.",
+      rejectConfirm: "Rejeter et supprimer cette boutique ? Impossible de revenir en arrière.",
+    },
   },
   portfolio: {
     title: "Mon portfolio",
@@ -574,6 +605,9 @@ export const fr: Dictionary = {
     delete: "Supprimer",
     tabList: "Liste",
     tabMap: "Carte",
+    disciplineLabel: "Discipline",
+    submitPending: "Merci ! Ta boutique sera visible après validation par un modérateur.",
+    loginToPropose: "pour proposer une boutique.",
   },
   calendar: {
     tab: "Calendrier",
@@ -639,6 +673,7 @@ export const en: Dictionary = {
     expo: "Exhibition",
     workshop: "Workshop",
     open_call: "Open call",
+    residency: "Residency",
     annonce: "Listing",
   },
   announcementSubtypeLabels: {
@@ -663,6 +698,10 @@ export const en: Dictionary = {
     Sculpture: "Sculpture",
     Performance: "Performance",
     Multidisciplinaire: "Multidisciplinary",
+  },
+  coutLabels: {
+    gratuit: "Free",
+    payant: "Paid",
   },
   nav: {
     evenements: "Events",
@@ -691,6 +730,7 @@ export const en: Dictionary = {
     filtersButton: "Filters",
     tousTypes: "All types",
     toutesDisciplines: "All disciplines",
+    tousCouts: "All",
     loadError: (message) => `Trouble loading events (${message}) — try again in a moment.`,
     noResults: "Nothing matches these filters — try dropping one or two.",
     loginToSee: "to see your events.",
@@ -787,12 +827,17 @@ export const en: Dictionary = {
     repeatWeekly: "Repeat weekly",
     repeatCountLabel: "Number of occurrences (including this one)",
     repeatHint: "Each occurrence is reviewed separately.",
+    coutLabel: "Cost",
+    coutPlaceholder: "— Choose —",
+    coutDetailPlaceholder: "Detail (optional) — e.g. €50 application fee",
   },
   map: {
-    noCoordinates: (count) =>
-      count > 1
-        ? `${count} events without a precise location — find them in the list.`
-        : `${count} event without a precise location — find it in the list.`,
+    noCoordinates: (count, kind) => {
+      const nom = kind === "shops" ? "shop" : "event";
+      return count > 1
+        ? `${count} ${nom}s without a precise location — find them in the list.`
+        : `${count} ${nom} without a precise location — find it in the list.`;
+    },
   },
   matching: {
     title: "Matching suggestions",
@@ -833,6 +878,11 @@ export const en: Dictionary = {
     rejectConfirm: "Reject and delete this event? This can't be undone.",
     submittedBy: (nom) => `Submitted by ${nom}`,
     loadError: (message) => `Trouble loading submissions (${message}).`,
+    shops: {
+      title: "Pending shops",
+      empty: "No shops pending review.",
+      rejectConfirm: "Reject and delete this shop? This can't be undone.",
+    },
   },
   portfolio: {
     title: "My portfolio",
@@ -891,6 +941,9 @@ export const en: Dictionary = {
     delete: "Delete",
     tabList: "List",
     tabMap: "Map",
+    disciplineLabel: "Discipline",
+    submitPending: "Thanks! Your shop will show up once a moderator approves it.",
+    loginToPropose: "to suggest a shop.",
   },
   calendar: {
     tab: "Calendar",
@@ -956,6 +1009,7 @@ export const el: Dictionary = {
     expo: "Έκθεση",
     workshop: "Εργαστήριο",
     open_call: "Ανοιχτή πρόσκληση",
+    residency: "Καλλιτεχνική διαμονή",
     annonce: "Αγγελία",
   },
   announcementSubtypeLabels: {
@@ -980,6 +1034,10 @@ export const el: Dictionary = {
     Sculpture: "Γλυπτική",
     Performance: "Περφόρμανς",
     Multidisciplinaire: "Διεπιστημονικό",
+  },
+  coutLabels: {
+    gratuit: "Δωρεάν",
+    payant: "Επί πληρωμή",
   },
   nav: {
     evenements: "Εκδηλώσεις",
@@ -1008,6 +1066,7 @@ export const el: Dictionary = {
     filtersButton: "Φίλτρα",
     tousTypes: "Όλοι οι τύποι",
     toutesDisciplines: "Όλες οι ειδικότητες",
+    tousCouts: "Όλα",
     loadError: (message) => `Πρόβλημα στη φόρτωση των εκδηλώσεων (${message}) — δοκίμασε ξανά σε λίγο.`,
     noResults: "Τίποτα δεν ταιριάζει με αυτά τα φίλτρα — δοκίμασε να αφαιρέσεις κάποιο.",
     loginToSee: "για να δεις τις εκδηλώσεις σου.",
@@ -1105,12 +1164,21 @@ export const el: Dictionary = {
     repeatWeekly: "Επανάληψη κάθε εβδομάδα",
     repeatCountLabel: "Αριθμός επαναλήψεων (μαζί με αυτή)",
     repeatHint: "Κάθε επανάληψη ελέγχεται ξεχωριστά.",
+    coutLabel: "Κόστος",
+    coutPlaceholder: "— Επίλεξε —",
+    coutDetailPlaceholder: "Λεπτομέρεια (προαιρετικό) — π.χ. 50€ τέλος συμμετοχής",
   },
   map: {
-    noCoordinates: (count) =>
-      count > 1
+    noCoordinates: (count, kind) => {
+      if (kind === "shops") {
+        return count > 1
+          ? `${count} καταστήματα χωρίς ακριβή τοποθεσία — βρες τα στη λίστα.`
+          : `${count} κατάστημα χωρίς ακριβή τοποθεσία — βρες το στη λίστα.`;
+      }
+      return count > 1
         ? `${count} εκδηλώσεις χωρίς ακριβή τοποθεσία — βρες τις στη λίστα.`
-        : `${count} εκδήλωση χωρίς ακριβή τοποθεσία — βρες τη στη λίστα.`,
+        : `${count} εκδήλωση χωρίς ακριβή τοποθεσία — βρες τη στη λίστα.`;
+    },
   },
   matching: {
     title: "Προτάσεις αντιστοίχισης",
@@ -1147,6 +1215,11 @@ export const el: Dictionary = {
     rejectConfirm: "Απόρριψη και διαγραφή αυτής της εκδήλωσης; Δεν μπορεί να αναιρεθεί.",
     submittedBy: (nom) => `Υποβλήθηκε από ${nom}`,
     loadError: (message) => `Πρόβλημα στη φόρτωση των προτάσεων (${message}).`,
+    shops: {
+      title: "Καταστήματα σε αναμονή",
+      empty: "Κανένα κατάστημα σε αναμονή.",
+      rejectConfirm: "Απόρριψη και διαγραφή αυτού του καταστήματος; Δεν μπορεί να αναιρεθεί.",
+    },
   },
   portfolio: {
     title: "Το portfolio μου",
@@ -1205,6 +1278,9 @@ export const el: Dictionary = {
     delete: "Διαγραφή",
     tabList: "Λίστα",
     tabMap: "Χάρτης",
+    disciplineLabel: "Ειδικότητα",
+    submitPending: "Ευχαριστούμε! Το κατάστημα θα εμφανιστεί μετά την έγκριση από συντονιστή.",
+    loginToPropose: "για να προτείνεις ένα κατάστημα.",
   },
   calendar: {
     tab: "Ημερολόγιο",

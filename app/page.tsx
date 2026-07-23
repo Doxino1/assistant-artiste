@@ -11,7 +11,7 @@ import { useSavedEvents } from "@/lib/use-saved-events";
 import { createClient } from "@/lib/supabase/client";
 import { formatInVille } from "@/lib/timezone";
 import { useT } from "@/lib/i18n/context";
-import { DISCIPLINES, EventType, Ville } from "@/lib/types";
+import { CoutType, DISCIPLINES, EventType, Ville } from "@/lib/types";
 
 const VILLES: Ville[] = ["Paris", "Athènes"];
 
@@ -52,9 +52,10 @@ export default function EvenementsPage() {
   const [ville, setVille] = useState<Ville>("Paris");
   const [types, setTypes] = useState<EventType[]>([]);
   const [disciplines, setDisciplines] = useState<string[]>([]);
+  const [cout, setCout] = useState<CoutType | "">("");
   const [query, setQuery] = useState("");
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const activeFilterCount = types.length + disciplines.length;
+  const activeFilterCount = types.length + disciplines.length + (cout ? 1 : 0);
 
   const [userId, setUserId] = useState<string | null>(null);
   const [checkingUser, setCheckingUser] = useState(true);
@@ -99,6 +100,10 @@ export default function EvenementsPage() {
       .filter((e) => e.ville === ville)
       .filter((e) => types.length === 0 || types.includes(e.type))
       .filter((e) => disciplines.length === 0 || disciplines.includes(e.discipline))
+      // Le filtre coût ne doit jamais masquer un événement qui n'a pas ce
+      // champ (vernissage/expo/annonce) — seuls les workshop/open_call/
+      // residency avec un coût non correspondant sont exclus.
+      .filter((e) => !cout || !e.coutType || e.coutType === cout)
       .filter(
         (e) =>
           !q ||
@@ -106,7 +111,7 @@ export default function EvenementsPage() {
           e.description.toLowerCase().includes(q)
       )
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  }, [allEvents, ville, types, disciplines, query, now]);
+  }, [allEvents, ville, types, disciplines, cout, query, now]);
 
   const savedEvents = allEvents
     .filter((e) => saved[e.id] === "sauvegarde")
@@ -261,6 +266,15 @@ export default function EvenementsPage() {
                   <X size={12} strokeWidth={2} />
                 </button>
               ))}
+              {cout && (
+                <button
+                  onClick={() => setCout("")}
+                  className="flex items-center gap-1 rounded-full border border-foreground/20 px-3 py-1 text-xs hover:border-foreground/40"
+                >
+                  {t.coutLabels[cout]}
+                  <X size={12} strokeWidth={2} />
+                </button>
+              )}
             </div>
           )}
 
@@ -310,6 +324,24 @@ export default function EvenementsPage() {
                     className={`shrink-0 whitespace-nowrap ${pillClass(disciplines.includes(d))}`}
                   >
                     {t.disciplineLabels[d]}
+                  </button>
+                ))}
+              </div>
+
+              <div className="mt-2 -mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <button
+                  onClick={() => setCout("")}
+                  className={`shrink-0 whitespace-nowrap ${pillClass(cout === "")}`}
+                >
+                  {t.evenements.tousCouts}
+                </button>
+                {Object.entries(t.coutLabels).map(([value, label]) => (
+                  <button
+                    key={value}
+                    onClick={() => setCout(value as CoutType)}
+                    className={`shrink-0 whitespace-nowrap ${pillClass(cout === value)}`}
+                  >
+                    {label}
                   </button>
                 ))}
               </div>

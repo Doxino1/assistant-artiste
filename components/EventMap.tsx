@@ -58,7 +58,7 @@ export function EventMap({ events, ville }: { events: ArtEvent[]; ville: Ville }
         </MapContainer>
       </div>
       {withoutCoords > 0 && (
-        <p className="mt-2 text-xs text-foreground/50">{t.map.noCoordinates(withoutCoords)}</p>
+        <p className="mt-2 text-xs text-foreground/50">{t.map.noCoordinates(withoutCoords, "events")}</p>
       )}
     </div>
   );

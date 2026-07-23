@@ -12,6 +12,8 @@ interface EventRow {
   lieu: string | null;
   lat: number | null;
   lng: number | null;
+  cout_type: ArtEvent["coutType"] | null;
+  cout_detail: string | null;
 }
 
 export function mapEventRow(row: EventRow): ArtEvent {
@@ -27,5 +29,7 @@ export function mapEventRow(row: EventRow): ArtEvent {
     lieu: row.lieu ?? "",
     lat: row.lat ?? undefined,
     lng: row.lng ?? undefined,
+    coutType: row.cout_type ?? null,
+    coutDetail: row.cout_detail ?? null,
   };
 }

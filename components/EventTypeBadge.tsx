@@ -8,6 +8,7 @@ const STYLES: Record<EventType, string> = {
   workshop: "bg-badge-workshop-bg text-badge-workshop-fg",
   open_call: "bg-badge-open-call-bg text-badge-open-call-fg",
   expo: "bg-badge-expo-bg text-badge-expo-fg",
+  residency: "bg-badge-residency-bg text-badge-residency-fg",
   annonce: "bg-badge-annonce-bg text-badge-annonce-fg",
 };
 

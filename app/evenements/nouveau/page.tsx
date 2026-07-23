@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { VILLE_TIMEZONES, zonedTimeToUtcIso } from "@/lib/timezone";
 import { geocode } from "@/lib/geocode";
 import { useT } from "@/lib/i18n/context";
-import { DISCIPLINES } from "@/lib/types";
+import { DISCIPLINES, EVENT_TYPES_WITH_COST } from "@/lib/types";
 
 const INITIAL: EventFormValues = {
   titre: "",
@@ -19,6 +19,8 @@ const INITIAL: EventFormValues = {
   date: "",
   heure: "19:00",
   lieu: "",
+  coutType: "",
+  coutDetail: "",
 };
 
 export default function NouvelEvenementPage() {
@@ -66,6 +68,7 @@ export default function NouvelEvenementPage() {
     const occurrences = recurrence.repeatWeekly ? recurrence.count : 1;
     const recurrenceGroupId = occurrences > 1 ? crypto.randomUUID() : null;
     const startDate = new Date(dateIso);
+    const costEligible = EVENT_TYPES_WITH_COST.includes(values.type);
 
     const rows = Array.from({ length: occurrences }, (_, i) => {
       const occurrenceDate = new Date(startDate.getTime() + i * 7 * 24 * 60 * 60 * 1000);
@@ -82,6 +85,8 @@ export default function NouvelEvenementPage() {
         lat: coords?.lat ?? null,
         lng: coords?.lng ?? null,
         recurrence_group_id: recurrenceGroupId,
+        cout_type: costEligible ? values.coutType || null : null,
+        cout_detail: costEligible ? values.coutDetail || null : null,
       };
     });
 

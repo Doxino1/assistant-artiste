@@ -6,7 +6,7 @@ import { EventForm, EventFormValues } from "@/components/EventForm";
 import { createClient } from "@/lib/supabase/client";
 import { VILLE_TIMEZONES, utcIsoToZonedParts, zonedTimeToUtcIso } from "@/lib/timezone";
 import { useT } from "@/lib/i18n/context";
-import { AnnouncementSubtype, DISCIPLINES, EventType, Ville } from "@/lib/types";
+import { AnnouncementSubtype, CoutType, DISCIPLINES, EventType, EVENT_TYPES_WITH_COST, Ville } from "@/lib/types";
 
 export default function ModifierEvenementPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -34,7 +34,9 @@ export default function ModifierEvenementPage({ params }: { params: Promise<{ id
 
       const { data, error } = await supabase
         .from("events")
-        .select("titre, description, type, sous_type, discipline, ville, date, lieu, soumis_par")
+        .select(
+          "titre, description, type, sous_type, discipline, ville, date, lieu, soumis_par, cout_type, cout_detail"
+        )
         .eq("id", id)
         .single();
 
@@ -59,6 +61,8 @@ export default function ModifierEvenementPage({ params }: { params: Promise<{ id
         date,
         heure: time,
         lieu: data.lieu ?? "",
+        coutType: (data.cout_type as CoutType) ?? "",
+        coutDetail: data.cout_detail ?? "",
       });
       setLoading(false);
     }
@@ -72,6 +76,7 @@ export default function ModifierEvenementPage({ params }: { params: Promise<{ id
   async function handleSubmit(values: EventFormValues) {
     const supabase = createClient();
     const dateIso = zonedTimeToUtcIso(values.date, values.heure, VILLE_TIMEZONES[values.ville]);
+    const costEligible = EVENT_TYPES_WITH_COST.includes(values.type);
 
     const { error } = await supabase
       .from("events")
@@ -84,6 +89,8 @@ export default function ModifierEvenementPage({ params }: { params: Promise<{ id
         ville: values.ville,
         date: dateIso,
         lieu: values.lieu,
+        cout_type: costEligible ? values.coutType || null : null,
+        cout_detail: costEligible ? values.coutDetail || null : null,
       })
       .eq("id", id);
 
